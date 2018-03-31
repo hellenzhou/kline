@@ -4850,7 +4850,7 @@ function () {
     this.isSized = false;
     this.paused = false;
     this.subscribed = null;
-    this.disableFirebase = false;
+    this.disableFirebase = true;
     /*api文档  https://www.zb.com/i/developer/restApi#config */
 
     /*k线数据 参考文档type  since  size */
