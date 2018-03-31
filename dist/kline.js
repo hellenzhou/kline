@@ -9041,7 +9041,8 @@ function () {
       var updateDataRes = _kline.default.instance.chartMgr.updateData("frame0.k0", _kline.default.instance.klineData);
 
       _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
-      var intervalTime = _kline.default.instance.klineIntervalTime < _kline.default.instance.range ? _kline.default.instance.klineIntervalTime : _kline.default.instance.range; //  $("#chart_loading").removeClass("activated");
+      var intervalTime = _kline.default.instance.klineIntervalTime < _kline.default.instance.range ? _kline.default.instance.klineIntervalTime : _kline.default.instance.range;
+      (0, _jquery.default)("#chart_loading").removeClass("activated");
 
       if (!updateDataRes) {
         if (_kline.default.instance.type === 'poll') {
@@ -28251,7 +28252,7 @@ function () {
       $('.symbol-title>a').text(_kline.default.instance.symbolName);
 
       if (f === -1) {
-        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null); // Control.requestData(true);
+        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
 
         _control.Control.klineRequestData(true);
 
@@ -28259,7 +28260,7 @@ function () {
 
         _control.Control.depthRequestData();
       } else {
-        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString()); // Control.requestData();
+        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
 
         _control.Control.klineRequestData();
 

@@ -219,7 +219,8 @@ export class Control {
         let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.klineData);
         Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
         let intervalTime = Kline.instance.klineIntervalTime < Kline.instance.range ? Kline.instance.klineIntervalTime : Kline.instance.range;
-      //  $("#chart_loading").removeClass("activated");
+
+        $("#chart_loading").removeClass("activated");
         if (!updateDataRes) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(Control.klineRequestData(true), intervalTime);

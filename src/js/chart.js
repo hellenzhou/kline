@@ -99,13 +99,13 @@ export class Chart {
 
         if (f === -1) {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, Kline.instance.limit, null);
-           // Control.requestData(true);
+
            Control.klineRequestData(true);
            Control.tradesRequestData();
            Control.depthRequestData();
         } else {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, f.toString());
-           // Control.requestData();
+   
            Control.klineRequestData();
            Control.tradesRequestData();
            Control.depthRequestData();
