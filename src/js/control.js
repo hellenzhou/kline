@@ -117,9 +117,9 @@ export class Control {
             return;
         }
 
-        // if (showLoading === true) {
-        //     $("#chart_loading").addClass("activated");
-        // }
+        if (showLoading === true) {
+            $("#chart_loading").addClass("activated");
+        }
 
         if (Kline.instance.type === "stomp" && Kline.instance.stompClient) {
             Control.klineRequestOverStomp();

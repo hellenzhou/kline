@@ -8926,10 +8926,11 @@ function () {
 
       if (_kline.default.instance.paused) {
         return;
-      } // if (showLoading === true) {
-      //     $("#chart_loading").addClass("activated");
-      // }
+      }
 
+      if (showLoading === true) {
+        (0, _jquery.default)("#chart_loading").addClass("activated");
+      }
 
       if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
         Control.klineRequestOverStomp();
@@ -17780,10 +17781,10 @@ function () {
         var item = array[i];
 
         if (i >= array.length - this.tradesLimit) {
-          this.tradeDate.setTime(item.time);
+          this.tradeDate.setTime(item.date * 1000);
           var dateStr = this.dateFormatTf(this.tradeDate.getHours()) + ":" + this.dateFormatTf(this.tradeDate.getMinutes()) + ":" + this.dateFormatTf(this.tradeDate.getSeconds());
-          var arr = (item.amount.toFixed(4) + "").split(".");
-          var price = item.price;
+          var arr = (Number(item.amount).toFixed(4) + "").split(".");
+          var price = Number(item.price);
 
           if (price > 1) {
             price = price.toFixed(2);
@@ -28253,10 +28254,18 @@ function () {
         _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null); // Control.requestData(true);
 
         _control.Control.klineRequestData(true);
+
+        _control.Control.tradesRequestData();
+
+        _control.Control.depthRequestData();
       } else {
         _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString()); // Control.requestData();
 
         _control.Control.klineRequestData();
+
+        _control.Control.tradesRequestData();
+
+        _control.Control.depthRequestData();
       }
 
       _chart_manager.ChartManager.instance.redraw('All', false);

@@ -44,12 +44,12 @@ export class KlineTrade {
         for (let i = 0; i < array.length; i++) {
             let item = array[i];
             if (i >= array.length - this.tradesLimit) {
-                this.tradeDate.setTime(item.time);
+                this.tradeDate.setTime(item.date * 1000);
                 let dateStr = this.dateFormatTf(this.tradeDate.getHours())
                     + ":" + this.dateFormatTf(this.tradeDate.getMinutes())
                     + ":" + this.dateFormatTf(this.tradeDate.getSeconds());
-                let arr = (item.amount.toFixed(4) + "").split(".");
-                let price = item.price;
+                let arr = (Number(item.amount).toFixed(4) + "").split(".");
+                let price = Number(item.price);
                 if (price > 1) {
                     price = price.toFixed(2)
                 }
