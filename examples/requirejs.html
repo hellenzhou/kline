@@ -7,10 +7,10 @@
     <script src="../lib/require.js"></script>
     <style type="text/css">
         .kline {
-            width: 1200px;
+            /* width: 1200px; */
             margin-left: auto;
             margin-right: auto;
-            height: 462px;
+            /* height: 462px; */
             position: relative;
         }
     </style>
@@ -46,10 +46,13 @@
         });
 
         require(['kline'], function () {
+
+            let w = window.innerWidth;
+            let h  =   window.innerHeight;
             var kline = new Kline({
                 element: "#kline_container",
-                width: 1200,
-                height: 650,
+                width: window.innerWidth,
+                height: window.innerHeight,
                 theme: 'dark', // light/dark
                 language: 'zh-cn', // zh-cn/en-us/zh-tw
                 showLanguageSelect: false,
@@ -59,10 +62,10 @@
                 symbolName: "btc/usdt",
                 type: "poll", // poll/socket
                 url: "/examples/mock.json",
-                limit: 200,
+                limit: 1000,
                 intervalTime: 5000,
                 debug: true,
-                showTrade: true,
+                showTrade: false,
                 klineBaseUrl: 'http://api.bitkk.com/data/v1/kline',
                 klineMarketName: 'market',
                 klineTypeName: 'type',

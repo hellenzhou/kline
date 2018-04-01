@@ -672,15 +672,24 @@ export class Control {
         canvasGroup.css({
             left: canvasGroupRect.x + 'px',
             top: canvasGroupRect.y + 'px',
-            // width: canvasGroupRect.w + 'px',
+            width: canvasGroupRect.w + 'px',
             height: canvasGroupRect.h + 'px'
         });
         let mainCanvas = $('#chart_mainCanvas')[0];
         let overlayCanvas = $('#chart_overlayCanvas')[0];
-        mainCanvas.width = canvasGroupRect.w;
-        mainCanvas.height = canvasGroupRect.h;
-        overlayCanvas.width = canvasGroupRect.w;
-        overlayCanvas.height = canvasGroupRect.h;
+        let devicePixelRatio = window.devicePixelRatio;
+
+
+        mainCanvas.width = canvasGroupRect.w * devicePixelRatio;
+        mainCanvas.height = canvasGroupRect.h * devicePixelRatio;
+        mainCanvas.style.width = canvasGroupRect.w + "px";
+        mainCanvas.style.height = canvasGroupRect.h + "px";
+
+        overlayCanvas.width = canvasGroupRect.w * devicePixelRatio;
+        overlayCanvas.height = canvasGroupRect.h * devicePixelRatio;
+        overlayCanvas.style.width = canvasGroupRect.w + "px";
+        overlayCanvas.style.height = canvasGroupRect.h + "px";
+
         if (tabBarShown) {
             tabBar.css({
                 left: tabBarRect.x + 'px',

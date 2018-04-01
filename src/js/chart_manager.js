@@ -637,7 +637,7 @@ export class ChartManager {
     }
 
     scale(s) {
-        if (this._highlightedFrame === null)
+        if (this._highlightedFrame === null || !this._highlightedFrame)
             return;
         let hiArea = this._highlightedFrame.getHighlightedArea();
         if (this.getRange(hiArea.getName()) !== undefined) {
