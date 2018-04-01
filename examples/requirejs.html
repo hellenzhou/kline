@@ -14,13 +14,12 @@
             position: relative;
         }
     </style>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0">
 </head>
 
 <body>
 
     <div class="kline">
-
-        <h1>K线图</h1>
 
         <div id="kline_container"></div>
     </div>
@@ -60,7 +59,7 @@
                 symbolName: "btc/usdt",
                 type: "poll", // poll/socket
                 url: "/examples/mock.json",
-                limit:200,
+                limit: 200,
                 intervalTime: 5000,
                 debug: true,
                 showTrade: true,
