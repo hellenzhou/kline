@@ -4,7 +4,13 @@ body {
     margin: 0;
     min-width: 100%
 }
-
+ul, li {
+    padding: 0;  
+    margin: 0;  
+}
+li {
+    list-style: none;
+}
 .chart_container {
     cursor: default;
     font-family: arial, sans, serif;
@@ -956,7 +962,6 @@ body {
 #orderbook #gbids {
     height: 195px;
     position: relative;
-    display: inline-block;
     overflow: hidden
 }
 
@@ -983,19 +988,29 @@ body {
     text-decoration: underline
 }
 
-#asks,
-#bids {
-    width: 150px
+#bids, #description {
+    width: 150px;
+    display: none;
 }
 
 #orderbook {
-    padding-left: 3px;
+    /* padding-left: 3px;
     border-bottom: 1px solid #222;
     padding-bottom: 2px;
     margin-left: 5px;
-    margin-bottom: 2px
+    margin-bottom: 2px */
 }
-
+#orderbook ul {
+    display: flex;
+}
+#orderbook ul li {
+    flex: 1;
+    text-align: center;
+    line-height: 30px;
+}
+#orderbook ul li.current {
+    color: green;
+}
 #orderbook .table {
     position: absolute;
     border-collapse: collapse;

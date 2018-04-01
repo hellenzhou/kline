@@ -1,4 +1,5 @@
 <div class="chart_container dark">
+    <div id="price" class="green"></div>
     <div id="chart_dom_elem_cache"></div>
     <!-- ToolBar -->
     <div id="chart_toolbar">
@@ -687,12 +688,19 @@
                 <a class="dark"></a>
             </div>
             <div id="orderbook">
+                <ul>
+                    <li id="depth" data-show="asks">深度</li>
+                    <li id="deal" data-show="bids">成交</li>
+                    <li id="descriptionTab" data-show="description">简介</li>
+                </ul>
                 <div id="asks">
                     <div class="table"></div>
                 </div>
-                <div id="price" class="green"></div>
                 <div id="bids">
                     <div class="table"></div>
+                </div>
+                <div id="description">
+
                 </div>
             </div>
             <div id="trades" class="trades">

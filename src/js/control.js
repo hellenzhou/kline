@@ -636,7 +636,7 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-        toolBarRect.y = 0;
+        toolBarRect.y = $("#price").height();
         toolBarRect.w = chartWidth;
         toolBarRect.h = 29;
         let toolPanelRect = {};
@@ -671,7 +671,7 @@ export class Control {
 
         canvasGroup.css({
             left: canvasGroupRect.x + 'px',
-            top: canvasGroupRect.y + 'px',
+            top: toolBarRect.y + toolBarRect.h + 'px',
             width: canvasGroupRect.w + 'px',
             height: canvasGroupRect.h + 'px'
         });

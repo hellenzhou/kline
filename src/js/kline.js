@@ -648,7 +648,11 @@ export default class Kline {
                     $(Kline.instance.element).css({ visibility: 'visible', height: Kline.instance.height + 'px' });
                 }
             });
-
+            $('body').on('click', '#orderbook ul li', function (element) {
+                var show = $(element.currentTarget).data().show;
+                $("#" + show).show();
+                $("#" + show).siblings("div").hide();
+            });
         })
 
     }
