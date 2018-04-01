@@ -718,6 +718,25 @@ export class Control {
         let showTools = $('#chart_show_tools')[0];
         let selectTheme = $('#chart_toolbar_theme')[0];
         let dropDownSettings = $('#chart_dropdown_settings');
+
+        $(showIndic).hide();
+        $(dropDownSettings).hide();
+        // 根据时间计算显示个数
+        let periodsItems = $(periodsHorz).find('li:visible');
+        if (chartWidth < periodsHorz) {
+            let totalWidth = 0;
+            periodsItems.each(function(index) {
+                totalWidth += $(this).width();
+                if (totalWidth < chartWidth) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else {
+            $(periodsVert).hide();
+        }
+
         let periodsVertNW = periodsVert[0].offsetWidth;
         let periodsHorzNW = periodsVertNW + periodsHorz.offsetWidth;
         let showIndicNW = periodsHorzNW + showIndic.offsetWidth + 4;
@@ -732,7 +751,7 @@ export class Control {
         if (chartWidth < periodsHorzNW) {
             domElemCache.append(periodsHorz);
         } else {
-            periodsVert.after(periodsHorz);
+            // periodsVert.after(periodsHorz);
         }
         if (chartWidth < showIndicNW) {
             domElemCache.append(showIndic);

@@ -403,7 +403,8 @@ body {
 
 .chart_container #chart_toolbar_theme {
     float: left;
-    padding: 0 8px
+    padding: 0 8px;
+    display: none;
 }
 
 .chart_container #chart_toolbar_theme a.chart_icon {
@@ -1256,4 +1257,8 @@ body {
 .chart_BoxSize {
     width: 20px;
     height: 20px
+}
+
+#chart_main_indicator {
+    float: right;
 }
