@@ -37,6 +37,8 @@ export default class Kline {
         this.intervalTime = 5000;
         this.debug = true;
         this.language = "zh-cn";
+        this.showLanguageSelect = false;
+        this.showDrawTool = false;
         this.theme = "dark";
         this.ranges = ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"];
         this.showTrade = true;
@@ -158,6 +160,9 @@ export default class Kline {
 
         this.setTheme(this.theme);
         this.setLanguage(this.language);
+
+        !this.showLanguageSelect && $("#chart_language_setting_div").hide();
+        !this.showDrawTool && $(".chart_str_tools_cap").hide();
 
         $(this.element).css({ visibility: "visible" });
     }

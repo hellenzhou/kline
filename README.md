@@ -143,6 +143,7 @@ $ npm install kline
 |`height`   | 高度度 (px)      | 650
 |`theme`   | 主题 dark(暗色)/light(亮色) | dark
 |`language` | 语言 zh-cn(简体中文)/en-us(英文)/zh-tw(繁体中文) | zh-cn
+|`showLanguageSelect` | 是否显示语言选择框
 |`ranges` | 聚合选项 1w/1d/12h/6h/4h/2h/1h/30m/15m/5m/3m/1m/line (w:周, d:天, h:小时, m:分钟, line:分时数据) | ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"]
 |`symbol` | 交易代号 | 
 |`symbolName`  | 交易名称 | 
