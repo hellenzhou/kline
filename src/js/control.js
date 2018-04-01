@@ -112,7 +112,7 @@ export class Control {
     static klineRequestData(showLoading) {
         Control.klineAbortRequest();
         window.clearTimeout(Kline.instance.klineTimer);
-       
+
         if (Kline.instance.paused) {
             return;
         }
@@ -203,7 +203,7 @@ export class Control {
     }
 
 
-    static klineRequestSuccessHandler(res) {        
+    static klineRequestSuccessHandler(res) {
         if (!res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
@@ -718,23 +718,31 @@ export class Control {
         let showTools = $('#chart_show_tools')[0];
         let selectTheme = $('#chart_toolbar_theme')[0];
         let dropDownSettings = $('#chart_dropdown_settings');
+        let mainIndicator = $('#chart_main_indicator')[0];
+
 
         $(showIndic).hide();
         $(dropDownSettings).hide();
         // 根据时间计算显示个数
-        let periodsItems = $(periodsHorz).find('li:visible');
-        if (chartWidth < periodsHorz) {
-            let totalWidth = 0;
-            periodsItems.each(function(index) {
-                totalWidth += $(this).width();
-                if (totalWidth < chartWidth) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+        let ranges = Kline.instance.ranges;
+        let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 70;
+        let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
+        // 显示当前
+        console.log('show', Kline.instance)
+        for (let i = 0; i < totalCount; i++) {
+            let dom = $('#chart_period_' + ranges[i] + '_h');
+            dom.show();
+            totalWidth += dom.width();
+            if (totalWidth > periodShowWidth - periodsVert.width()) {
+                dom.hide();
+                showCount--;
+            }
+        }
+
+        if (showCount < ranges.length) {
+            periodsVert.show();
         } else {
-            $(periodsVert).hide();
+            periodsVert.hide();
         }
 
         let periodsVertNW = periodsVert[0].offsetWidth;
@@ -748,11 +756,11 @@ export class Control {
         showIndicNW += dropDownSettingsW;
         showToolsNW += dropDownSettingsW;
         selectThemeNW += dropDownSettingsW;
-        if (chartWidth < periodsHorzNW) {
-            domElemCache.append(periodsHorz);
-        } else {
-            // periodsVert.after(periodsHorz);
-        }
+        // if (chartWidth < periodsHorzNW) {
+        //     domElemCache.append(periodsHorz);
+        // } else {
+        //     periodsVert.after(periodsHorz);
+        // }
         if (chartWidth < showIndicNW) {
             domElemCache.append(showIndic);
             rowIndic.style.display = "";

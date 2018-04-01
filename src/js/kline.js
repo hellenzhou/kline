@@ -452,6 +452,19 @@ export default class Kline {
                         mgr.removeMainIndicator("frame0.k0");
                     mgr.redraw();
                 });
+                $("#chart_main_indicator li")
+                .click(function () {
+                    $("#chart_main_indicator a").removeClass('selected');
+                    $(this).find('a').addClass("selected");
+                    let name = $(this).attr('name');
+                    let tmp = ChartSettings.get();
+                    tmp.charts.mIndic = name;
+                    ChartSettings.save();
+                    let mgr = ChartManager.instance;
+                    if (!mgr.setMainIndicator("frame0.k0", name))
+                        mgr.removeMainIndicator("frame0.k0");
+                    mgr.redraw();
+                });
             $('#chart_toolbar_theme a').click(function () {
                 $('#chart_toolbar_theme a').removeClass('selected');
                 if ($(this).attr('name') === 'dark') {

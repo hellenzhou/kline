@@ -733,17 +733,29 @@ body {
 }
 
 #chart_loading {
-    border: 1px solid;
-    border-radius: 4px;
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 48px;
+    border: 2px solid #fff;
+    border-left: 2px solid transparent;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
     overflow: hidden;
     position: absolute;
     text-align: center;
     visibility: hidden;
-    width: 200px;
-    z-index: 200
+    z-index: 200;
+}
+
+.chart_str_loading {
+    animation: loading_rotate 1s infinite linear;
+}
+
+@keyframes loading_rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 #chart_loading.activated {
@@ -751,13 +763,11 @@ body {
 }
 
 .chart_container.dark #chart_loading {
-    border-color: #aaa;
     background-color: rgba(0, 0, 0, 0.6);
     color: #ccc
 }
 
 .chart_container.light #chart_loading {
-    border-color: #afb1b3;
     background-color: rgba(244, 244, 244, 0.8);
     color: #393c40
 }
@@ -1261,4 +1271,12 @@ body {
 
 #chart_main_indicator {
     float: right;
+}
+#chart_main_indicator li {
+    line-height: 24px;
+    display: block;
+}
+
+.chart_str_loading {
+    text-indent: -99999px;
 }
