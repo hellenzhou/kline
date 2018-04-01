@@ -621,7 +621,7 @@ export class Control {
 
     static onSize(w, h) {
         let width = w || window.innerWidth;
-        let chartWidth = Kline.instance.showTrade ? (width - Kline.instance.tradeWidth) : width;
+        let chartWidth = width;
         let height = h || window.innerHeight;
         let container = $(Kline.instance.element);
         container.css({
@@ -701,7 +701,9 @@ export class Control {
         let dlgSettings = $("#chart_parameter_settings");
         dlgSettings.css({
             left: (chartWidth - dlgSettings.width()) >> 1,
-            top: (height - dlgSettings.height()) >> 1
+            top: (height - dlgSettings.height()) >> 1,
+            width: canvasGroupRect.w,
+            height: canvasGroupRect.h
         });
         let dlgLoading = $("#chart_loading");
         dlgLoading.css({

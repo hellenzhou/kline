@@ -52,7 +52,7 @@
             var kline = new Kline({
                 element: "#kline_container",
                 width: window.innerWidth,
-                height: window.innerHeight,
+                // height: window.innerHeight,
                 theme: 'dark', // light/dark
                 language: 'zh-cn', // zh-cn/en-us/zh-tw
                 showLanguageSelect: false,
@@ -65,7 +65,7 @@
                 limit: 1000,
                 intervalTime: 5000,
                 debug: true,
-                showTrade: false,
+                showTrade: true,
                 klineBaseUrl: 'http://api.bitkk.com/data/v1/kline',
                 klineMarketName: 'market',
                 klineTypeName: 'type',

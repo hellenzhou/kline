@@ -774,7 +774,7 @@ body {
 
 #chart_parameter_settings {
     border-radius: 4px;
-    border: 1px solid;
+    border: 0px solid;
     width: 640px;
     position: absolute;
     overflow: hidden;
@@ -880,9 +880,9 @@ body {
 }
 
 .trade_container {
-    width: 250px;
+    width: 100%;
     height: 100%;
-    float: right;
+    /* float: right; */
     z-index: 99999;
     font-size: 12px;
     overflow: hidden
