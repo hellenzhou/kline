@@ -887,11 +887,12 @@ li {
 
 .trade_container {
     width: 100%;
-    height: 100%;
+    height: auto;
     /* float: right; */
     z-index: 99999;
     font-size: 12px;
-    overflow: hidden
+    overflow: hidden;
+    padding-bottom: 15px;
 }
 
 .trade_container.dark {
@@ -937,6 +938,7 @@ li {
 }
 
 .m_guadan {
+    padding: 0 10px;
     margin-top: 29px;
     overflow: hidden;
     border-left: 1px solid #404040;
@@ -955,7 +957,9 @@ li {
     border-left: 1px solid #afb1b3;
     border-top: 1px solid #afb1b3
 }
-
+#trades, #description {
+    display: none;
+} 
 #orderbook #asks,
 #orderbook #gasks,
 #orderbook #bids,
@@ -988,28 +992,28 @@ li {
     text-decoration: underline
 }
 
-#bids, #description {
-    width: 150px;
-    display: none;
-}
-
 #orderbook {
     /* padding-left: 3px;
     border-bottom: 1px solid #222;
     padding-bottom: 2px;
     margin-left: 5px;
     margin-bottom: 2px */
+    display: flex;
+
 }
-#orderbook ul {
+#asks, #bids {
+    flex: 1;
+}
+#tabList {
     display: flex;
 }
-#orderbook ul li {
+#tabList li {
     flex: 1;
     text-align: center;
     line-height: 30px;
 }
-#orderbook ul li.current {
-    color: green;
+#tabList li.current {
+    color: #0F0;
 }
 #orderbook .table {
     position: absolute;
@@ -1108,7 +1112,6 @@ li {
     overflow-y: auto;
     text-align: left;
     color: #666;
-    padding-top: 5px
 }
 
 .trade_container.light {
@@ -1155,11 +1158,11 @@ li {
 }
 
 .trades_list {
-    padding-left: 25px
+    /* padding-left: 25px */
 }
 
 .trades_list ul {
-    width: 200px;
+    width: 100%;
     height: 14px;
     line-height: 14px;
     text-align: left;
@@ -1167,7 +1170,8 @@ li {
     clear: both;
     zoom: 1;
     margin: 0;
-    padding: 0
+    padding: 0;
+    display: flex;
 }
 
 .trades_list ul li {
@@ -1180,7 +1184,8 @@ li {
     *display: inline;
     margin: 0;
     padding: 0;
-    font-family: Consolas, monospace
+    font-family: Consolas, monospace;
+    flex: 1;
 }
 
 .trades_list ul li.tm {

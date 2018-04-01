@@ -452,7 +452,7 @@ export default class Kline {
                         mgr.removeMainIndicator("frame0.k0");
                     mgr.redraw();
                 });
-                $("#chart_main_indicator li")
+            $("#chart_main_indicator li")
                 .click(function () {
                     $("#chart_main_indicator a").removeClass('selected');
                     $(this).find('a').addClass("selected");
@@ -648,10 +648,13 @@ export default class Kline {
                     $(Kline.instance.element).css({ visibility: 'visible', height: Kline.instance.height + 'px' });
                 }
             });
-            $('body').on('click', '#orderbook ul li', function (element) {
-                var show = $(element.currentTarget).data().show;
-                $("#" + show).show();
-                $("#" + show).siblings("div").hide();
+            $('body').on('click', '#tabList li', function (element) {
+                var currentTarget = $(element.currentTarget),
+                    showTabContent = currentTarget.data().show;
+                $("#" + showTabContent).show();
+                $("#" + showTabContent).siblings("div").hide();
+                currentTarget.addClass("current");
+                currentTarget.siblings().removeClass("current");
             });
         })
 
