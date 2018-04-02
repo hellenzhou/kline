@@ -124,7 +124,7 @@ export class MainDataSource extends DataSource {
                         this._updatedCount++;
                     }
                     i++;
-                    console.log(i + '----' + cnt);
+              
                     if (i < cnt) {
                       //  this.setUpdateMode(DataSource.UpdateMode.Append);
                       this.setUpdateMode(DataSource.UpdateMode.Refresh);
@@ -139,8 +139,6 @@ export class MainDataSource extends DataSource {
                                 volume: e[5]
                             });
                         }
-
-                        console.log('this._appendedCount=' + this._appendedCount);
                     }
                     return true;
                 }

@@ -11,7 +11,6 @@ export class Control {
 
     static refreshCounter = 0;
     static refreshHandler = null;
-
     static requestDuration = {
         "01d": "1day",
         "01w": "1week",
@@ -28,48 +27,6 @@ export class Control {
         "01m": "1min",
         "line": "line"
     };
-
-    static refreshFunction() {
-        Control.refreshCounter++;
-        let lang = ChartManager.instance.getLanguage();
-        if (Control.refreshCounter > 3600) {
-            let num = Number(Control.refreshCounter / 3600);
-            if (lang === "en-us") {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "h");
-            } else if (lang === "zh-tw") {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "小時");
-            } else {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "小时");
-            }
-        } else if (Control.refreshCounter > 60 && Control.refreshCounter <= 3600) {
-            let num = Number(Control.refreshCounter / 60);
-            if (lang === "en-us") {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "m");
-            } else if (lang === "zh-tw") {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "分鐘");
-            } else {
-                $("#chart_updated_time_text").html(num.toFixed(0) + "分钟");
-            }
-        } else if (Control.refreshCounter <= 60) {
-            if (lang === "en-us") {
-                $("#chart_updated_time_text").html(Control.refreshCounter + "s");
-            } else {
-                $("#chart_updated_time_text").html(Control.refreshCounter + "秒");
-            }
-        }
-    }
-
-    static clearRefreshCounter() {
-        window.clearInterval(Control.refreshHandler);
-        Control.refreshCounter = 0;
-        let lang = ChartManager.instance.getLanguage();
-        if (lang === "en-us") {
-            $("#chart_updated_time_text").html(Control.refreshCounter + "s");
-        } else {
-            $("#chart_updated_time_text").html(Control.refreshCounter + "秒");
-        }
-        Control.refreshHandler = setInterval(Control.refreshFunction, Kline.instance.intervalTime);
-    }
 
     static klineAbortRequest() {
         if (Kline.instance.type !== "stomp" || !Kline.instance.stompClient) {
@@ -112,7 +69,6 @@ export class Control {
     static klineRequestData(showLoading) {
         Control.klineAbortRequest();
         window.clearTimeout(Kline.instance.klineTimer);
-
         if (Kline.instance.paused) {
             return;
         }
@@ -127,7 +83,6 @@ export class Control {
             Control.klineRequestOverHttp();
         }
     }
-
 
     static depthRequestData(showLoading) {
         Control.depthAbortRequest();
@@ -293,7 +248,6 @@ export class Control {
         );
     }
 
-
     static depthRequestSuccessHandler(res) {
         if (!res || !res.asks || !Array.isArray(res.asks) || !res.bids || !Array.isArray(res.bids)) {
             if (Kline.instance.type === 'poll') {
@@ -309,7 +263,6 @@ export class Control {
         if (Kline.instance.depthData) {
             KlineTrade.instance.updateDepth(Kline.instance.depthData);
         }
-        //  Control.clearRefreshCounter();
 
         if (Kline.instance.type === 'poll') {
             Kline.instance.depthTimer = setTimeout(Control.depthTwoSecondThread, intervalTime);
@@ -390,22 +343,6 @@ export class Control {
         Control.tradesRequestData();
     }
 
-    static requestData(showLoading) {
-        Control.AbortRequest();
-        window.clearTimeout(Kline.instance.timer);
-        if (Kline.instance.paused) {
-            return;
-        }
-        if (showLoading === true) {
-            $("#chart_loading").addClass("activated");
-        }
-        if (Kline.instance.type === "stomp" && Kline.instance.stompClient) {
-            Control.requestOverStomp();
-        } else {
-            Control.requestOverHttp();
-        }
-    }
-
     static parseRequestParam(str) {
         return JSON.parse('{"' + decodeURI(str.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}')
     }
@@ -466,59 +403,6 @@ export class Control {
                 }
             })
         );
-    }
-
-    static requestSuccessHandler(res) {
-        if (Kline.instance.debug) {
-            console.log(res);
-        }
-        if (!res || !res.success) {
-            if (Kline.instance.type === 'poll') {
-                Kline.instance.timer = setTimeout(function () {
-                    Control.requestData(true);
-                }, Kline.instance.intervalTime);
-            }
-            return;
-        }
-        $("#chart_loading").removeClass("activated");
-
-        let chart = ChartManager.instance.getChart();
-        chart.setTitle();
-        Kline.instance.data = eval(res.data);
-
-        let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.data.lines);
-        Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
-
-        let intervalTime = Kline.instance.intervalTime < Kline.instance.range ? Kline.instance.intervalTime : Kline.instance.range;
-
-        if (!updateDataRes) {
-            if (Kline.instance.type === 'poll') {
-                Kline.instance.timer = setTimeout(Control.requestData, intervalTime);
-            }
-            return;
-        }
-        if (Kline.instance.data.trades && Kline.instance.data.trades.length > 0) {
-            KlineTrade.instance.pushTrades(Kline.instance.data.trades);
-            KlineTrade.instance.klineTradeInit = true;
-        }
-        if (Kline.instance.data.depths) {
-            KlineTrade.instance.updateDepth(Kline.instance.data.depths);
-        }
-        Control.clearRefreshCounter();
-
-        if (Kline.instance.type === 'poll') {
-            Kline.instance.timer = setTimeout(Control.TwoSecondThread, intervalTime);
-        }
-
-        ChartManager.instance.redraw('All', false);
-    }
-
-    static AbortRequest() {
-        if (Kline.instance.type !== "stomp" || !Kline.instance.stompClient) {
-            if (Kline.instance.G_HTTP_REQUEST && Kline.instance.G_HTTP_REQUEST.readyState !== 4) {
-                Kline.instance.G_HTTP_REQUEST.abort();
-            }
-        }
     }
 
     static TwoSecondThread() {
@@ -610,7 +494,7 @@ export class Control {
                 $(this)[0].innerHTML = attr;
             });
         });
-        $("#chart_language_setting_div li a[name='" + lang + "']").addClass("selected");
+        // $("#chart_language_setting_div li a[name='" + lang + "']").addClass("selected");
         ChartManager.instance.setLanguage(lang);
         ChartManager.instance.getChart().setTitle();
         let tmp = ChartSettings.get();
@@ -730,7 +614,7 @@ export class Control {
         let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 70;
         let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
         // 显示当前
-        console.log('show', Kline.instance)
+
         for (let i = 0; i < totalCount; i++) {
             let dom = $('#chart_period_' + ranges[i] + '_h');
             dom.show();
