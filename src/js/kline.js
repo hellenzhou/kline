@@ -17,18 +17,15 @@ export default class Kline {
     constructor(option) {
         this.element = "#kline_container";
         this.chartMgr = null;
-        this.G_HTTP_REQUEST = null;
-        this.timer = null;
         this.buttonDown = false;
         this.init = false;
         this.requestParam = "";
         this.data = {};
-        this.width = 1200;
-        this.height = 650;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
         this.symbol = "";
         this.symbolName = "";
         this.range = null;
-        this.url = "";
         this.limit = 1000;
         this.type = "poll";
         this.subscribePath = "";
