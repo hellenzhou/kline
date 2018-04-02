@@ -520,6 +520,62 @@ export default class Kline {
                 }
                 ChartManager.instance.redraw('OverlayCanvas', false);
             });
+
+
+            // 支持移动mobile触摸屏
+            let chart_overlayCanvas = document.getElementById('chart_overlayCanvas');
+            chart_overlayCanvas.ontouchstart = function (e) {
+                // let eventCode = e.which || e.keyCode;
+                // if (eventCode !== 1) {
+                //     ChartManager.instance.deleteToolObject();
+                //     ChartManager.instance.redraw('OverlayCanvas', false);
+                //     return;
+                // }
+                Kline.instance.buttonDown = true;
+                let r = e.target.getBoundingClientRect();
+                let x =e.touches[0].clientX- r.left;
+                let y = e.touches[0].clientY - r.top;
+                ChartManager.instance.onMouseDown("frame0", x, y);
+            }
+
+            chart_overlayCanvas.ontouchmove = function (e) {
+                let r = e.target.getBoundingClientRect();
+                let x = e.changedTouches[0].clientX - r.left;
+                let y = e.changedTouches[0].clientY - r.top;
+                let mgr = ChartManager.instance;
+                if (Kline.instance.buttonDown === true) {
+                    mgr.onMouseMove("frame0", x, y, true);
+                    mgr.redraw("All", false);
+                } else {
+                    mgr.onMouseMove("frame0", x, y, false);
+                    mgr.redraw("OverlayCanvas");
+                }
+            }
+
+            chart_overlayCanvas.ontouchend = function (e) {
+                // if (e.which !== 1) {
+                //     return;
+                // }
+                Kline.instance.buttonDown = false;
+                let r = e.target.getBoundingClientRect();
+                let x = e.changedTouches[0].clientX - r.left;
+                let y = e.changedTouches[0].clientY - r.top;
+                let mgr = ChartManager.instance;
+                mgr.onMouseUp("frame0", x, y);
+                mgr.redraw("All");
+            }
+
+            chart_overlayCanvas.ontouchcancel = function (e) {
+                let r = e.target.getBoundingClientRect();
+                let x = e.clientX - r.left;
+                let y = e.clientY - r.top;
+                let mgr = ChartManager.instance;
+                mgr.onMouseLeave("frame0", x, y, false);
+                mgr.redraw("OverlayCanvas");
+            }
+
+
+
             $("#chart_overlayCanvas")
                 .mousemove(function (e) {
                     let r = e.target.getBoundingClientRect();
@@ -566,6 +622,9 @@ export default class Kline {
                     let y = e.clientY - r.top;
                     ChartManager.instance.onMouseDown("frame0", x, y);
                 });
+
+
+
             $("#chart_parameter_settings :input").change(function () {
                 let name = $(this).attr("name");
                 let index = 0;
