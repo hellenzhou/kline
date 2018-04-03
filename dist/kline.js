@@ -4961,8 +4961,8 @@ function () {
       _control.Control.readCookie();
 
       this.setTheme(this.theme);
-      this.setLanguage(this.language);
-      !this.showLanguageSelect && (0, _jquery.default)("#chart_language_setting_div").hide();
+      this.setLanguage(this.language); //  !this.showLanguageSelect && $("#chart_language_setting_div").hide();
+
       !this.showDrawTool && (0, _jquery.default)(".chart_str_tools_cap").hide();
       (0, _jquery.default)(this.element).css({
         visibility: "visible"
@@ -5338,17 +5338,18 @@ function () {
             _control.Control.switchIndic('off');
           }
         });
-        (0, _jquery.default)('#chart_language_setting_div li a').click(function () {
-          (0, _jquery.default)('#chart_language_setting_div a').removeClass('selected');
+        /*
+        $('#chart_language_setting_div li a').click(function () {
+             $('#chart_language_setting_div a').removeClass('selected');
+            if ($(this).attr('name') === 'zh-cn') {
+                Control.chartSwitchLanguage('zh-cn');
+            } else if ($(this).attr('name') === 'en-us') {
+                 Control.chartSwitchLanguage('en-us');
+            } else if ($(this).attr('name') === 'zh-tw') {
+                Control.chartSwitchLanguage('zh-tw');
+            }
+        });*/
 
-          if ((0, _jquery.default)(this).attr('name') === 'zh-cn') {
-            _control.Control.chartSwitchLanguage('zh-cn');
-          } else if ((0, _jquery.default)(this).attr('name') === 'en-us') {
-            _control.Control.chartSwitchLanguage('en-us');
-          } else if ((0, _jquery.default)(this).attr('name') === 'zh-tw') {
-            _control.Control.chartSwitchLanguage('zh-tw');
-          }
-        });
         (0, _jquery.default)(document).keyup(function (e) {
           if (e.keyCode === 46) {
             _chart_manager.ChartManager.instance.deleteToolObject();
@@ -5366,7 +5367,62 @@ function () {
           }
 
           _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
-        });
+        }); // 支持移动mobile触摸屏
+
+        var chart_overlayCanvas = document.getElementById('chart_overlayCanvas');
+
+        chart_overlayCanvas.ontouchstart = function (e) {
+          // let eventCode = e.which || e.keyCode;
+          // if (eventCode !== 1) {
+          //     ChartManager.instance.deleteToolObject();
+          //     ChartManager.instance.redraw('OverlayCanvas', false);
+          //     return;
+          // }
+          Kline.instance.buttonDown = true;
+          var r = e.target.getBoundingClientRect();
+          var x = e.touches[0].clientX - r.left;
+          var y = e.touches[0].clientY - r.top;
+
+          _chart_manager.ChartManager.instance.onMouseDown("frame0", x, y);
+        };
+
+        chart_overlayCanvas.ontouchmove = function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.changedTouches[0].clientX - r.left;
+          var y = e.changedTouches[0].clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+
+          if (Kline.instance.buttonDown === true) {
+            mgr.onMouseMove("frame0", x, y, true);
+            mgr.redraw("All", false);
+          } else {
+            mgr.onMouseMove("frame0", x, y, false);
+            mgr.redraw("OverlayCanvas");
+          }
+        };
+
+        chart_overlayCanvas.ontouchend = function (e) {
+          // if (e.which !== 1) {
+          //     return;
+          // }
+          Kline.instance.buttonDown = false;
+          var r = e.target.getBoundingClientRect();
+          var x = e.changedTouches[0].clientX - r.left;
+          var y = e.changedTouches[0].clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          mgr.onMouseUp("frame0", x, y);
+          mgr.redraw("All");
+        };
+
+        chart_overlayCanvas.ontouchcancel = function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          mgr.onMouseLeave("frame0", x, y, false);
+          mgr.redraw("OverlayCanvas");
+        };
+
         (0, _jquery.default)("#chart_overlayCanvas").mousemove(function (e) {
           var r = e.target.getBoundingClientRect();
           var x = e.clientX - r.left;

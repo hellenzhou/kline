@@ -158,7 +158,7 @@ export default class Kline {
         this.setTheme(this.theme);
         this.setLanguage(this.language);
 
-        !this.showLanguageSelect && $("#chart_language_setting_div").hide();
+      //  !this.showLanguageSelect && $("#chart_language_setting_div").hide();
         !this.showDrawTool && $(".chart_str_tools_cap").hide();
 
         $(this.element).css({ visibility: "visible" });
@@ -494,6 +494,8 @@ export default class Kline {
                     Control.switchIndic('off');
                 }
             });
+
+            /*
             $('#chart_language_setting_div li a').click(function () {
 
                 $('#chart_language_setting_div a').removeClass('selected');
@@ -505,7 +507,8 @@ export default class Kline {
                 } else if ($(this).attr('name') === 'zh-tw') {
                     Control.chartSwitchLanguage('zh-tw');
                 }
-            });
+            });*/
+            
             $(document).keyup(function (e) {
                 if (e.keyCode === 46) {
                     ChartManager.instance.deleteToolObject();
@@ -575,7 +578,6 @@ export default class Kline {
             }
 
 
-
             $("#chart_overlayCanvas")
                 .mousemove(function (e) {
                     let r = e.target.getBoundingClientRect();
@@ -622,8 +624,6 @@ export default class Kline {
                     let y = e.clientY - r.top;
                     ChartManager.instance.onMouseDown("frame0", x, y);
                 });
-
-
 
             $("#chart_parameter_settings :input").change(function () {
                 let name = $(this).attr("name");
