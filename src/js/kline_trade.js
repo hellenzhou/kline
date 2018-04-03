@@ -69,47 +69,65 @@ export class KlineTrade {
         }
         let j = 0;
         let that = this;
-        if (this.klineTradeInit) {
-            clearInterval(myTime);
-            let myTime = setInterval(function () {
-                let item = array[j];
-                //that.curPrice = item.price
-                let price = Number(item.price);
-                if (price > 1) {
-                    price = price.toFixed(2)
-                }
 
-                if (price < 1 && price > 0.0001) {
-                    price = price.toFixed(4)
-                }
-                if (price < 0.0001) {
-                    price = price.toFixed(6)
-                }
-                that.curPrice = price;
-                $("div#price").attr("class", item.type === 'buy' ? 'green' : 'red').text(price);
-                j++;
-                if (j >= array.length) {
-                    clearInterval(myTime);
-                }
-            }, 100)
-        } else {
-            if (array.length > 0) {
-                //this.curPrice=array[array.length-1].price.toFixed(6);
-                let price = Number(array[array.length - 1].price);
-                if (price > 1) {
-                    price = price.toFixed(2)
-                }
-
-                if (price < 1 && price > 0.0001) {
-                    price = price.toFixed(4)
-                }
-                if (price < 0.0001) {
-                    price = price.toFixed(6)
-                }
-                that.curPrice = price;
-                $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
+        if (array.length > 0) {
+            //this.curPrice=array[array.length-1].price.toFixed(6);
+            let price = Number(array[array.length - 1].price);
+            if (price > 1) {
+                price = price.toFixed(2)
             }
+
+            if (price < 1 && price > 0.0001) {
+                price = price.toFixed(4)
+            }
+            if (price < 0.0001) {
+                price = price.toFixed(6)
+            }
+            that.curPrice = price;
+            $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
         }
+        
+        // if (this.klineTradeInit) {
+        //     clearInterval(myTime);
+        //     let myTime = setInterval(function () {
+        //         let item = array[j];
+        //         //that.curPrice = item.price
+        //         let price = Number(item.price);
+        //         if (price > 1) {
+        //             price = price.toFixed(2)
+        //         }
+
+        //         if (price < 1 && price > 0.0001) {
+        //             price = price.toFixed(4)
+        //         }
+        //         if (price < 0.0001) {
+        //             price = price.toFixed(6)
+        //         }
+        //         that.curPrice = price;
+        //         $("div#price").attr("class", item.type === 'buy' ? 'green' : 'red').text(price);
+        //         j++;
+        //         if (j >= array.length) {
+        //             clearInterval(myTime);
+        //         }
+        //     }, 100)
+        // } else {
+        //     if (array.length > 0) {
+        //         //this.curPrice=array[array.length-1].price.toFixed(6);
+        //         let price = Number(array[array.length - 1].price);
+        //         if (price > 1) {
+        //             price = price.toFixed(2)
+        //         }
+
+        //         if (price < 1 && price > 0.0001) {
+        //             price = price.toFixed(4)
+        //         }
+        //         if (price < 0.0001) {
+        //             price = price.toFixed(6)
+        //         }
+        //         that.curPrice = price;
+        //         $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
+        //     }
+        // }
 
         if (this.klineTradeInit) {
             $trades.prepend(totalUls);

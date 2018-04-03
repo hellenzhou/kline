@@ -68,7 +68,7 @@ export default class Kline {
         this.G_TRADES_HTTP_REQUEST = null;
         this.tradesData = {};
         this.tradesTimer = null;
-        this.tradesIntervalTime = 80000;
+        this.tradesIntervalTime = 7000;
 
         //市场深度数据
         this.depthBaseUrl = 'http://api.bitkk.com/data/v1/depth';

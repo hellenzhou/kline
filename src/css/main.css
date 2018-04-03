@@ -1056,13 +1056,65 @@ li {
     color: #666
 }
 
+
 #price {
-    text-align: center;
+    text-align: left;
     font-size: 16px;
     font-weight: bold;
-    height: 44px;
-    line-height: 22px;
+    /* padding-left: 15px;   */
+    padding-top: 20px;  
+}
+
+#chart_trade_quotation {
+    height: 64px;
     background-color:#0a0a0a;
+    position: relative;
+}
+
+
+#chart_trade_quotation_content ul,li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+#chart_trade_quotation_content li {
+    position: absolute;
+    display: block;
+}
+#chart_trade_quotation_content li:nth-of-type(1){
+    left: 10px;
+}
+#chart_trade_quotation_content li:nth-of-type(2){
+    left: 12px;
+    top: 44px;
+    color: whitesmoke;
+}
+#chart_trade_quotation_content li:nth-of-type(3){
+   
+    right: 10px;
+    top: 10px;
+    color: goldenrod;
+    
+}
+#chart_trade_quotation_content li:nth-of-type(4){
+    color: yellowgreen;
+    top: 28px;
+    right: 10px;
+}
+#chart_trade_quotation_content li:nth-of-type(5){
+    color: white;
+    top: 49px;
+    right: 10px;
+}
+
+.class_chart_trade_quotation .green {
+    color: #0F0
+}
+
+.class_chart_trade_quotation .red {
+    color: #F00
 }
 
 .trade_container .green {
