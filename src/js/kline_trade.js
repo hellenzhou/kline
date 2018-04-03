@@ -86,7 +86,6 @@ export class KlineTrade {
             that.curPrice = price;
             $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
         }
-        
         // if (this.klineTradeInit) {
         //     clearInterval(myTime);
         //     let myTime = setInterval(function () {

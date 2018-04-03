@@ -12,7 +12,7 @@ import * as ranges from './ranges'
 
 export class Template {
 
-    static displayVolume = true;
+    static displayVolume = false;
 
     static createCandlestickDataSource(dsAlias) {
         return new data_sources.MainDataSource(dsAlias);
@@ -68,10 +68,10 @@ export class Template {
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
         mgr.setPlotter(plotter.getName(), plotter);
-        /*
-        plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
-        mgr.setPlotter(plotter.getName(), plotter);
-        */
+       
+        // plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
+        // mgr.setPlotter(plotter.getName(), plotter);
+        
         plotter = new plotters.RangePlotter(areaName + "Range.main");
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");

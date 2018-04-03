@@ -506,7 +506,10 @@ export class Control {
     static onSize(w, h) {
         let width = w || window.innerWidth;
         let chartWidth = width;
-        let height = h || window.innerHeight;
+        let topDivHeight = $("#chart_trade_quotation").height();
+        if(topDivHeight === undefined) topDivHeight = 0 ;
+        
+        let height = h || window.innerHeight - topDivHeight;
         let container = $(Kline.instance.element);
         container.css({
             width: width + 'px',
@@ -520,8 +523,9 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-        let pirceDivHeight = $("#chart_trade_quotation").height();
-        toolBarRect.y = pirceDivHeight;
+       
+  
+        toolBarRect.y = topDivHeight;
         toolBarRect.w = chartWidth;
  
         toolBarRect.h = 29;
@@ -535,11 +539,12 @@ export class Control {
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
         tabBarRect.y = height - (tabBarRect.h + 1);
+ 
         let canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
         canvasGroupRect.y = toolPanelRect.y;
         canvasGroupRect.w = tabBarRect.w;
-        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y -  topDivHeight;
         toolBar.css({
             left: toolBarRect.x + 'px',
             top: toolBarRect.y + 'px',
@@ -564,7 +569,6 @@ export class Control {
         let mainCanvas = $('#chart_mainCanvas')[0];
         let overlayCanvas = $('#chart_overlayCanvas')[0];
         let devicePixelRatio = window.devicePixelRatio;
-
 
         mainCanvas.width = canvasGroupRect.w * devicePixelRatio;
         mainCanvas.height = canvasGroupRect.h * devicePixelRatio;
