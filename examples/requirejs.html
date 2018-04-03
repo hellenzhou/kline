@@ -46,22 +46,21 @@
         });
 
         require(['kline'], function () {
-
             let w = window.innerWidth;
             let h  =   window.innerHeight;
             var kline = new Kline({
                 element: "#kline_container",
                 width: window.innerWidth,
-                // height: window.innerHeight,
+                height: window.innerHeight,
                 theme: 'dark', // light/dark
                 language: 'zh-cn', // zh-cn/en-us/zh-tw
                 showLanguageSelect: false,
                 showDrawTool: false,
-                ranges: ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"],
+                ranges: ["line","1w", "15m", "1h", "30m", "1d", "5m", "1m"],
                 symbol: "btc_usdt",
                 symbolName: "btc/usdt",
                 type: "poll", // poll/socket
-             
+
                 limit: 1000,
                 debug: true,
                 showTrade: true,

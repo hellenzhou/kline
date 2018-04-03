@@ -450,7 +450,7 @@ li {
 .chart_container #chart_updated_time {
     float: right;
     margin: 4px 3px;
-    padding: 3px 10px
+    padding: 3px 5px
 }
 
 .chart_container.dark #chart_updated_time {
@@ -1043,22 +1043,6 @@ li {
     color: #666
 }
 
-#gasks,
-#gbids {
-    width: 80px
-}
-
-#gasks .amount,
-#gbids .amount {
-    float: right
-}
-
-#gasks .price,
-#gbids .price {
-    float: left;
-    text-align: right
-}
-
 .price {
     margin-right: 10px
 }
@@ -1076,8 +1060,9 @@ li {
     text-align: center;
     font-size: 16px;
     font-weight: bold;
-    height: 25px;
-    line-height: 25px
+    height: 44px;
+    line-height: 22px;
+    background-color:#0a0a0a;
 }
 
 .trade_container .green {

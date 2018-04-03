@@ -520,8 +520,10 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-        toolBarRect.y = $("#price").height();
+        let pirceDivHeight = $("#price").height();
+        toolBarRect.y = pirceDivHeight;
         toolBarRect.w = chartWidth;
+ 
         toolBarRect.h = 29;
         let toolPanelRect = {};
         toolPanelRect.x = 0;

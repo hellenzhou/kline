@@ -5,11 +5,8 @@ import {DataSource} from './data_sources'
 export class Timeline extends NamedObject {
 
     static itemWidth = [1, 3, 3, 5, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29];
-
     static spaceWidth = [1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 7, 7, 7];
-
     static PADDING_LEFT = 4;
-
     static PADDING_RIGHT = 8;
 
     constructor(name) {

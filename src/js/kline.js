@@ -158,9 +158,8 @@ export default class Kline {
         this.setTheme(this.theme);
         this.setLanguage(this.language);
 
-      //  !this.showLanguageSelect && $("#chart_language_setting_div").hide();
+        !this.showLanguageSelect && $("#chart_language_setting_div").hide();
         !this.showDrawTool && $(".chart_str_tools_cap").hide();
-
         $(this.element).css({ visibility: "visible" });
     }
 
@@ -508,7 +507,7 @@ export default class Kline {
                     Control.chartSwitchLanguage('zh-tw');
                 }
             });*/
-            
+
             $(document).keyup(function (e) {
                 if (e.keyCode === 46) {
                     ChartManager.instance.deleteToolObject();
@@ -536,7 +535,7 @@ export default class Kline {
                 // }
                 Kline.instance.buttonDown = true;
                 let r = e.target.getBoundingClientRect();
-                let x =e.touches[0].clientX- r.left;
+                let x = e.touches[0].clientX - r.left;
                 let y = e.touches[0].clientY - r.top;
                 ChartManager.instance.onMouseDown("frame0", x, y);
             }
