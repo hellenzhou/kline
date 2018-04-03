@@ -1,4 +1,4 @@
-import {ChartManager} from './chart_manager'
+import { ChartManager } from './chart_manager'
 
 export class KlineTrade {
 
@@ -32,8 +32,6 @@ export class KlineTrade {
         this.curPrice = null;
         this.klineTradeInit = false;
         $("#trades .trades_list").empty();
-        $("#gasks .table").empty();
-        $("#gbids .table").empty();
         $("#asks .table").empty();
         $("#bids .table").empty();
     }
@@ -60,11 +58,14 @@ export class KlineTrade {
                     price = price.toFixed(6)
                 }
 
-                if (this.klineTradeInit) {
-                    totalUls = "<ul class='newul'><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
-                } else {
-                    totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
-                }
+                // if (this.klineTradeInit) {
+                //     totalUls = "<ul class='newul'><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
+                // } else {
+                //     totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
+                // }
+
+                totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
+
             }
         }
         let j = 0;
@@ -134,9 +135,9 @@ export class KlineTrade {
             $trades.append(totalUls);
         }
         totalUls = null;
-        $trades.find("ul.newul").slideDown(1000, function () {
-            $(this).removeClass("newul");
-        });
+        // $trades.find("ul.newul").slideDown(1000, function () {
+        //     $(this).removeClass("newul");
+        // });
         $trades.find("ul:gt(" + (this.tradesLimit - 1) + ")").remove();
     }
 

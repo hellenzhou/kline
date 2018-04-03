@@ -100,7 +100,9 @@ export class DarkTheme extends Theme {
         this._colors[Theme.Color.CircleColorFill] = "#000000";
         this._colors[Theme.Color.CircleColorStroke] = "#ffffff";
         this._fonts = [];
-        this._fonts[Theme.Font.Default] = "12px Tahoma";
+        let size =  10 * devicePixelRatio;
+
+        this._fonts[Theme.Font.Default] = size + "px Tahoma";
     }
 
 }
@@ -148,7 +150,10 @@ export class LightTheme extends Theme {
         this._colors[Theme.Color.CircleColorFill] = "#ffffff";
         this._colors[Theme.Color.CircleColorStroke] = "#393c40";
         this._fonts = [];
-        this._fonts[Theme.Font.Default] = "12px Tahoma";
+        let devicePixelRatio = window.devicePixelRatio;
+        let size =  10 * devicePixelRatio;
+        this._fonts[Theme.Font.Default] = size + "px Tahoma";
+        
     }
 
 }

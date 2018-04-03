@@ -92,12 +92,42 @@ export class ChartManager {
 
 
     bindCanvas(layer, canvas) {
+     
         if (layer === "main") {
+
+            // let context= canvas.getContext("2d");  
+            // let devicePixelRatio = window.devicePixelRatio || 1;
+            // let backingStoreRatio = context.webkitBackingStorePixelRatio ||
+            //                     context.mozBackingStorePixelRatio ||
+            //                     context.msBackingStorePixelRatio ||
+            //                     context.oBackingStorePixelRatio ||
+            //                     context.backingStorePixelRatio || 1;
+            // let ratio = devicePixelRatio / backingStoreRatio;
+          
+            // canvas.width = canvas.width * ratio;
+            // canvas.height = canvas.height* ratio;
+            // context.scale(ratio, ratio);
+
             this._mainCanvas = canvas;
-            this._mainContext = canvas.getContext("2d");
+
+            this._mainContext = canvas.getContext("2d"); 
         } else if (layer === "overlay") {
+           
+            let context= canvas.getContext("2d");  
+            // let devicePixelRatio = window.devicePixelRatio || 1;
+            // let backingStoreRatio = context.webkitBackingStorePixelRatio ||
+            //                     context.mozBackingStorePixelRatio ||
+            //                     context.msBackingStorePixelRatio ||
+            //                     context.oBackingStorePixelRatio ||
+            //                     context.backingStorePixelRatio || 1;
+            // let ratio = devicePixelRatio / backingStoreRatio;
+          
+            // canvas.width = canvas.width * ratio;
+            // canvas.height = canvas.height* ratio;
+            // context.scale(ratio, ratio);
             this._overlayCanvas = canvas;
             this._overlayContext = canvas.getContext("2d");
+         
             if (this._captureMouseWheelDirectly) {
                 $(this._overlayCanvas).bind('mousewheel', Control.mouseWheel);
             }

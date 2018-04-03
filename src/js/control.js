@@ -157,7 +157,6 @@ export class Control {
         );
     }
 
-
     static klineRequestSuccessHandler(res) {
         if (!res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
@@ -507,8 +506,8 @@ export class Control {
         let width = w || window.innerWidth;
         let chartWidth = width;
         let topDivHeight = $("#chart_trade_quotation").height();
-        if(topDivHeight === undefined) topDivHeight = 0 ;
-        
+        if (topDivHeight === undefined) topDivHeight = 0;
+
         let height = h || window.innerHeight - topDivHeight;
         let container = $(Kline.instance.element);
         container.css({
@@ -523,11 +522,11 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-       
-  
+
+
         toolBarRect.y = topDivHeight;
         toolBarRect.w = chartWidth;
- 
+
         toolBarRect.h = 29;
         let toolPanelRect = {};
         toolPanelRect.x = 0;
@@ -539,12 +538,12 @@ export class Control {
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
         tabBarRect.y = height - (tabBarRect.h + 1);
- 
+
         let canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
         canvasGroupRect.y = toolPanelRect.y;
         canvasGroupRect.w = tabBarRect.w;
-        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y -  topDivHeight;
+        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y - topDivHeight;
         toolBar.css({
             left: toolBarRect.x + 'px',
             top: toolBarRect.y + 'px',
@@ -563,22 +562,32 @@ export class Control {
         canvasGroup.css({
             left: canvasGroupRect.x + 'px',
             top: toolBarRect.y + toolBarRect.h + 'px',
-            width: canvasGroupRect.w + 'px',
+           // width: canvasGroupRect.w + 'px',
+           width:'100%',
             height: canvasGroupRect.h + 'px'
         });
         let mainCanvas = $('#chart_mainCanvas')[0];
         let overlayCanvas = $('#chart_overlayCanvas')[0];
         let devicePixelRatio = window.devicePixelRatio;
+        let context= mainCanvas.getContext("2d");  
+        let backingStoreRatio = context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio || 1;
 
-        mainCanvas.width = canvasGroupRect.w * devicePixelRatio;
-        mainCanvas.height = canvasGroupRect.h * devicePixelRatio;
-        mainCanvas.style.width = canvasGroupRect.w + "px";
+
+        let ratio = devicePixelRatio / backingStoreRatio;
+
+        mainCanvas.width = canvasGroupRect.w * ratio;
+        mainCanvas.height = canvasGroupRect.h * ratio;
+        mainCanvas.style.width = '100%';
         mainCanvas.style.height = canvasGroupRect.h + "px";
 
-        overlayCanvas.width = canvasGroupRect.w * devicePixelRatio;
-        overlayCanvas.height = canvasGroupRect.h * devicePixelRatio;
-        overlayCanvas.style.width = canvasGroupRect.w + "px";
-        overlayCanvas.style.height = canvasGroupRect.h + "px";
+        overlayCanvas.width = canvasGroupRect.w * ratio;
+        overlayCanvas.height = canvasGroupRect.h * ratio;
+        overlayCanvas.style.width = '100%';
+        overlayCanvas.style.height = canvasGroupRect.h  + "px";
 
         if (tabBarShown) {
             tabBar.css({

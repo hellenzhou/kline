@@ -134,8 +134,8 @@ export class Template {
         mgr.setTimeline(timeline.getName(), timeline);
         plotter = new plotters.TimelineAreaBackgroundPlotter(dsName + ".timeline.background");
         mgr.setPlotter(plotter.getName(), plotter);
-        plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
-        mgr.setPlotter(plotter.getName(), plotter);
+        // plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
+        // mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.TimelineSelectionPlotter(dsName + ".timeline.selection");
         mgr.setPlotter(plotter.getName(), plotter);
     }

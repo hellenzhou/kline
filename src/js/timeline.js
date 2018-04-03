@@ -1,11 +1,20 @@
-import {NamedObject} from './named_object'
-import {ChartManager} from './chart_manager'
-import {DataSource} from './data_sources'
+import { NamedObject } from './named_object'
+import { ChartManager } from './chart_manager'
+import { DataSource } from './data_sources'
 
 export class Timeline extends NamedObject {
 
-    static itemWidth = [1, 3, 3, 5, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29];
-    static spaceWidth = [1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 7, 7, 7];
+    static devicePixelRatio = window.devicePixelRatio || 1;
+    static itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
+    5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio,
+    9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio,
+    15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio,
+    23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
+    static spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio,
+    2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
+    3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
+    3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio,
+    5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
     static PADDING_LEFT = 4;
     static PADDING_RIGHT = 8;
 
@@ -204,7 +213,7 @@ export class Timeline extends NamedObject {
                 this._updated = true;
                 break;
             case DataSource.UpdateMode.Append:
-      
+
                 let lastIndex = this.getLastIndex();
                 let erasedCount = ds.getErasedCount();
                 if (lastIndex < oldMaxIndex) {
@@ -224,7 +233,7 @@ export class Timeline extends NamedObject {
                     }
                     this._updated = true;
                 }
- 
+
                 break;
         }
     }

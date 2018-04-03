@@ -729,7 +729,7 @@ li {
 #chart_mainCanvas {
     overflow: hidden;
     position: absolute;
-    z-index: 0
+    z-index: 0;
 }
 
 #chart_overlayCanvas {
@@ -1232,12 +1232,12 @@ li {
 
 .trades_list ul li.pr-green {
     width: 65px;
-    color: #6c6
+    color: #0F0
 }
 
 .trades_list ul li.pr-red {
     width: 65px;
-    color: #c66
+    color: #F00
 }
 
 .trades_list ul li.vl {

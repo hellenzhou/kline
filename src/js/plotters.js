@@ -577,8 +577,8 @@ export class MainInfoPlotter extends Plotter {
         let rect = {
             x: area.getLeft() + 4,
             y: area.getTop() + 2,
-            w: area.getWidth() - 8,
-            h: 20
+            w: area.getWidth() - 2 ,
+            h: 30
         };
         let selIndex = timeline.getSelectedIndex();
         if (selIndex < 0)
@@ -1871,6 +1871,7 @@ export class CToolPlotter extends NamedObject {
     }
 
     drawFibRayLines(context, startPoint, endPoint) {
+        debugger
         for (let i = 0; i < this.fiboFansSequence.length; i++) {
             let stageY = startPoint.y + (100 - this.fiboFansSequence[i]) / 100 * (endPoint.y - startPoint.y);
             let tempStartPt = {x: startPoint.x, y: startPoint.y};
@@ -2178,7 +2179,10 @@ export class DrawPriceLinesPlotter extends CToolPlotter {
     }
 
     draw(context) {
-        context.font = "12px Tahoma";
+
+        let devicePixelRatio = window.devicePixelRatio;
+        let size =  10 * devicePixelRatio;
+        context.font = size + "px Tahoma";
         context.textAlign = "left";
         context.fillStyle = this.theme.getColor(themes.Theme.Color.LineColorNormal);
         this.updateCtrlPtPos();
@@ -2322,7 +2326,9 @@ export class BandLinesPlotter extends CToolPlotter {
     }
 
     drawLinesAndInfo(context, startPoint, endPoint) {
-        context.font = "12px Tahoma";
+        let devicePixelRatio = window.devicePixelRatio;
+        let size =  10 * devicePixelRatio;
+        context.font = size + "px Tahoma";
         context.textAlign = "left";
         context.fillStyle = this.theme.getColor(themes.Theme.Color.LineColorNormal);
         let text;

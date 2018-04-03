@@ -535,6 +535,8 @@ export default class Kline {
                 // }
                 Kline.instance.buttonDown = true;
                 let r = e.target.getBoundingClientRect();
+                let xxxx = e.touches[0].clientX
+                debugger
                 let x = e.touches[0].clientX - r.left;
                 let y = e.touches[0].clientY - r.top;
                 ChartManager.instance.onMouseDown("frame0", x, y);
@@ -579,15 +581,16 @@ export default class Kline {
 
             $("#chart_overlayCanvas")
                 .mousemove(function (e) {
+    
                     let r = e.target.getBoundingClientRect();
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
                     if (Kline.instance.buttonDown === true) {
-                        mgr.onMouseMove("frame0", x, y, true);
+                        mgr.onMouseMove("frame0", x * 2, y *2, true);
                         mgr.redraw("All", false);
                     } else {
-                        mgr.onMouseMove("frame0", x, y, false);
+                        mgr.onMouseMove("frame0", x *2, y * 2, false);
                         mgr.redraw("OverlayCanvas");
                     }
                 })
@@ -596,7 +599,7 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseLeave("frame0", x, y, false);
+                    mgr.onMouseLeave("frame0", x *2, y *2, false);
                     mgr.redraw("OverlayCanvas");
                 })
                 .mouseup(function (e) {
@@ -608,7 +611,7 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseUp("frame0", x, y);
+                    mgr.onMouseUp("frame0", x *2, y * 2);
                     mgr.redraw("All");
                 })
                 .mousedown(function (e) {
@@ -621,7 +624,7 @@ export default class Kline {
                     let r = e.target.getBoundingClientRect();
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
-                    ChartManager.instance.onMouseDown("frame0", x, y);
+                    ChartManager.instance.onMouseDown("frame0", x * 2, y * 2);
                 });
 
             $("#chart_parameter_settings :input").change(function () {
