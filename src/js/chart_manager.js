@@ -1,16 +1,16 @@
-import {Control} from './control'
-import {Chart} from './chart'
+import { Control } from './control'
+import { Chart } from './chart'
 import * as indicators from './indicators'
 import * as ranges from './ranges'
 import * as templates from './templates'
 import * as data_sources from './data_sources'
-import {ChartSettings} from './chart_settings'
+import { ChartSettings } from './chart_settings'
 import * as data_providers from './data_providers'
 import * as themes from './themes'
 import * as plotters from './plotters'
 import * as ctools from './ctools'
 import * as areas from './areas'
-import {Util} from './util'
+import { Util } from './util'
 
 
 export class ChartManager {
@@ -92,42 +92,12 @@ export class ChartManager {
 
 
     bindCanvas(layer, canvas) {
-     
         if (layer === "main") {
-
-            // let context= canvas.getContext("2d");  
-            // let devicePixelRatio = window.devicePixelRatio || 1;
-            // let backingStoreRatio = context.webkitBackingStorePixelRatio ||
-            //                     context.mozBackingStorePixelRatio ||
-            //                     context.msBackingStorePixelRatio ||
-            //                     context.oBackingStorePixelRatio ||
-            //                     context.backingStorePixelRatio || 1;
-            // let ratio = devicePixelRatio / backingStoreRatio;
-          
-            // canvas.width = canvas.width * ratio;
-            // canvas.height = canvas.height* ratio;
-            // context.scale(ratio, ratio);
-
             this._mainCanvas = canvas;
-
-            this._mainContext = canvas.getContext("2d"); 
+            this._mainContext = canvas.getContext("2d");
         } else if (layer === "overlay") {
-           
-            let context= canvas.getContext("2d");  
-            // let devicePixelRatio = window.devicePixelRatio || 1;
-            // let backingStoreRatio = context.webkitBackingStorePixelRatio ||
-            //                     context.mozBackingStorePixelRatio ||
-            //                     context.msBackingStorePixelRatio ||
-            //                     context.oBackingStorePixelRatio ||
-            //                     context.backingStorePixelRatio || 1;
-            // let ratio = devicePixelRatio / backingStoreRatio;
-          
-            // canvas.width = canvas.width * ratio;
-            // canvas.height = canvas.height* ratio;
-            // context.scale(ratio, ratio);
             this._overlayCanvas = canvas;
             this._overlayContext = canvas.getContext("2d");
-         
             if (this._captureMouseWheelDirectly) {
                 $(this._overlayCanvas).bind('mousewheel', Control.mouseWheel);
             }
@@ -479,7 +449,7 @@ export class ChartManager {
     }
 
     setFrameMousePos(name, px, py) {
-        this._frameMousePos[name] = {x: px, y: py};
+        this._frameMousePos[name] = { x: px, y: py };
     }
 
     drawArea(context, area, plotterNames) {
@@ -1004,7 +974,7 @@ export class ChartManager {
         if (!notLoadSettings) {
             indic.setParameters(ChartSettings.get().indics[indicName]);
         }
-        return {"indic": indic, "range": range};
+        return { "indic": indic, "range": range };
     }
 
     setMainIndicator(dsName, indicName) {

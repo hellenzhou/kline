@@ -5,16 +5,19 @@ import { DataSource } from './data_sources'
 export class Timeline extends NamedObject {
 
     static devicePixelRatio = window.devicePixelRatio || 1;
+
     static itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
     5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio,
     9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio,
     15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio,
     23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
+
     static spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio,
     2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
     3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
     3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio,
     5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
+
     static PADDING_LEFT = 4;
     static PADDING_RIGHT = 8;
 
