@@ -39,7 +39,9 @@ export default class Kline {
         this.theme = "dark";
         this.ranges = ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"];
         this.showTrade = true;
+        this.tradeheight = 44;
         this.tradeWidth = 250;
+        this.onMaximizeWindow = null;
         this.socketConnected = false;
         this.enableSockjs = true;
         this.reverseColor = false;
@@ -581,16 +583,16 @@ export default class Kline {
 
             $("#chart_overlayCanvas")
                 .mousemove(function (e) {
-    
+
                     let r = e.target.getBoundingClientRect();
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
                     if (Kline.instance.buttonDown === true) {
-                        mgr.onMouseMove("frame0", x * 2, y *2, true);
+                        mgr.onMouseMove("frame0", x * 2, y * 2, true);
                         mgr.redraw("All", false);
                     } else {
-                        mgr.onMouseMove("frame0", x *2, y * 2, false);
+                        mgr.onMouseMove("frame0", x * 2, y * 2, false);
                         mgr.redraw("OverlayCanvas");
                     }
                 })
@@ -599,7 +601,7 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseLeave("frame0", x *2, y *2, false);
+                    mgr.onMouseLeave("frame0", x * 2, y * 2, false);
                     mgr.redraw("OverlayCanvas");
                 })
                 .mouseup(function (e) {
@@ -611,7 +613,7 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseUp("frame0", x *2, y * 2);
+                    mgr.onMouseUp("frame0", x * 2, y * 2);
                     mgr.redraw("All");
                 })
                 .mousedown(function (e) {
@@ -682,6 +684,10 @@ export default class Kline {
 
 
             $('body').on('click', '#sizeIcon', function () {
+                if (Kline.instance.onMaximizeWindow) Kline.instance.onMaximizeWindow();
+
+                return;
+
                 Kline.instance.isSized = !Kline.instance.isSized;
                 if (Kline.instance.isSized) {
                     $(Kline.instance.element).css({

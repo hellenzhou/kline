@@ -508,7 +508,11 @@ export class Control {
         let topDivHeight = $("#chart_trade_quotation").height();
         if (topDivHeight === undefined) topDivHeight = 0;
 
-        let height = h || window.innerHeight - topDivHeight;
+        let height = (h || window.innerHeight) - topDivHeight;
+        if (Kline.instance.showTrade && Kline.instance.tradeheight !== undefined && !isNaN(Kline.instance.tradeheight)) {
+            height -= Kline.instance.tradeheight;
+        }
+
         let container = $(Kline.instance.element);
         container.css({
             width: width + 'px',
@@ -562,14 +566,13 @@ export class Control {
         canvasGroup.css({
             left: canvasGroupRect.x + 'px',
             top: toolBarRect.y + toolBarRect.h + 'px',
-           // width: canvasGroupRect.w + 'px',
-           width:'100%',
+            width: '100%',
             height: canvasGroupRect.h + 'px'
         });
         let mainCanvas = $('#chart_mainCanvas')[0];
         let overlayCanvas = $('#chart_overlayCanvas')[0];
         let devicePixelRatio = window.devicePixelRatio;
-        let context= mainCanvas.getContext("2d");  
+        let context = mainCanvas.getContext("2d");
         let backingStoreRatio = context.webkitBackingStorePixelRatio ||
             context.mozBackingStorePixelRatio ||
             context.msBackingStorePixelRatio ||
@@ -587,7 +590,7 @@ export class Control {
         overlayCanvas.width = canvasGroupRect.w * ratio;
         overlayCanvas.height = canvasGroupRect.h * ratio;
         overlayCanvas.style.width = '100%';
-        overlayCanvas.style.height = canvasGroupRect.h  + "px";
+        overlayCanvas.style.height = canvasGroupRect.h + "px";
 
         if (tabBarShown) {
             tabBar.css({
@@ -613,23 +616,25 @@ export class Control {
         let rowTheme = $('#chart_select_theme')[0];
         let rowTools = $('#chart_enable_tools')[0];
         let rowIndic = $('#chart_enable_indicator')[0];
-        let periodsVert = $('#chart_toolbar_periods_vert');
-        let periodsHorz = $('#chart_toolbar_periods_horz')[0];
+        let periodsVert = $('#chart_toolbar_periods_vert'); //周期
+        let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
         let showIndic = $('#chart_show_indicator')[0];
         let showTools = $('#chart_show_tools')[0];
         let selectTheme = $('#chart_toolbar_theme')[0];
         let dropDownSettings = $('#chart_dropdown_settings');
-        let mainIndicator = $('#chart_main_indicator')[0];
-
+        let mainIndicator = $('#chart_main_indicator')[0]; //指标
 
         $(showIndic).hide();
         $(dropDownSettings).hide();
+
+        debugger
         // 根据时间计算显示个数
         let ranges = Kline.instance.ranges;
-        let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 70;
+        let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
         let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
         // 显示当前
 
+        debugger
         for (let i = 0; i < totalCount; i++) {
             let dom = $('#chart_period_' + ranges[i] + '_h');
             dom.show();
@@ -657,6 +662,8 @@ export class Control {
         showIndicNW += dropDownSettingsW;
         showToolsNW += dropDownSettingsW;
         selectThemeNW += dropDownSettingsW;
+
+        debugger
         // if (chartWidth < periodsHorzNW) {
         //     domElemCache.append(periodsHorz);
         // } else {

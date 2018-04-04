@@ -932,7 +932,7 @@ li {
 
 .m_guadan {
     padding: 0 10px;
-    margin-top: 29px;
+    margin-top: 0px;
     overflow: hidden;
     border-left: 1px solid #404040;
     border-top: 1px solid #404040
@@ -945,7 +945,7 @@ li {
 }
 
 .light .m_guadan {
-    margin-top: 29px;
+    margin-top: 0px;
     overflow: hidden;
     border-left: 1px solid #afb1b3;
     border-top: 1px solid #afb1b3
@@ -962,13 +962,18 @@ li {
 }
 
 .symbol-title {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 20px;
+    /* font-weight: bold; */
     text-align: center;
-    height: 16px;
-    line-height: 16px;
+    height: 24px;
+    line-height: 24px;
     font-family: Arial, sans, serif;
     padding: 5px
+}
+
+.symbol-title .white {
+    color: #FFF;
+    text-decoration:none;
 }
 
 .symbol-title .dark {
@@ -1059,7 +1064,7 @@ li {
 }
 
 #chart_trade_quotation {
-    height: 44px;
+    height: 80px;
     background-color: #0a0a0a;
     position: relative;
 }
@@ -1076,7 +1081,8 @@ li {
 }
 
 #chart_trade_quotation_content li:nth-of-type(1) {
-    left: 10px;
+    left: 12px;
+    top: 24px;
 }
 
 #chart_trade_quotation_content li:nth-of-type(2) {
@@ -1320,6 +1326,7 @@ li {
 
 #chart_main_indicator {
     float: right;
+    right: 12px;
 }
 
 #chart_main_indicator li {
