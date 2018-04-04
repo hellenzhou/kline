@@ -626,15 +626,12 @@ export class Control {
 
         $(showIndic).hide();
         $(dropDownSettings).hide();
-
-        debugger
+        
         // 根据时间计算显示个数
         let ranges = Kline.instance.ranges;
         let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
         let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
-        // 显示当前
-
-        debugger
+     
         for (let i = 0; i < totalCount; i++) {
             let dom = $('#chart_period_' + ranges[i] + '_h');
             dom.show();
@@ -663,7 +660,6 @@ export class Control {
         showToolsNW += dropDownSettingsW;
         selectThemeNW += dropDownSettingsW;
 
-        debugger
         // if (chartWidth < periodsHorzNW) {
         //     domElemCache.append(periodsHorz);
         // } else {

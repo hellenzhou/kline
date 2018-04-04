@@ -1871,7 +1871,6 @@ export class CToolPlotter extends NamedObject {
     }
 
     drawFibRayLines(context, startPoint, endPoint) {
-        debugger
         for (let i = 0; i < this.fiboFansSequence.length; i++) {
             let stageY = startPoint.y + (100 - this.fiboFansSequence[i]) / 100 * (endPoint.y - startPoint.y);
             let tempStartPt = {x: startPoint.x, y: startPoint.y};

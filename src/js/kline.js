@@ -450,14 +450,16 @@ export default class Kline {
                         mgr.removeMainIndicator("frame0.k0");
                     mgr.redraw();
                 });
+
             $("#chart_main_indicator li")
                 .click(function () {
                     $("#chart_main_indicator a").removeClass('selected');
                     $(this).find('a').addClass("selected");
-                    let name = $(this).attr('name');
+                    let name = $(this).find('a').attr('name');
                     let tmp = ChartSettings.get();
                     tmp.charts.mIndic = name;
                     ChartSettings.save();
+    
                     let mgr = ChartManager.instance;
                     if (!mgr.setMainIndicator("frame0.k0", name))
                         mgr.removeMainIndicator("frame0.k0");
@@ -529,16 +531,8 @@ export default class Kline {
             // 支持移动mobile触摸屏
             let chart_overlayCanvas = document.getElementById('chart_overlayCanvas');
             chart_overlayCanvas.ontouchstart = function (e) {
-                // let eventCode = e.which || e.keyCode;
-                // if (eventCode !== 1) {
-                //     ChartManager.instance.deleteToolObject();
-                //     ChartManager.instance.redraw('OverlayCanvas', false);
-                //     return;
-                // }
                 Kline.instance.buttonDown = true;
                 let r = e.target.getBoundingClientRect();
-                let xxxx = e.touches[0].clientX
-                debugger
                 let x = e.touches[0].clientX - r.left;
                 let y = e.touches[0].clientY - r.top;
                 ChartManager.instance.onMouseDown("frame0", x, y);
@@ -559,9 +553,6 @@ export default class Kline {
             }
 
             chart_overlayCanvas.ontouchend = function (e) {
-                // if (e.which !== 1) {
-                //     return;
-                // }
                 Kline.instance.buttonDown = false;
                 let r = e.target.getBoundingClientRect();
                 let x = e.changedTouches[0].clientX - r.left;
@@ -579,7 +570,6 @@ export default class Kline {
                 mgr.onMouseLeave("frame0", x, y, false);
                 mgr.redraw("OverlayCanvas");
             }
-
 
             $("#chart_overlayCanvas")
                 .mousemove(function (e) {

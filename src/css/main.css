@@ -973,7 +973,7 @@ li {
 
 .symbol-title .white {
     color: #FFF;
-    text-decoration:none;
+    /* text-decoration:none; */
 }
 
 .symbol-title .dark {
@@ -1087,7 +1087,7 @@ li {
 
 #chart_trade_quotation_content li:nth-of-type(2) {
     left: 12px;
-    top: 44px;
+    top: 36px;
     color: whitesmoke;
 }
 
