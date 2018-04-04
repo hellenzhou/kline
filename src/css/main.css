@@ -1,16 +1,18 @@
-html,
-body {
+html, body {
     min-height: 100%;
     margin: 0;
     min-width: 100%
 }
+
 ul, li {
-    padding: 0;  
-    margin: 0;  
+    padding: 0;
+    margin: 0;
 }
+
 li {
     list-style: none;
 }
+
 .chart_container {
     cursor: default;
     font-family: arial, sans, serif;
@@ -20,9 +22,7 @@ li {
     width: 100%
 }
 
-.chart_container div,
-.chart_container ul,
-.chart_container form {
+.chart_container div, .chart_container ul, .chart_container form {
     margin: 0;
     padding: 0
 }
@@ -397,13 +397,11 @@ li {
     magin: 0 6px 0 6px
 }
 
-.chart_container a.chart_icon_theme_dark,
-.chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {
+.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {
     background-color: #000
 }
 
-.chart_container a.chart_icon_theme_light,
-.chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {
+.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {
     background-color: #fff
 }
 
@@ -852,8 +850,7 @@ li {
     color: #eee
 }
 
-.chart_container input,
-.chart_container button {
+.chart_container input, .chart_container button {
     border-radius: 4px;
     border: 1px solid;
     padding: 4px
@@ -863,23 +860,19 @@ li {
     width: 12em
 }
 
-.chart_container input[type=button],
-.chart_container input[type=submit],
-.chart_container button {
+.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {
     font-family: arial, sans, serif;
     padding: 4px 8px;
     cursor: pointer
 }
 
-.chart_container.dark input,
-.chart_container.dark button {
+.chart_container.dark input, .chart_container.dark button {
     background-color: #151515;
     border-color: #333;
     color: #ccc
 }
 
-.chart_container.light input,
-.chart_container.light button {
+.chart_container.light input, .chart_container.light button {
     background-color: #ddd;
     border-color: #ddd;
     color: #222
@@ -957,13 +950,12 @@ li {
     border-left: 1px solid #afb1b3;
     border-top: 1px solid #afb1b3
 }
+
 #trades, #description {
     display: none;
-} 
-#orderbook #asks,
-#orderbook #gasks,
-#orderbook #bids,
-#orderbook #gbids {
+}
+
+#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {
     height: 195px;
     position: relative;
     overflow: hidden
@@ -999,22 +991,26 @@ li {
     margin-left: 5px;
     margin-bottom: 2px */
     display: flex;
-
 }
+
 #asks, #bids {
     flex: 1;
 }
+
 #tabList {
     display: flex;
 }
+
 #tabList li {
     flex: 1;
     text-align: center;
     line-height: 30px;
 }
+
 #tabList li.current {
     color: #0F0;
 }
+
 #orderbook .table {
     position: absolute;
     border-collapse: collapse;
@@ -1022,8 +1018,7 @@ li {
     margin: 0
 }
 
-#gasks .table,
-#asks .table {
+#gasks .table, #asks .table {
     bottom: 0
 }
 
@@ -1051,59 +1046,58 @@ li {
     visibility: hidden
 }
 
-.price g,
-.amount g {
+.price g, .amount g {
     color: #666
 }
-
 
 #price {
     text-align: left;
     font-size: 16px;
     font-weight: bold;
     /* padding-left: 15px;   */
-    padding-top: 20px;  
+    padding-top: 20px;
 }
 
 #chart_trade_quotation {
     height: 44px;
-    background-color:#0a0a0a;
+    background-color: #0a0a0a;
     position: relative;
 }
 
-
-#chart_trade_quotation_content ul,li {
+#chart_trade_quotation_content ul, li {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-
 #chart_trade_quotation_content li {
     position: absolute;
     display: block;
 }
-#chart_trade_quotation_content li:nth-of-type(1){
+
+#chart_trade_quotation_content li:nth-of-type(1) {
     left: 10px;
 }
-#chart_trade_quotation_content li:nth-of-type(2){
+
+#chart_trade_quotation_content li:nth-of-type(2) {
     left: 12px;
     top: 44px;
     color: whitesmoke;
 }
-#chart_trade_quotation_content li:nth-of-type(3){
-   
+
+#chart_trade_quotation_content li:nth-of-type(3) {
     right: 10px;
     top: 10px;
     color: goldenrod;
-    
 }
-#chart_trade_quotation_content li:nth-of-type(4){
+
+#chart_trade_quotation_content li:nth-of-type(4) {
     color: yellowgreen;
     top: 28px;
     right: 10px;
 }
-#chart_trade_quotation_content li:nth-of-type(5){
+
+#chart_trade_quotation_content li:nth-of-type(5) {
     color: white;
     top: 49px;
     right: 10px;
@@ -1125,13 +1119,11 @@ li {
     color: #F00
 }
 
-.trade_container.dark #orderbook div.table div.remove g,
-.trade_container.dark #orderbook div.table div.remove span {
+.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {
     color: #444
 }
 
-.trade_container.light #orderbook div.table div.remove g,
-.trade_container.light #orderbook div.table div.remove span {
+.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {
     color: #ddd
 }
 
@@ -1329,6 +1321,7 @@ li {
 #chart_main_indicator {
     float: right;
 }
+
 #chart_main_indicator li {
     line-height: 24px;
     display: block;
