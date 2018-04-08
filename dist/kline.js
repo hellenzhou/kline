@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("jquery")) : factory(root["$"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_62__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_63__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -102,7 +102,7 @@ var crypt_1 = __webpack_require__(65);
 exports.base64 = crypt_1.base64;
 exports.base64Decode = crypt_1.base64Decode;
 exports.base64Encode = crypt_1.base64Encode;
-var constants_1 = __webpack_require__(44);
+var constants_1 = __webpack_require__(45);
 exports.CONSTANTS = constants_1.CONSTANTS;
 var deepCopy_1 = __webpack_require__(138);
 exports.deepCopy = deepCopy_1.deepCopy;
@@ -1338,9 +1338,9 @@ var _chart = __webpack_require__(105);
 
 var indicators = _interopRequireWildcard(__webpack_require__(109));
 
-var ranges = _interopRequireWildcard(__webpack_require__(61));
+var ranges = _interopRequireWildcard(__webpack_require__(62));
 
-var templates = _interopRequireWildcard(__webpack_require__(27));
+var templates = _interopRequireWildcard(__webpack_require__(28));
 
 var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
@@ -2854,7 +2854,7 @@ var SortedMap_1 = __webpack_require__(33);
 var Node_1 = __webpack_require__(7);
 var snap_1 = __webpack_require__(74);
 var PriorityIndex_1 = __webpack_require__(5);
-var KeyIndex_1 = __webpack_require__(23);
+var KeyIndex_1 = __webpack_require__(24);
 var IndexMap_1 = __webpack_require__(76);
 var LeafNode_1 = __webpack_require__(32);
 var comparators_1 = __webpack_require__(78);
@@ -3456,7 +3456,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NamedObject = void 0;
 
-var _cname = __webpack_require__(58);
+var _cname = __webpack_require__(59);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4785,13 +4785,13 @@ exports.default = void 0;
 
 var _control = __webpack_require__(38);
 
-var _kline_trade = __webpack_require__(57);
+var _kline_trade = __webpack_require__(58);
 
 var _chart_manager = __webpack_require__(4);
 
 var _chart_settings = __webpack_require__(20);
 
-var _templates = __webpack_require__(27);
+var _templates = __webpack_require__(28);
 
 __webpack_require__(110);
 
@@ -4799,7 +4799,7 @@ var _tpl = _interopRequireDefault(__webpack_require__(126));
 
 var _firebase = _interopRequireDefault(__webpack_require__(127));
 
-var _jquery = _interopRequireDefault(__webpack_require__(62));
+var _jquery = _interopRequireDefault(__webpack_require__(63));
 
 var _util = __webpack_require__(213);
 
@@ -5215,10 +5215,11 @@ function () {
         (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
 
-          var periodDescribe = (0, _jquery.default)(this).text();
+          var pdescribe = (0, _jquery.default)(this).text();
 
-          if (periodDescribe != undefined && typeof periodDescribe === "string") {
-            (0, _jquery.default)(".chart_str_period").text(periodDescribe);
+          if (pdescribe != undefined && typeof pdescribe === "string") {
+            (0, _jquery.default)(".chart_str_period").text(pdescribe);
+            (0, _jquery.default)(".chart_str_period").addClass('selected');
           }
         });
         (0, _jquery.default)(".market_chooser ul a").click(function () {
@@ -6144,6 +6145,33 @@ exports.LightTheme = LightTheme;
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6244,7 +6272,7 @@ exports.KEY_INDEX = new KeyIndex();
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6352,7 +6380,7 @@ PriorityIndex_1.setNodeFromJSON(nodeFromJSON);
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6566,7 +6594,7 @@ function endsWith(s, end) {
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6638,7 +6666,7 @@ function taskStateFromInternalTaskState(state) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6663,13 +6691,13 @@ var plotters = _interopRequireWildcard(__webpack_require__(41));
 
 var _timeline = __webpack_require__(107);
 
-var _cname = __webpack_require__(58);
+var _cname = __webpack_require__(59);
 
 var layouts = _interopRequireWildcard(__webpack_require__(108));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
-var ranges = _interopRequireWildcard(__webpack_require__(61));
+var ranges = _interopRequireWildcard(__webpack_require__(62));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -6929,33 +6957,6 @@ function () {
 }();
 
 exports.TemplateMeasuringHandler = TemplateMeasuringHandler;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
 
 /***/ }),
 /* 29 */
@@ -8078,7 +8079,7 @@ exports.SortedMap = SortedMap;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var ServerValues_1 = __webpack_require__(80);
-var nodeFromJSON_1 = __webpack_require__(24);
+var nodeFromJSON_1 = __webpack_require__(25);
 var Path_1 = __webpack_require__(2);
 var SparseSnapshotTree_1 = __webpack_require__(81);
 var SyncTree_1 = __webpack_require__(160);
@@ -8087,7 +8088,7 @@ var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
 var util_3 = __webpack_require__(0);
 var AuthTokenProvider_1 = __webpack_require__(172);
-var StatsManager_1 = __webpack_require__(49);
+var StatsManager_1 = __webpack_require__(50);
 var StatsReporter_1 = __webpack_require__(174);
 var StatsListener_1 = __webpack_require__(86);
 var EventQueue_1 = __webpack_require__(175);
@@ -8882,17 +8883,17 @@ exports.Control = void 0;
 
 var _kline = _interopRequireDefault(__webpack_require__(17));
 
-var _kline_trade = __webpack_require__(57);
+var _kline_trade = __webpack_require__(58);
 
 var _chart_manager = __webpack_require__(4);
 
 var _chart_settings = __webpack_require__(20);
 
-var _templates = __webpack_require__(27);
+var _templates = __webpack_require__(28);
 
-var _mevent = __webpack_require__(60);
+var _mevent = __webpack_require__(61);
 
-var _jquery = _interopRequireDefault(__webpack_require__(62));
+var _jquery = _interopRequireDefault(__webpack_require__(63));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11499,7 +11500,7 @@ var _util = __webpack_require__(21);
 
 var _cpoint = __webpack_require__(39);
 
-var exprs = _interopRequireWildcard(__webpack_require__(59));
+var exprs = _interopRequireWildcard(__webpack_require__(60));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
@@ -15214,7 +15215,7 @@ var _named_object = __webpack_require__(9);
 
 var _chart_manager = __webpack_require__(4);
 
-var _mevent = __webpack_require__(60);
+var _mevent = __webpack_require__(61);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -15897,6 +15898,196 @@ exports.ChartAreaGroup = ChartAreaGroup;
 
 /***/ }),
 /* 44 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15939,7 +16130,7 @@ exports.CONSTANTS = {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16245,7 +16436,7 @@ SyncPoint_1.SyncPoint.__referenceConstructor = Reference;
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16425,7 +16616,7 @@ exports.DataSnapshot = DataSnapshot;
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16789,7 +16980,7 @@ exports.ImmutableTree = ImmutableTree;
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16929,7 +17120,7 @@ exports.IndexedFilter = IndexedFilter;
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16978,7 +17169,7 @@ exports.StatsManager = StatsManager;
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17118,7 +17309,7 @@ exports.RepoManager = RepoManager;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17153,7 +17344,7 @@ function toBase64(arrayBuffer) {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17255,7 +17446,7 @@ var SUBSCRIPTION_DETAILS = {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17269,7 +17460,7 @@ var SUBSCRIPTION_DETAILS = {
 /* harmony export (immutable) */ __webpack_exports__["a"] = looseObjectSpec;
 /* harmony export (immutable) */ __webpack_exports__["d"] = nullFunctionSpec;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__error__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__metadata__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__metadata__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type__ = __webpack_require__(8);
 /**
  * Copyright 2017 Google Inc.
@@ -17409,7 +17600,7 @@ function nullFunctionSpec(opt_optional) {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17426,7 +17617,7 @@ function nullFunctionSpec(opt_optional) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__location__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__path__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__url__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__url__ = __webpack_require__(56);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -17605,7 +17796,7 @@ function metadataValidator(p) {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17660,7 +17851,7 @@ function makeQueryString(params) {
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17712,7 +17903,7 @@ function remove(array, elem) {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18233,7 +18424,7 @@ KlineTrade.created = false;
 KlineTrade.instance = null;
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18307,7 +18498,7 @@ function () {
 exports.CName = CName;
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19907,7 +20098,7 @@ function (_OpABCDExpr) {
 exports.SarExpr = SarExpr;
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19983,7 +20174,7 @@ function () {
 exports.MEvent = MEvent;
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20519,200 +20710,10 @@ function (_Range5) {
 exports.PercentageRange = PercentageRange;
 
 /***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_62__;
-
-/***/ }),
 /* 63 */
 /***/ (function(module, exports) {
 
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
+module.exports = __WEBPACK_EXTERNAL_MODULE_63__;
 
 /***/ }),
 /* 64 */
@@ -20736,7 +20737,7 @@ process.umask = function() { return 0; };
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants_1 = __webpack_require__(44);
+var constants_1 = __webpack_require__(45);
 /**
  * Throws an error if the provided assertion is falsy
  * @param {*} assertion The assertion to be tested for falsiness
@@ -21293,9 +21294,9 @@ var tslib_1 = __webpack_require__(3);
 var util_1 = __webpack_require__(1);
 var parser_1 = __webpack_require__(70);
 var Path_1 = __webpack_require__(2);
-var Reference_1 = __webpack_require__(45);
+var Reference_1 = __webpack_require__(46);
 var Repo_1 = __webpack_require__(34);
-var RepoManager_1 = __webpack_require__(50);
+var RepoManager_1 = __webpack_require__(51);
 var util_2 = __webpack_require__(0);
 var validation_1 = __webpack_require__(13);
 /**
@@ -22022,7 +22023,7 @@ exports.OnDisconnect = OnDisconnect;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var KeyIndex_1 = __webpack_require__(23);
+var KeyIndex_1 = __webpack_require__(24);
 var PriorityIndex_1 = __webpack_require__(5);
 var ValueIndex_1 = __webpack_require__(75);
 var PathIndex_1 = __webpack_require__(79);
@@ -22600,7 +22601,7 @@ var tslib_1 = __webpack_require__(3);
 var Index_1 = __webpack_require__(31);
 var Node_1 = __webpack_require__(7);
 var util_1 = __webpack_require__(1);
-var nodeFromJSON_1 = __webpack_require__(24);
+var nodeFromJSON_1 = __webpack_require__(25);
 /**
  * @constructor
  * @extends {Index}
@@ -22697,7 +22698,7 @@ var childSet_1 = __webpack_require__(77);
 var util_2 = __webpack_require__(0);
 var Node_1 = __webpack_require__(7);
 var PriorityIndex_1 = __webpack_require__(5);
-var KeyIndex_1 = __webpack_require__(23);
+var KeyIndex_1 = __webpack_require__(24);
 var _defaultIndexMap;
 var fallbackObject = {};
 /**
@@ -23058,7 +23059,7 @@ var util_2 = __webpack_require__(1);
 var Index_1 = __webpack_require__(31);
 var ChildrenNode_1 = __webpack_require__(6);
 var Node_1 = __webpack_require__(7);
-var nodeFromJSON_1 = __webpack_require__(24);
+var nodeFromJSON_1 = __webpack_require__(25);
 /**
  * @param {!Path} indexPath
  * @constructor
@@ -23154,7 +23155,7 @@ var util_1 = __webpack_require__(0);
 var Path_1 = __webpack_require__(2);
 var SparseSnapshotTree_1 = __webpack_require__(81);
 var LeafNode_1 = __webpack_require__(32);
-var nodeFromJSON_1 = __webpack_require__(24);
+var nodeFromJSON_1 = __webpack_require__(25);
 var PriorityIndex_1 = __webpack_require__(5);
 /**
  * Generate placeholders for deferred values.
@@ -25407,7 +25408,7 @@ exports.Connection = Connection;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(1);
 var CountedSet_1 = __webpack_require__(82);
-var StatsManager_1 = __webpack_require__(49);
+var StatsManager_1 = __webpack_require__(50);
 var PacketReceiver_1 = __webpack_require__(179);
 var Constants_1 = __webpack_require__(30);
 var util_2 = __webpack_require__(0);
@@ -26044,7 +26045,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __webpack_require__(11);
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
-var StatsManager_1 = __webpack_require__(49);
+var StatsManager_1 = __webpack_require__(50);
 var Constants_1 = __webpack_require__(30);
 var util_3 = __webpack_require__(0);
 var storage_1 = __webpack_require__(29);
@@ -26376,7 +26377,7 @@ exports.WebSocketConnection = WebSocketConnection;
 
 //# sourceMappingURL=WebSocketConnection.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(63)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)))
 
 /***/ }),
 /* 92 */
@@ -26478,7 +26479,7 @@ exports.ServerActions = ServerActions;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var IndexedFilter_1 = __webpack_require__(48);
+var IndexedFilter_1 = __webpack_require__(49);
 var PriorityIndex_1 = __webpack_require__(5);
 var Node_1 = __webpack_require__(7);
 var ChildrenNode_1 = __webpack_require__(6);
@@ -26619,7 +26620,7 @@ exports.RangedFilter = RangedFilter;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_vapid_details_model__ = __webpack_require__(192);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_notification_permission__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_iid_model__ = __webpack_require__(96);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helpers_array_buffer_to_base64__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helpers_array_buffer_to_base64__ = __webpack_require__(52);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -27045,8 +27046,8 @@ var DBInterface = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_util__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_util___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__firebase_util__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers_array_buffer_to_base64__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fcm_details__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers_array_buffer_to_base64__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fcm_details__ = __webpack_require__(53);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -27327,15 +27328,15 @@ var ErrorCode;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Reference; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_blob__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__implementation_error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_location__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_metadata__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_metadata__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__implementation_object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__implementation_path__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__implementation_requests__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__implementation_string__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__implementation_string__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__implementation_type__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task__ = __webpack_require__(203);
 /**
@@ -27659,7 +27660,7 @@ function lastComponent(path) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FbsBlob; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fs__ = __webpack_require__(201);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__string__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__string__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type__ = __webpack_require__(8);
 /**
  * Copyright 2017 Google Inc.
@@ -27813,14 +27814,14 @@ var FbsBlob = /** @class */ (function () {
 /* harmony export (immutable) */ __webpack_exports__["f"] = getResumableUploadStatus;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return resumableUploadChunkSize; });
 /* harmony export (immutable) */ __webpack_exports__["b"] = continueResumableUpload;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blob__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__error__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__requestinfo__ = __webpack_require__(202);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(56);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -28192,7 +28193,7 @@ var _control = __webpack_require__(38);
 
 var _kline = _interopRequireDefault(__webpack_require__(17));
 
-var _templates = __webpack_require__(27);
+var _templates = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29537,7 +29538,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.STOCHRSIIndicator = exports.PSYIndicator = exports.BOLLIndicator = exports.MTMIndicator = exports.ROCIndicator = exports.KDJIndicator = exports.SARIndicator = exports.WRIndicator = exports.RSIIndicator = exports.EMVIndicator = exports.OBVIndicator = exports.VRIndicator = exports.BRARIndicator = exports.TRIXIndicator = exports.DMAIndicator = exports.DMIIndicator = exports.MACDIndicator = exports.VOLUMEIndicator = exports.EMAIndicator = exports.MAIndicator = exports.HLCIndicator = exports.Indicator = void 0;
 
-var exprs = _interopRequireWildcard(__webpack_require__(59));
+var exprs = _interopRequireWildcard(__webpack_require__(60));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
@@ -30766,7 +30767,7 @@ exports = module.exports = __webpack_require__(113)(false);
 
 
 // module
-exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(114)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(115)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(116)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(117)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n.chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n}\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(118)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(119)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(120)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(121)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(122)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(123)) + ") no-repeat;\n}\n\n.chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n}\n\n.chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n}\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n#chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n}\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    /* padding-left: 15px;   */\n    padding-top: 20px;\n}\n\n#chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 12px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 12px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: white;\n    top: 49px;\n    right: 10px;\n}\n\n.class_chart_trade_quotation .green {\n    color: #0F0\n}\n\n.class_chart_trade_quotation .red {\n    color: #F00\n}\n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
+exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(114)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(115)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n#chart_toolbar_periods_vert div a.selected {\n    color: #ffac00\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(116)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(117)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n.chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n}\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(118)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(119)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(120)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(121)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(122)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(123)) + ") no-repeat;\n}\n\n.chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n}\n\n.chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n}\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n#chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n}\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    /* padding-left: 15px;   */\n    padding-top: 20px;\n}\n\n#chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 12px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 12px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: white;\n    top: 49px;\n    right: 10px;\n}\n\n.class_chart_trade_quotation .green {\n    color: #0F0\n}\n\n.class_chart_trade_quotation .red {\n    color: #F00\n}\n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
 
 // exports
 
@@ -31584,7 +31585,7 @@ if (typeof Promise === 'undefined') {
 
 //# sourceMappingURL=promise.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
 
 /***/ }),
 /* 132 */
@@ -31901,7 +31902,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
 
 /***/ }),
 /* 134 */
@@ -32094,7 +32095,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(63)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23), __webpack_require__(44)))
 
 /***/ }),
 /* 135 */
@@ -32775,7 +32776,7 @@ exports.Deferred = Deferred;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants_1 = __webpack_require__(44);
+var constants_1 = __webpack_require__(45);
 /**
  * Returns navigator.userAgent string or '' if it's not defined.
  * @return {string} user agent string
@@ -34222,7 +34223,7 @@ Y(og.prototype,{toJSON:{name:"toJSON",j:[V(null,!0)]}});Y(dm.prototype,{clear:{n
 c){a=new Bl(a);c({INTERNAL:{getUid:r(a.getUid,a),getToken:r(a.$b,a),addAuthTokenListener:r(a.Qb,a),removeAuthTokenListener:r(a.yc,a)}});return a},a,function(a,c){if("create"===a)try{c.auth()}catch(d){}});firebase.INTERNAL.extendNamespace({User:Hk})}else throw Error("Cannot find the firebase namespace; be sure to include firebase-app.js before this library.");})();
 }).call(typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : {});
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
 
 /***/ }),
 /* 151 */
@@ -34274,11 +34275,11 @@ var Database_1 = __webpack_require__(68);
 exports.Database = Database_1.Database;
 var Query_1 = __webpack_require__(73);
 exports.Query = Query_1.Query;
-var Reference_1 = __webpack_require__(45);
+var Reference_1 = __webpack_require__(46);
 exports.Reference = Reference_1.Reference;
 var util_1 = __webpack_require__(1);
 exports.enableLogging = util_1.enableLogging;
-var RepoManager_1 = __webpack_require__(50);
+var RepoManager_1 = __webpack_require__(51);
 var INTERNAL = __webpack_require__(185);
 var TEST_ACCESS = __webpack_require__(186);
 var util_2 = __webpack_require__(0);
@@ -34303,7 +34304,7 @@ function registerDatabase(instance) {
 }
 exports.registerDatabase = registerDatabase;
 registerDatabase(app_1.default);
-var DataSnapshot_1 = __webpack_require__(46);
+var DataSnapshot_1 = __webpack_require__(47);
 exports.DataSnapshot = DataSnapshot_1.DataSnapshot;
 var onDisconnect_1 = __webpack_require__(72);
 exports.OnDisconnect = onDisconnect_1.OnDisconnect;
@@ -34650,7 +34651,7 @@ exports.nextPushId = (function () {
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var DataSnapshot_1 = __webpack_require__(46);
+var DataSnapshot_1 = __webpack_require__(47);
 var Event_1 = __webpack_require__(159);
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(0);
@@ -34996,7 +34997,7 @@ var util_2 = __webpack_require__(1);
 var AckUserWrite_1 = __webpack_require__(161);
 var ChildrenNode_1 = __webpack_require__(6);
 var util_3 = __webpack_require__(0);
-var ImmutableTree_1 = __webpack_require__(47);
+var ImmutableTree_1 = __webpack_require__(48);
 var ListenComplete_1 = __webpack_require__(162);
 var Merge_1 = __webpack_require__(163);
 var Operation_1 = __webpack_require__(14);
@@ -35917,7 +35918,7 @@ exports.Merge = Merge;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var IndexedFilter_1 = __webpack_require__(48);
+var IndexedFilter_1 = __webpack_require__(49);
 var ViewProcessor_1 = __webpack_require__(165);
 var ChildrenNode_1 = __webpack_require__(6);
 var CacheNode_1 = __webpack_require__(35);
@@ -36137,8 +36138,8 @@ var util_1 = __webpack_require__(0);
 var ChildChangeAccumulator_1 = __webpack_require__(166);
 var Change_1 = __webpack_require__(18);
 var ChildrenNode_1 = __webpack_require__(6);
-var KeyIndex_1 = __webpack_require__(23);
-var ImmutableTree_1 = __webpack_require__(47);
+var KeyIndex_1 = __webpack_require__(24);
+var ImmutableTree_1 = __webpack_require__(48);
 var Path_1 = __webpack_require__(2);
 var CompleteChildSource_1 = __webpack_require__(167);
 /**
@@ -37709,7 +37710,7 @@ exports.WriteTreeRef = WriteTreeRef;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImmutableTree_1 = __webpack_require__(47);
+var ImmutableTree_1 = __webpack_require__(48);
 var Path_1 = __webpack_require__(2);
 var util_1 = __webpack_require__(0);
 var Node_1 = __webpack_require__(7);
@@ -38936,11 +38937,11 @@ exports.ReadonlyRestClient = ReadonlyRestClient;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
-var KeyIndex_1 = __webpack_require__(23);
+var KeyIndex_1 = __webpack_require__(24);
 var PriorityIndex_1 = __webpack_require__(5);
 var ValueIndex_1 = __webpack_require__(75);
 var PathIndex_1 = __webpack_require__(79);
-var IndexedFilter_1 = __webpack_require__(48);
+var IndexedFilter_1 = __webpack_require__(49);
 var LimitedFilter_1 = __webpack_require__(182);
 var RangedFilter_1 = __webpack_require__(93);
 var util_3 = __webpack_require__(0);
@@ -39614,8 +39615,8 @@ exports.LimitedFilter = LimitedFilter;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var Reference_1 = __webpack_require__(45);
-var DataSnapshot_1 = __webpack_require__(46);
+var Reference_1 = __webpack_require__(46);
+var DataSnapshot_1 = __webpack_require__(47);
 var Path_1 = __webpack_require__(2);
 var Tree_1 = __webpack_require__(184);
 var PriorityIndex_1 = __webpack_require__(5);
@@ -39623,7 +39624,7 @@ var util_2 = __webpack_require__(1);
 var ServerValues_1 = __webpack_require__(80);
 var validation_1 = __webpack_require__(13);
 var util_3 = __webpack_require__(0);
-var nodeFromJSON_1 = __webpack_require__(24);
+var nodeFromJSON_1 = __webpack_require__(25);
 var ChildrenNode_1 = __webpack_require__(6);
 var Repo_1 = __webpack_require__(34);
 // TODO: This is pretty messy.  Ideally, a lot of this would move into FirebaseData, or a transaction-specific
@@ -40482,7 +40483,7 @@ exports.interceptServerData = function (ref, callback) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var RepoInfo_1 = __webpack_require__(71);
 var PersistentConnection_1 = __webpack_require__(87);
-var RepoManager_1 = __webpack_require__(50);
+var RepoManager_1 = __webpack_require__(51);
 var Connection_1 = __webpack_require__(89);
 exports.DataConnection = PersistentConnection_1.PersistentConnection;
 /**
@@ -40630,7 +40631,7 @@ registerMessaging(__WEBPACK_IMPORTED_MODULE_2__firebase_app__["firebase"]);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_worker_page_message__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_default_sw__ = __webpack_require__(193);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_notification_permission__ = __webpack_require__(97);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_fcm_details__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_fcm_details__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__helpers_base64_to_array_buffer__ = __webpack_require__(194);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__firebase_util__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__firebase_util___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__firebase_util__);
@@ -41033,7 +41034,7 @@ var WindowController = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__db_interface__ = __webpack_require__(95);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_array_buffer_to_base64__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_array_buffer_to_base64__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__clean_v1_undefined__ = __webpack_require__(191);
 /**
  * Copyright 2017 Google Inc.
@@ -41612,7 +41613,7 @@ var VapidDetailsModel = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__controller_interface__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_fcm_details__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_fcm_details__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_worker_page_message__ = __webpack_require__(98);
 /**
  * Copyright 2017 Google Inc.
@@ -41977,8 +41978,8 @@ __webpack_require__(197);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["registerStorage"] = registerStorage;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_app__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_implementation_string__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_implementation_taskenums__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_implementation_string__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_implementation_taskenums__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_implementation_xhriopool__ = __webpack_require__(198);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_reference__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_service__ = __webpack_require__(207);
@@ -42379,11 +42380,11 @@ var RequestInfo = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UploadTask; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_taskenums__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_taskenums__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_observer__ = __webpack_require__(204);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tasksnapshot__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_args__ = __webpack_require__(53);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_array__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_args__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_array__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__implementation_async__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__implementation_error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__implementation_promise_external__ = __webpack_require__(16);
@@ -43096,7 +43097,7 @@ function async(f) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Service; });
 /* unused harmony export ServiceInternals */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_authwrapper__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__implementation_location__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_promise_external__ = __webpack_require__(16);
@@ -43494,13 +43495,13 @@ var RequestMap = /** @class */ (function () {
 /* unused harmony export addVersionHeader_ */
 /* harmony export (immutable) */ __webpack_exports__["a"] = makeRequest;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_app__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(57);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backoff__ = __webpack_require__(212);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__promise_external__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__xhrio__ = __webpack_require__(99);
 /**
  * Copyright 2017 Google Inc.
@@ -44441,7 +44442,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(63)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23), __webpack_require__(44)))
 
 /***/ }),
 /* 214 */

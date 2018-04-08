@@ -369,16 +369,14 @@ export default class Kline {
             $(".chart_container .chart_toolbar_tabgroup a")
                 .click(function () {
                     Control.switchPeriod($(this).parent().attr('name'));
-
                 });
             $("#chart_toolbar_periods_vert ul a").click(function () {
-
                 Control.switchPeriod($(this).parent().attr('name'));
-                let periodDescribe = $(this).text();
-                if (periodDescribe != undefined && typeof (periodDescribe) === "string") {
-                    $(".chart_str_period").text(periodDescribe);
+                let pdescribe = $(this).text();
+                if (pdescribe != undefined && typeof (pdescribe) === "string") {
+                    $(".chart_str_period").text(pdescribe);
+                    $(".chart_str_period").addClass('selected');
                 }
-
             });
 
             $(".market_chooser ul a").click(function () {

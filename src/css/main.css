@@ -218,6 +218,10 @@ li {
     background-color: #383838
 }
 
+#chart_toolbar_periods_vert div a.selected {
+    color: #ffac00
+}
+
 .chart_container.dark .chart_dropdown_data li a.selected {
     color: #ffac00
 }
