@@ -459,11 +459,14 @@ export default class Kline {
                     let tmp = ChartSettings.get();
                     tmp.charts.mIndic = name;
                     ChartSettings.save();
-    
+
                     let mgr = ChartManager.instance;
                     if (!mgr.setMainIndicator("frame0.k0", name))
                         mgr.removeMainIndicator("frame0.k0");
                     mgr.redraw();
+
+                    $("#chart_main_indicator .chart_dropdown_data").removeClass("chart_dropdown-hover");
+                    $("#chart_main_indicator .chart_dropdown_t").removeClass("chart_dropdown-hover");
                 });
             $('#chart_toolbar_theme a').click(function () {
                 $('#chart_toolbar_theme a').removeClass('selected');

@@ -5303,6 +5303,8 @@ function () {
           var mgr = _chart_manager.ChartManager.instance;
           if (!mgr.setMainIndicator("frame0.k0", name)) mgr.removeMainIndicator("frame0.k0");
           mgr.redraw();
+          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_data").removeClass("chart_dropdown-hover");
+          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_t").removeClass("chart_dropdown-hover");
         });
         (0, _jquery.default)('#chart_toolbar_theme a').click(function () {
           (0, _jquery.default)('#chart_toolbar_theme a').removeClass('selected');
@@ -9778,6 +9780,7 @@ function () {
           (0, _jquery.default)(this).addClass('selected');
         }
       });
+      (0, _jquery.default)("#chart_toolbar_periods_vert .chart_dropdown_t").removeClass("chart_dropdown-hover");
 
       _chart_manager.ChartManager.instance.showCursor();
 

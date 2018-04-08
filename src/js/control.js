@@ -820,6 +820,9 @@ export class Control {
                 $(this).addClass('selected');
             }
         });
+        
+        $("#chart_toolbar_periods_vert .chart_dropdown_t").removeClass("chart_dropdown-hover");
+
         ChartManager.instance.showCursor();
         Control.calcPeriodWeight(name);
         if (name === 'line') {
