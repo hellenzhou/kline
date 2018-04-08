@@ -7,6 +7,7 @@ import '../css/main.css'
 import tpl from '../view/tpl.html'
 import fire from './firebase'
 import $ from 'jquery'
+import { isNull } from 'util';
 
 
 export default class Kline {
@@ -373,6 +374,10 @@ export default class Kline {
             $("#chart_toolbar_periods_vert ul a").click(function () {
 
                 Control.switchPeriod($(this).parent().attr('name'));
+                let periodDescribe = $(this).text();
+                if (periodDescribe != undefined && typeof (periodDescribe) === "string") {
+                    $(".chart_str_period").text(periodDescribe);
+                }
 
             });
 
