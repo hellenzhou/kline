@@ -517,7 +517,6 @@ export class Control {
         } 
 
         let container = $(Kline.instance.element);
-       
         container.css({
             width: width + 'px',
             height: remainHeight + 'px'
@@ -543,8 +542,7 @@ export class Control {
         let tabBarRect = {};
         tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
-        tabBarRect.x = chartWidth - tabBarRect.w;
-        debugger
+        tabBarRect.x = chartWidth - tabBarRect.w;      
         tabBarRect.y = remainHeight - (tabBarRect.h + 1);
 
         let canvasGroupRect = {};
