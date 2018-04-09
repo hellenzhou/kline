@@ -4914,6 +4914,7 @@ function () {
       "line": "01m"
     };
     this.periodTitle = null;
+    this.periodAreaRanages = null;
     Object.assign(this, option);
 
     if (!Kline.created) {
@@ -4927,12 +4928,16 @@ function () {
   _createClass(Kline, [{
     key: "periodsVertDisplayNone",
     value: function periodsVertDisplayNone(array) {
-      for (var k in this.ranges) {
-        var curRanage = this.ranges[k];
+      this.periodAreaRanages = array;
 
-        if (array && array.length > 0 && array.indexOf(curRanage) >= 0) {
-          var nodeName = '#chart_period_' + curRanage + '_v';
-          (0, _jquery.default)(nodeName).attr('style', "display:none");
+      if (array && array instanceof Array && array.length > 0) {
+        for (var k in this.ranges) {
+          var curPeriod = this.ranges[k];
+
+          if (curPeriod && typeof curPeriod === "string" && array.indexOf(curPeriod) >= 0) {
+            var nodeName = '#chart_period_' + curPeriod + '_v';
+            (0, _jquery.default)(nodeName).attr('style', "display:none");
+          }
         }
       }
     }
@@ -4984,17 +4989,21 @@ function () {
       var tmp = _chart_settings.ChartSettings.get();
 
       var period = tmp.charts.period;
-      var pdescribe = (0, _jquery.default)('#chart_period_' + period + '_v a').text();
+
+      if (this.periodAreaRanages instanceof Array && this.periodAreaRanages.length > 0 && this.periodAreaRanages.indexOf(period) === -1) {
+        var pdescribe = (0, _jquery.default)('#chart_period_' + period + '_v a').text();
+
+        if (pdescribe != undefined && typeof pdescribe === "string" && pdescribe !== "") {
+          (0, _jquery.default)(".chart_str_period").addClass('selected');
+          (0, _jquery.default)(".chart_str_period").text(pdescribe);
+        }
+      }
+
       !this.showLanguageSelect && (0, _jquery.default)("#chart_language_setting_div").hide();
       !this.showDrawTool && (0, _jquery.default)(".chart_str_tools_cap").hide();
       (0, _jquery.default)(this.element).css({
         visibility: "visible"
       });
-
-      if (pdescribe != undefined && typeof pdescribe === "string" && pdescribe !== "") {
-        (0, _jquery.default)(".chart_str_period").addClass('selected');
-        (0, _jquery.default)(".chart_str_period").text(pdescribe);
-      }
     }
   }, {
     key: "resize",

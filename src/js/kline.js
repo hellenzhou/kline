@@ -118,8 +118,9 @@ export default class Kline {
         };
 
         this.periodTitle = null;
-        Object.assign(this, option);
+        this.periodAreaRanages = null;
 
+        Object.assign(this, option);
         if (!Kline.created) {
             Kline.instance = this;
             Kline.created = true;
@@ -129,14 +130,16 @@ export default class Kline {
     }
 
     periodsVertDisplayNone(array) {
-        for (let k in this.ranges) {
-            let curRanage = this.ranges[k];
-            if (array && array.length > 0 && array.indexOf(curRanage) >= 0) {
-                let nodeName = '#chart_period_' + curRanage + '_v';
-                $(nodeName).attr('style', "display:none");
+        this.periodAreaRanages = array;
+        if (array && (array instanceof Array) && array.length > 0) {
+            for (let k in this.ranges) {
+                let curPeriod = this.ranges[k];
+                if (curPeriod && typeof (curPeriod) === "string" && array.indexOf(curPeriod) >= 0) {
+                    let nodeName = '#chart_period_' + curPeriod + '_v';
+                    $(nodeName).attr('style', "display:none");
+                }
             }
         }
-
     }
 
     /*********************************************
@@ -172,20 +175,27 @@ export default class Kline {
         Control.onSize(this.width, this.height);
         Control.readCookie();
 
-       
+
         this.setTheme(this.theme);
         this.setLanguage(this.language);
         let tmp = ChartSettings.get();
         let period = tmp.charts.period;
-        let pdescribe =   $('#chart_period_' + period + '_v a').text();
+
+        if ((this.periodAreaRanages instanceof Array)
+            && this.periodAreaRanages.length > 0
+            && this.periodAreaRanages.indexOf(period) === -1) {
+            let pdescribe = $('#chart_period_' + period + '_v a').text();
+
+            if (pdescribe != undefined && typeof (pdescribe) === "string"
+                && pdescribe !== "") {
+                $(".chart_str_period").addClass('selected');
+                $(".chart_str_period").text(pdescribe);
+            }
+        }
+
         !this.showLanguageSelect && $("#chart_language_setting_div").hide();
         !this.showDrawTool && $(".chart_str_tools_cap").hide();
         $(this.element).css({ visibility: "visible" });
-
-        if (pdescribe != undefined && typeof (pdescribe) === "string" &&  pdescribe !== "" ) {
-           $(".chart_str_period").addClass('selected');
-           $(".chart_str_period").text(pdescribe);
-       }
     }
 
     resize(width, height) {
