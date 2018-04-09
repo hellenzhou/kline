@@ -58,15 +58,13 @@
                 symbol: "btc_usdt",
                 symbolName: "btc/usdt",
                 type: "poll", // poll/socket
-
                 limit: 1000,
                 debug: true,
-                showTrade: true,
+                showTrade:true,
                 klineBaseUrl: 'http://api.bitkk.com/data/v1/kline',
                 klineMarketName: 'market',
                 klineTypeName: 'type',
-                klineSizeName: 'size',
-
+                klineSizeName: 'size'
             });
 
             kline.draw();

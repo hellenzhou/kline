@@ -4841,7 +4841,7 @@ function () {
     this.theme = "dark";
     this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "3d", "1w"];
     this.showTrade = true;
-    this.tradeheight = 44;
+    this.tradeHeight = 44;
     this.tradeWidth = 250;
     this.onMaximizeWindow = null;
     this.socketConnected = false;
@@ -5227,20 +5227,15 @@ function () {
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
 
           (0, _jquery.default)(".chart_str_period").removeClass('selected');
-          debugger;
 
           if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
             (0, _jquery.default)(".chart_str_period").text(Kline.instance.periodTitle);
-            console.log(Kline.instance.periodTitle);
           }
         });
         (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
           // 第一次时获取字符串保存起来
-          debugger;
-
           if (!Kline.instance.periodTitle) {
             Kline.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
-            console.log(Kline.instance.periodTitle);
           }
 
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
@@ -9480,18 +9475,19 @@ function () {
     value: function onSize(w, h) {
       var width = w || window.innerWidth;
       var chartWidth = width;
+      var height = h || window.innerHeight;
       var topDivHeight = (0, _jquery.default)("#chart_trade_quotation").height();
       if (topDivHeight === undefined) topDivHeight = 0;
-      var height = (h || window.innerHeight) - topDivHeight;
+      var remainHeight = height;
 
-      if (_kline.default.instance.showTrade && _kline.default.instance.tradeheight !== undefined && !isNaN(_kline.default.instance.tradeheight)) {
-        height -= _kline.default.instance.tradeheight;
+      if (_kline.default.instance.showTrade && !isNaN(_kline.default.instance.tradeHeight)) {
+        remainHeight -= _kline.default.instance.tradeHeight;
       }
 
       var container = (0, _jquery.default)(_kline.default.instance.element);
       container.css({
         width: width + 'px',
-        height: height + 'px'
+        height: remainHeight + 'px'
       });
       var toolBar = (0, _jquery.default)('#chart_toolbar');
       var toolPanel = (0, _jquery.default)('#chart_toolpanel');
@@ -9513,7 +9509,8 @@ function () {
       tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
       tabBarRect.h = tabBarShown ? 22 : -1;
       tabBarRect.x = chartWidth - tabBarRect.w;
-      tabBarRect.y = height - (tabBarRect.h + 1);
+      debugger;
+      tabBarRect.y = remainHeight - (tabBarRect.h + 1);
       var canvasGroupRect = {};
       canvasGroupRect.x = tabBarRect.x;
       canvasGroupRect.y = toolPanelRect.y;
@@ -9660,6 +9657,12 @@ function () {
       } else {
         dropDownSettings.before(selectTheme);
         rowTheme.style.display = "none";
+      }
+
+      if (_kline.default.instance.showTrade) {
+        (0, _jquery.default)(".trade_container").show();
+      } else {
+        (0, _jquery.default)(".trade_container").hide();
       }
 
       _chart_manager.ChartManager.instance.redraw('All', true);

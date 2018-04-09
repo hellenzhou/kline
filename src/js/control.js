@@ -11,6 +11,7 @@ export class Control {
 
     static refreshCounter = 0;
     static refreshHandler = null;
+
     static requestDuration = {
         "01d": "1day",
         "01w": "1week",
@@ -505,19 +506,23 @@ export class Control {
     static onSize(w, h) {
         let width = w || window.innerWidth;
         let chartWidth = width;
+        let height = h || window.innerHeight;
+ 
         let topDivHeight = $("#chart_trade_quotation").height();
         if (topDivHeight === undefined) topDivHeight = 0;
 
-        let height = (h || window.innerHeight) - topDivHeight;
-        if (Kline.instance.showTrade && Kline.instance.tradeheight !== undefined && !isNaN(Kline.instance.tradeheight)) {
-            height -= Kline.instance.tradeheight;
-        }
+        let  remainHeight =  height;
+        if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
+            remainHeight -= Kline.instance.tradeHeight;
+        } 
 
         let container = $(Kline.instance.element);
+       
         container.css({
             width: width + 'px',
-            height: height + 'px'
+            height: remainHeight + 'px'
         });
+
         let toolBar = $('#chart_toolbar');
         let toolPanel = $('#chart_toolpanel');
         let canvasGroup = $('#chart_canvasGroup');
@@ -526,8 +531,6 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-
-
         toolBarRect.y = topDivHeight;
         toolBarRect.w = chartWidth;
 
@@ -541,7 +544,8 @@ export class Control {
         tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
-        tabBarRect.y = height - (tabBarRect.h + 1);
+        debugger
+        tabBarRect.y = remainHeight - (tabBarRect.h + 1);
 
         let canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
@@ -690,6 +694,12 @@ export class Control {
         } else {
             dropDownSettings.before(selectTheme);
             rowTheme.style.display = "none";
+        }
+
+        if (Kline.instance.showTrade) {
+            $(".trade_container").show();
+        } else {
+            $(".trade_container").hide();
         }
 
         ChartManager.instance.redraw('All', true);
