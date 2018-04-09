@@ -116,7 +116,7 @@ export default class Kline {
             "line": "01m"
         };
 
-        this.periodTitle= null;
+        this.periodTitle = null;
         Object.assign(this, option);
 
         if (!Kline.created) {
@@ -383,19 +383,17 @@ export default class Kline {
                 .click(function () {
                     Control.switchPeriod($(this).parent().attr('name'));
                     $(".chart_str_period").removeClass('selected');
-                    debugger
                     if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
                         $(".chart_str_period").text(Kline.instance.periodTitle);
-                        console.log( Kline.instance.periodTitle)
+                        console.log(Kline.instance.periodTitle)
                     }
 
                 });
             $("#chart_toolbar_periods_vert ul a").click(function () {
                 // 第一次时获取字符串保存起来
-                debugger
                 if (!Kline.instance.periodTitle) {
                     Kline.instance.periodTitle = $(".chart_str_period").text();
-                    console.log( Kline.instance.periodTitle)
+                    console.log(Kline.instance.periodTitle)
                 }
 
                 Control.switchPeriod($(this).parent().attr('name'));
