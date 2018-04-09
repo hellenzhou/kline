@@ -1108,7 +1108,7 @@ li {
 }
 
 #chart_trade_quotation_content li:nth-of-type(5) {
-    color: white;
+    color: orchid;
     top: 49px;
     right: 10px;
 }
