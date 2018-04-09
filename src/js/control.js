@@ -428,7 +428,6 @@ export class Control {
         Control.switchSymbolSelected(symbol);
         let period = tmp.charts.period;
 
-         
         Kline.instance.periodTitle = $(".chart_str_period").text();
         Control.switchPeriod(period);
 
@@ -586,6 +585,7 @@ export class Control {
 
         let ratio = devicePixelRatio / backingStoreRatio;
 
+        Kline.instance.deviceRatio = ratio;
         mainCanvas.width = canvasGroupRect.w * ratio;
         mainCanvas.height = canvasGroupRect.h * ratio;
         mainCanvas.style.width = '100%';

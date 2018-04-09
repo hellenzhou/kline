@@ -38,7 +38,7 @@ export default class Kline {
         this.showLanguageSelect = false;
         this.showDrawTool = false;
         this.theme = "dark";
-        this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "3d", "1w"];
+        this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "12h", "1w"];
         this.showTrade = true;
         this.tradeHeight = 44;
         this.tradeWidth = 250;
@@ -119,6 +119,7 @@ export default class Kline {
 
         this.periodTitle = null;
         this.periodAreaRanages = null;
+        this.deviceRatio = 2;
 
         Object.assign(this, option);
         if (!Kline.created) {
@@ -174,7 +175,6 @@ export default class Kline {
         Control.refreshTemplate();
         Control.onSize(this.width, this.height);
         Control.readCookie();
-
 
         this.setTheme(this.theme);
         this.setLanguage(this.language);
@@ -624,11 +624,12 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
+                    let ratio = Kline.instance.deviceRatio;
                     if (Kline.instance.buttonDown === true) {
-                        mgr.onMouseMove("frame0", x * 2, y * 2, true);
+                        mgr.onMouseMove("frame0", x * ratio, y * ratio, true);
                         mgr.redraw("All", false);
                     } else {
-                        mgr.onMouseMove("frame0", x * 2, y * 2, false);
+                        mgr.onMouseMove("frame0", x * ratio, y * ratio, false);
                         mgr.redraw("OverlayCanvas");
                     }
                 })
@@ -637,7 +638,8 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseLeave("frame0", x * 2, y * 2, false);
+                    let ratio = Kline.instance.deviceRatio;
+                    mgr.onMouseLeave("frame0", x * ratio, y * ratio, false);
                     mgr.redraw("OverlayCanvas");
                 })
                 .mouseup(function (e) {
@@ -649,7 +651,8 @@ export default class Kline {
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
                     let mgr = ChartManager.instance;
-                    mgr.onMouseUp("frame0", x * 2, y * 2);
+                    let ratio = Kline.instance.deviceRatio;
+                    mgr.onMouseUp("frame0", x * ratio, y * ratio);
                     mgr.redraw("All");
                 })
                 .mousedown(function (e) {
@@ -662,7 +665,8 @@ export default class Kline {
                     let r = e.target.getBoundingClientRect();
                     let x = e.clientX - r.left;
                     let y = e.clientY - r.top;
-                    ChartManager.instance.onMouseDown("frame0", x * 2, y * 2);
+                    let ratio = Kline.instance.deviceRatio;
+                    ChartManager.instance.onMouseDown("frame0", x * ratio, y * ratio);
                 });
 
             $("#chart_parameter_settings :input").change(function () {

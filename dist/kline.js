@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("jquery")) : factory(root["$"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_63__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_62__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -102,7 +102,7 @@ var crypt_1 = __webpack_require__(65);
 exports.base64 = crypt_1.base64;
 exports.base64Decode = crypt_1.base64Decode;
 exports.base64Encode = crypt_1.base64Encode;
-var constants_1 = __webpack_require__(45);
+var constants_1 = __webpack_require__(44);
 exports.CONSTANTS = constants_1.CONSTANTS;
 var deepCopy_1 = __webpack_require__(138);
 exports.deepCopy = deepCopy_1.deepCopy;
@@ -1338,9 +1338,9 @@ var _chart = __webpack_require__(105);
 
 var indicators = _interopRequireWildcard(__webpack_require__(109));
 
-var ranges = _interopRequireWildcard(__webpack_require__(62));
+var ranges = _interopRequireWildcard(__webpack_require__(61));
 
-var templates = _interopRequireWildcard(__webpack_require__(28));
+var templates = _interopRequireWildcard(__webpack_require__(27));
 
 var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
@@ -2854,7 +2854,7 @@ var SortedMap_1 = __webpack_require__(33);
 var Node_1 = __webpack_require__(7);
 var snap_1 = __webpack_require__(74);
 var PriorityIndex_1 = __webpack_require__(5);
-var KeyIndex_1 = __webpack_require__(24);
+var KeyIndex_1 = __webpack_require__(23);
 var IndexMap_1 = __webpack_require__(76);
 var LeafNode_1 = __webpack_require__(32);
 var comparators_1 = __webpack_require__(78);
@@ -3456,7 +3456,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NamedObject = void 0;
 
-var _cname = __webpack_require__(59);
+var _cname = __webpack_require__(58);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4785,13 +4785,13 @@ exports.default = void 0;
 
 var _control = __webpack_require__(38);
 
-var _kline_trade = __webpack_require__(58);
+var _kline_trade = __webpack_require__(57);
 
 var _chart_manager = __webpack_require__(4);
 
 var _chart_settings = __webpack_require__(20);
 
-var _templates = __webpack_require__(28);
+var _templates = __webpack_require__(27);
 
 __webpack_require__(110);
 
@@ -4799,7 +4799,7 @@ var _tpl = _interopRequireDefault(__webpack_require__(126));
 
 var _firebase = _interopRequireDefault(__webpack_require__(127));
 
-var _jquery = _interopRequireDefault(__webpack_require__(63));
+var _jquery = _interopRequireDefault(__webpack_require__(62));
 
 var _util = __webpack_require__(213);
 
@@ -4839,7 +4839,7 @@ function () {
     this.showLanguageSelect = false;
     this.showDrawTool = false;
     this.theme = "dark";
-    this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "3d", "1w"];
+    this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "12h", "1w"];
     this.showTrade = true;
     this.tradeHeight = 44;
     this.tradeWidth = 250;
@@ -4915,6 +4915,7 @@ function () {
     };
     this.periodTitle = null;
     this.periodAreaRanages = null;
+    this.deviceRatio = 2;
     Object.assign(this, option);
 
     if (!Kline.created) {
@@ -5475,12 +5476,13 @@ function () {
           var x = e.clientX - r.left;
           var y = e.clientY - r.top;
           var mgr = _chart_manager.ChartManager.instance;
+          var ratio = Kline.instance.deviceRatio;
 
           if (Kline.instance.buttonDown === true) {
-            mgr.onMouseMove("frame0", x * 2, y * 2, true);
+            mgr.onMouseMove("frame0", x * ratio, y * ratio, true);
             mgr.redraw("All", false);
           } else {
-            mgr.onMouseMove("frame0", x * 2, y * 2, false);
+            mgr.onMouseMove("frame0", x * ratio, y * ratio, false);
             mgr.redraw("OverlayCanvas");
           }
         }).mouseleave(function (e) {
@@ -5488,7 +5490,8 @@ function () {
           var x = e.clientX - r.left;
           var y = e.clientY - r.top;
           var mgr = _chart_manager.ChartManager.instance;
-          mgr.onMouseLeave("frame0", x * 2, y * 2, false);
+          var ratio = Kline.instance.deviceRatio;
+          mgr.onMouseLeave("frame0", x * ratio, y * ratio, false);
           mgr.redraw("OverlayCanvas");
         }).mouseup(function (e) {
           if (e.which !== 1) {
@@ -5500,7 +5503,8 @@ function () {
           var x = e.clientX - r.left;
           var y = e.clientY - r.top;
           var mgr = _chart_manager.ChartManager.instance;
-          mgr.onMouseUp("frame0", x * 2, y * 2);
+          var ratio = Kline.instance.deviceRatio;
+          mgr.onMouseUp("frame0", x * ratio, y * ratio);
           mgr.redraw("All");
         }).mousedown(function (e) {
           if (e.which !== 1) {
@@ -5515,8 +5519,9 @@ function () {
           var r = e.target.getBoundingClientRect();
           var x = e.clientX - r.left;
           var y = e.clientY - r.top;
+          var ratio = Kline.instance.deviceRatio;
 
-          _chart_manager.ChartManager.instance.onMouseDown("frame0", x * 2, y * 2);
+          _chart_manager.ChartManager.instance.onMouseDown("frame0", x * ratio, y * ratio);
         });
         (0, _jquery.default)("#chart_parameter_settings :input").change(function () {
           var name = (0, _jquery.default)(this).attr("name");
@@ -6188,33 +6193,6 @@ exports.LightTheme = LightTheme;
 
 /***/ }),
 /* 23 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6315,7 +6293,7 @@ exports.KEY_INDEX = new KeyIndex();
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6423,7 +6401,7 @@ PriorityIndex_1.setNodeFromJSON(nodeFromJSON);
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6637,7 +6615,7 @@ function endsWith(s, end) {
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6709,7 +6687,7 @@ function taskStateFromInternalTaskState(state) {
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6734,13 +6712,13 @@ var plotters = _interopRequireWildcard(__webpack_require__(41));
 
 var _timeline = __webpack_require__(107);
 
-var _cname = __webpack_require__(59);
+var _cname = __webpack_require__(58);
 
 var layouts = _interopRequireWildcard(__webpack_require__(108));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
-var ranges = _interopRequireWildcard(__webpack_require__(62));
+var ranges = _interopRequireWildcard(__webpack_require__(61));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -7000,6 +6978,33 @@ function () {
 }();
 
 exports.TemplateMeasuringHandler = TemplateMeasuringHandler;
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 /* 29 */
@@ -8122,7 +8127,7 @@ exports.SortedMap = SortedMap;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var ServerValues_1 = __webpack_require__(80);
-var nodeFromJSON_1 = __webpack_require__(25);
+var nodeFromJSON_1 = __webpack_require__(24);
 var Path_1 = __webpack_require__(2);
 var SparseSnapshotTree_1 = __webpack_require__(81);
 var SyncTree_1 = __webpack_require__(160);
@@ -8131,7 +8136,7 @@ var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
 var util_3 = __webpack_require__(0);
 var AuthTokenProvider_1 = __webpack_require__(172);
-var StatsManager_1 = __webpack_require__(50);
+var StatsManager_1 = __webpack_require__(49);
 var StatsReporter_1 = __webpack_require__(174);
 var StatsListener_1 = __webpack_require__(86);
 var EventQueue_1 = __webpack_require__(175);
@@ -8926,17 +8931,17 @@ exports.Control = void 0;
 
 var _kline = _interopRequireDefault(__webpack_require__(17));
 
-var _kline_trade = __webpack_require__(58);
+var _kline_trade = __webpack_require__(57);
 
 var _chart_manager = __webpack_require__(4);
 
 var _chart_settings = __webpack_require__(20);
 
-var _templates = __webpack_require__(28);
+var _templates = __webpack_require__(27);
 
-var _mevent = __webpack_require__(61);
+var _mevent = __webpack_require__(60);
 
-var _jquery = _interopRequireDefault(__webpack_require__(63));
+var _jquery = _interopRequireDefault(__webpack_require__(62));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9557,6 +9562,7 @@ function () {
       var context = mainCanvas.getContext("2d");
       var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
       var ratio = devicePixelRatio / backingStoreRatio;
+      _kline.default.instance.deviceRatio = ratio;
       mainCanvas.width = canvasGroupRect.w * ratio;
       mainCanvas.height = canvasGroupRect.h * ratio;
       mainCanvas.style.width = '100%';
@@ -11551,7 +11557,7 @@ var _util = __webpack_require__(21);
 
 var _cpoint = __webpack_require__(39);
 
-var exprs = _interopRequireWildcard(__webpack_require__(60));
+var exprs = _interopRequireWildcard(__webpack_require__(59));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
@@ -15266,7 +15272,7 @@ var _named_object = __webpack_require__(9);
 
 var _chart_manager = __webpack_require__(4);
 
-var _mevent = __webpack_require__(61);
+var _mevent = __webpack_require__(60);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -15949,196 +15955,6 @@ exports.ChartAreaGroup = ChartAreaGroup;
 
 /***/ }),
 /* 44 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16181,7 +15997,7 @@ exports.CONSTANTS = {
 
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16487,7 +16303,7 @@ SyncPoint_1.SyncPoint.__referenceConstructor = Reference;
 
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16667,7 +16483,7 @@ exports.DataSnapshot = DataSnapshot;
 
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17031,7 +16847,7 @@ exports.ImmutableTree = ImmutableTree;
 
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17171,7 +16987,7 @@ exports.IndexedFilter = IndexedFilter;
 
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17220,7 +17036,7 @@ exports.StatsManager = StatsManager;
 
 
 /***/ }),
-/* 51 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17360,7 +17176,7 @@ exports.RepoManager = RepoManager;
 
 
 /***/ }),
-/* 52 */
+/* 51 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17395,7 +17211,7 @@ function toBase64(arrayBuffer) {
 
 
 /***/ }),
-/* 53 */
+/* 52 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17497,7 +17313,7 @@ var SUBSCRIPTION_DETAILS = {
 
 
 /***/ }),
-/* 54 */
+/* 53 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17511,7 +17327,7 @@ var SUBSCRIPTION_DETAILS = {
 /* harmony export (immutable) */ __webpack_exports__["a"] = looseObjectSpec;
 /* harmony export (immutable) */ __webpack_exports__["d"] = nullFunctionSpec;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__error__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__metadata__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__metadata__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type__ = __webpack_require__(8);
 /**
  * Copyright 2017 Google Inc.
@@ -17651,7 +17467,7 @@ function nullFunctionSpec(opt_optional) {
 
 
 /***/ }),
-/* 55 */
+/* 54 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17668,7 +17484,7 @@ function nullFunctionSpec(opt_optional) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__location__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__path__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__url__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__url__ = __webpack_require__(55);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -17847,7 +17663,7 @@ function metadataValidator(p) {
 
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17902,7 +17718,7 @@ function makeQueryString(params) {
 
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17954,7 +17770,7 @@ function remove(array, elem) {
 
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18475,7 +18291,7 @@ KlineTrade.created = false;
 KlineTrade.instance = null;
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18549,7 +18365,7 @@ function () {
 exports.CName = CName;
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20149,7 +19965,7 @@ function (_OpABCDExpr) {
 exports.SarExpr = SarExpr;
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20225,7 +20041,7 @@ function () {
 exports.MEvent = MEvent;
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20761,10 +20577,200 @@ function (_Range5) {
 exports.PercentageRange = PercentageRange;
 
 /***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_62__;
+
+/***/ }),
 /* 63 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_63__;
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
 
 /***/ }),
 /* 64 */
@@ -20788,7 +20794,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_63__;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants_1 = __webpack_require__(45);
+var constants_1 = __webpack_require__(44);
 /**
  * Throws an error if the provided assertion is falsy
  * @param {*} assertion The assertion to be tested for falsiness
@@ -21345,9 +21351,9 @@ var tslib_1 = __webpack_require__(3);
 var util_1 = __webpack_require__(1);
 var parser_1 = __webpack_require__(70);
 var Path_1 = __webpack_require__(2);
-var Reference_1 = __webpack_require__(46);
+var Reference_1 = __webpack_require__(45);
 var Repo_1 = __webpack_require__(34);
-var RepoManager_1 = __webpack_require__(51);
+var RepoManager_1 = __webpack_require__(50);
 var util_2 = __webpack_require__(0);
 var validation_1 = __webpack_require__(13);
 /**
@@ -22074,7 +22080,7 @@ exports.OnDisconnect = OnDisconnect;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var KeyIndex_1 = __webpack_require__(24);
+var KeyIndex_1 = __webpack_require__(23);
 var PriorityIndex_1 = __webpack_require__(5);
 var ValueIndex_1 = __webpack_require__(75);
 var PathIndex_1 = __webpack_require__(79);
@@ -22652,7 +22658,7 @@ var tslib_1 = __webpack_require__(3);
 var Index_1 = __webpack_require__(31);
 var Node_1 = __webpack_require__(7);
 var util_1 = __webpack_require__(1);
-var nodeFromJSON_1 = __webpack_require__(25);
+var nodeFromJSON_1 = __webpack_require__(24);
 /**
  * @constructor
  * @extends {Index}
@@ -22749,7 +22755,7 @@ var childSet_1 = __webpack_require__(77);
 var util_2 = __webpack_require__(0);
 var Node_1 = __webpack_require__(7);
 var PriorityIndex_1 = __webpack_require__(5);
-var KeyIndex_1 = __webpack_require__(24);
+var KeyIndex_1 = __webpack_require__(23);
 var _defaultIndexMap;
 var fallbackObject = {};
 /**
@@ -23110,7 +23116,7 @@ var util_2 = __webpack_require__(1);
 var Index_1 = __webpack_require__(31);
 var ChildrenNode_1 = __webpack_require__(6);
 var Node_1 = __webpack_require__(7);
-var nodeFromJSON_1 = __webpack_require__(25);
+var nodeFromJSON_1 = __webpack_require__(24);
 /**
  * @param {!Path} indexPath
  * @constructor
@@ -23206,7 +23212,7 @@ var util_1 = __webpack_require__(0);
 var Path_1 = __webpack_require__(2);
 var SparseSnapshotTree_1 = __webpack_require__(81);
 var LeafNode_1 = __webpack_require__(32);
-var nodeFromJSON_1 = __webpack_require__(25);
+var nodeFromJSON_1 = __webpack_require__(24);
 var PriorityIndex_1 = __webpack_require__(5);
 /**
  * Generate placeholders for deferred values.
@@ -25459,7 +25465,7 @@ exports.Connection = Connection;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(1);
 var CountedSet_1 = __webpack_require__(82);
-var StatsManager_1 = __webpack_require__(50);
+var StatsManager_1 = __webpack_require__(49);
 var PacketReceiver_1 = __webpack_require__(179);
 var Constants_1 = __webpack_require__(30);
 var util_2 = __webpack_require__(0);
@@ -26096,7 +26102,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = __webpack_require__(11);
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
-var StatsManager_1 = __webpack_require__(50);
+var StatsManager_1 = __webpack_require__(49);
 var Constants_1 = __webpack_require__(30);
 var util_3 = __webpack_require__(0);
 var storage_1 = __webpack_require__(29);
@@ -26428,7 +26434,7 @@ exports.WebSocketConnection = WebSocketConnection;
 
 //# sourceMappingURL=WebSocketConnection.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(63)))
 
 /***/ }),
 /* 92 */
@@ -26530,7 +26536,7 @@ exports.ServerActions = ServerActions;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var IndexedFilter_1 = __webpack_require__(49);
+var IndexedFilter_1 = __webpack_require__(48);
 var PriorityIndex_1 = __webpack_require__(5);
 var Node_1 = __webpack_require__(7);
 var ChildrenNode_1 = __webpack_require__(6);
@@ -26671,7 +26677,7 @@ exports.RangedFilter = RangedFilter;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_vapid_details_model__ = __webpack_require__(192);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_notification_permission__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_iid_model__ = __webpack_require__(96);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helpers_array_buffer_to_base64__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helpers_array_buffer_to_base64__ = __webpack_require__(51);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -27097,8 +27103,8 @@ var DBInterface = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_util__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_util___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__firebase_util__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers_array_buffer_to_base64__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fcm_details__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__helpers_array_buffer_to_base64__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fcm_details__ = __webpack_require__(52);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -27379,15 +27385,15 @@ var ErrorCode;
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Reference; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_blob__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__implementation_error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_location__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_metadata__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_metadata__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__implementation_object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__implementation_path__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__implementation_requests__ = __webpack_require__(103);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__implementation_string__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__implementation_string__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__implementation_type__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task__ = __webpack_require__(203);
 /**
@@ -27711,7 +27717,7 @@ function lastComponent(path) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FbsBlob; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fs__ = __webpack_require__(201);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__string__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__string__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__type__ = __webpack_require__(8);
 /**
  * Copyright 2017 Google Inc.
@@ -27865,14 +27871,14 @@ var FbsBlob = /** @class */ (function () {
 /* harmony export (immutable) */ __webpack_exports__["f"] = getResumableUploadStatus;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return resumableUploadChunkSize; });
 /* harmony export (immutable) */ __webpack_exports__["b"] = continueResumableUpload;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blob__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__error__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__metadata__ = __webpack_require__(54);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__requestinfo__ = __webpack_require__(202);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(55);
 /**
  * Copyright 2017 Google Inc.
  *
@@ -28244,7 +28250,7 @@ var _control = __webpack_require__(38);
 
 var _kline = _interopRequireDefault(__webpack_require__(17));
 
-var _templates = __webpack_require__(28);
+var _templates = __webpack_require__(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29589,7 +29595,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.STOCHRSIIndicator = exports.PSYIndicator = exports.BOLLIndicator = exports.MTMIndicator = exports.ROCIndicator = exports.KDJIndicator = exports.SARIndicator = exports.WRIndicator = exports.RSIIndicator = exports.EMVIndicator = exports.OBVIndicator = exports.VRIndicator = exports.BRARIndicator = exports.TRIXIndicator = exports.DMAIndicator = exports.DMIIndicator = exports.MACDIndicator = exports.VOLUMEIndicator = exports.EMAIndicator = exports.MAIndicator = exports.HLCIndicator = exports.Indicator = void 0;
 
-var exprs = _interopRequireWildcard(__webpack_require__(60));
+var exprs = _interopRequireWildcard(__webpack_require__(59));
 
 var themes = _interopRequireWildcard(__webpack_require__(22));
 
@@ -31636,7 +31642,7 @@ if (typeof Promise === 'undefined') {
 
 //# sourceMappingURL=promise.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
 /* 132 */
@@ -31953,7 +31959,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
 /* 134 */
@@ -32146,7 +32152,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23), __webpack_require__(44)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(63)))
 
 /***/ }),
 /* 135 */
@@ -32827,7 +32833,7 @@ exports.Deferred = Deferred;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var constants_1 = __webpack_require__(45);
+var constants_1 = __webpack_require__(44);
 /**
  * Returns navigator.userAgent string or '' if it's not defined.
  * @return {string} user agent string
@@ -34274,7 +34280,7 @@ Y(og.prototype,{toJSON:{name:"toJSON",j:[V(null,!0)]}});Y(dm.prototype,{clear:{n
 c){a=new Bl(a);c({INTERNAL:{getUid:r(a.getUid,a),getToken:r(a.$b,a),addAuthTokenListener:r(a.Qb,a),removeAuthTokenListener:r(a.yc,a)}});return a},a,function(a,c){if("create"===a)try{c.auth()}catch(d){}});firebase.INTERNAL.extendNamespace({User:Hk})}else throw Error("Cannot find the firebase namespace; be sure to include firebase-app.js before this library.");})();
 }).call(typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : {});
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
 
 /***/ }),
 /* 151 */
@@ -34326,11 +34332,11 @@ var Database_1 = __webpack_require__(68);
 exports.Database = Database_1.Database;
 var Query_1 = __webpack_require__(73);
 exports.Query = Query_1.Query;
-var Reference_1 = __webpack_require__(46);
+var Reference_1 = __webpack_require__(45);
 exports.Reference = Reference_1.Reference;
 var util_1 = __webpack_require__(1);
 exports.enableLogging = util_1.enableLogging;
-var RepoManager_1 = __webpack_require__(51);
+var RepoManager_1 = __webpack_require__(50);
 var INTERNAL = __webpack_require__(185);
 var TEST_ACCESS = __webpack_require__(186);
 var util_2 = __webpack_require__(0);
@@ -34355,7 +34361,7 @@ function registerDatabase(instance) {
 }
 exports.registerDatabase = registerDatabase;
 registerDatabase(app_1.default);
-var DataSnapshot_1 = __webpack_require__(47);
+var DataSnapshot_1 = __webpack_require__(46);
 exports.DataSnapshot = DataSnapshot_1.DataSnapshot;
 var onDisconnect_1 = __webpack_require__(72);
 exports.OnDisconnect = onDisconnect_1.OnDisconnect;
@@ -34702,7 +34708,7 @@ exports.nextPushId = (function () {
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var DataSnapshot_1 = __webpack_require__(47);
+var DataSnapshot_1 = __webpack_require__(46);
 var Event_1 = __webpack_require__(159);
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(0);
@@ -35048,7 +35054,7 @@ var util_2 = __webpack_require__(1);
 var AckUserWrite_1 = __webpack_require__(161);
 var ChildrenNode_1 = __webpack_require__(6);
 var util_3 = __webpack_require__(0);
-var ImmutableTree_1 = __webpack_require__(48);
+var ImmutableTree_1 = __webpack_require__(47);
 var ListenComplete_1 = __webpack_require__(162);
 var Merge_1 = __webpack_require__(163);
 var Operation_1 = __webpack_require__(14);
@@ -35969,7 +35975,7 @@ exports.Merge = Merge;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var IndexedFilter_1 = __webpack_require__(49);
+var IndexedFilter_1 = __webpack_require__(48);
 var ViewProcessor_1 = __webpack_require__(165);
 var ChildrenNode_1 = __webpack_require__(6);
 var CacheNode_1 = __webpack_require__(35);
@@ -36189,8 +36195,8 @@ var util_1 = __webpack_require__(0);
 var ChildChangeAccumulator_1 = __webpack_require__(166);
 var Change_1 = __webpack_require__(18);
 var ChildrenNode_1 = __webpack_require__(6);
-var KeyIndex_1 = __webpack_require__(24);
-var ImmutableTree_1 = __webpack_require__(48);
+var KeyIndex_1 = __webpack_require__(23);
+var ImmutableTree_1 = __webpack_require__(47);
 var Path_1 = __webpack_require__(2);
 var CompleteChildSource_1 = __webpack_require__(167);
 /**
@@ -37761,7 +37767,7 @@ exports.WriteTreeRef = WriteTreeRef;
  * limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var ImmutableTree_1 = __webpack_require__(48);
+var ImmutableTree_1 = __webpack_require__(47);
 var Path_1 = __webpack_require__(2);
 var util_1 = __webpack_require__(0);
 var Node_1 = __webpack_require__(7);
@@ -38988,11 +38994,11 @@ exports.ReadonlyRestClient = ReadonlyRestClient;
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
 var util_2 = __webpack_require__(1);
-var KeyIndex_1 = __webpack_require__(24);
+var KeyIndex_1 = __webpack_require__(23);
 var PriorityIndex_1 = __webpack_require__(5);
 var ValueIndex_1 = __webpack_require__(75);
 var PathIndex_1 = __webpack_require__(79);
-var IndexedFilter_1 = __webpack_require__(49);
+var IndexedFilter_1 = __webpack_require__(48);
 var LimitedFilter_1 = __webpack_require__(182);
 var RangedFilter_1 = __webpack_require__(93);
 var util_3 = __webpack_require__(0);
@@ -39666,8 +39672,8 @@ exports.LimitedFilter = LimitedFilter;
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 var util_1 = __webpack_require__(0);
-var Reference_1 = __webpack_require__(46);
-var DataSnapshot_1 = __webpack_require__(47);
+var Reference_1 = __webpack_require__(45);
+var DataSnapshot_1 = __webpack_require__(46);
 var Path_1 = __webpack_require__(2);
 var Tree_1 = __webpack_require__(184);
 var PriorityIndex_1 = __webpack_require__(5);
@@ -39675,7 +39681,7 @@ var util_2 = __webpack_require__(1);
 var ServerValues_1 = __webpack_require__(80);
 var validation_1 = __webpack_require__(13);
 var util_3 = __webpack_require__(0);
-var nodeFromJSON_1 = __webpack_require__(25);
+var nodeFromJSON_1 = __webpack_require__(24);
 var ChildrenNode_1 = __webpack_require__(6);
 var Repo_1 = __webpack_require__(34);
 // TODO: This is pretty messy.  Ideally, a lot of this would move into FirebaseData, or a transaction-specific
@@ -40534,7 +40540,7 @@ exports.interceptServerData = function (ref, callback) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var RepoInfo_1 = __webpack_require__(71);
 var PersistentConnection_1 = __webpack_require__(87);
-var RepoManager_1 = __webpack_require__(51);
+var RepoManager_1 = __webpack_require__(50);
 var Connection_1 = __webpack_require__(89);
 exports.DataConnection = PersistentConnection_1.PersistentConnection;
 /**
@@ -40682,7 +40688,7 @@ registerMessaging(__WEBPACK_IMPORTED_MODULE_2__firebase_app__["firebase"]);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_worker_page_message__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_default_sw__ = __webpack_require__(193);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__models_notification_permission__ = __webpack_require__(97);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_fcm_details__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__models_fcm_details__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__helpers_base64_to_array_buffer__ = __webpack_require__(194);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__firebase_util__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__firebase_util___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__firebase_util__);
@@ -41085,7 +41091,7 @@ var WindowController = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__db_interface__ = __webpack_require__(95);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_array_buffer_to_base64__ = __webpack_require__(52);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_array_buffer_to_base64__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__clean_v1_undefined__ = __webpack_require__(191);
 /**
  * Copyright 2017 Google Inc.
@@ -41664,7 +41670,7 @@ var VapidDetailsModel = /** @class */ (function (_super) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tslib__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__controller_interface__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_errors__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_fcm_details__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_fcm_details__ = __webpack_require__(52);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_worker_page_message__ = __webpack_require__(98);
 /**
  * Copyright 2017 Google Inc.
@@ -42029,8 +42035,8 @@ __webpack_require__(197);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["registerStorage"] = registerStorage;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_app__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_implementation_string__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_implementation_taskenums__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__src_implementation_string__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__src_implementation_taskenums__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__src_implementation_xhriopool__ = __webpack_require__(198);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__src_reference__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__src_service__ = __webpack_require__(207);
@@ -42431,11 +42437,11 @@ var RequestInfo = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UploadTask; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_taskenums__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_taskenums__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_observer__ = __webpack_require__(204);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tasksnapshot__ = __webpack_require__(205);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_args__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_array__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_args__ = __webpack_require__(53);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__implementation_array__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__implementation_async__ = __webpack_require__(206);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__implementation_error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__implementation_promise_external__ = __webpack_require__(16);
@@ -43148,7 +43154,7 @@ function async(f) {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Service; });
 /* unused harmony export ServiceInternals */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(54);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__implementation_args__ = __webpack_require__(53);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__implementation_authwrapper__ = __webpack_require__(208);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__implementation_location__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__implementation_promise_external__ = __webpack_require__(16);
@@ -43546,13 +43552,13 @@ var RequestMap = /** @class */ (function () {
 /* unused harmony export addVersionHeader_ */
 /* harmony export (immutable) */ __webpack_exports__["a"] = makeRequest;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__firebase_app__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__backoff__ = __webpack_require__(212);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__error__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__object__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__promise_external__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__type__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(56);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__url__ = __webpack_require__(55);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__xhrio__ = __webpack_require__(99);
 /**
  * Copyright 2017 Google Inc.
@@ -44493,7 +44499,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23), __webpack_require__(44)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(63)))
 
 /***/ }),
 /* 214 */
