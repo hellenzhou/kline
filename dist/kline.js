@@ -4839,7 +4839,7 @@ function () {
     this.showLanguageSelect = false;
     this.showDrawTool = false;
     this.theme = "dark";
-    this.ranges = ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"];
+    this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "3d", "1w"];
     this.showTrade = true;
     this.tradeheight = 44;
     this.tradeWidth = 250;
@@ -4880,6 +4880,7 @@ function () {
     this.depthData = {};
     this.depthTimer = null;
     this.depthIntervalTime = 2000;
+    this.chatPeriodToolRanages = [];
     this.periodMap = {
       "01w": 7 * 86400 * 1000,
       "03d": 3 * 86400 * 1000,
@@ -4912,6 +4913,7 @@ function () {
       "1m": "01m",
       "line": "01m"
     };
+    this.periodTitle = null;
     Object.assign(this, option);
 
     if (!Kline.created) {
@@ -4921,12 +4923,24 @@ function () {
 
     return Kline.instance;
   }
-  /*********************************************
-   * Methods
-   *********************************************/
-
 
   _createClass(Kline, [{
+    key: "periodsVertDisplayNone",
+    value: function periodsVertDisplayNone(array) {
+      for (var k in this.ranges) {
+        var curRanage = this.ranges[k];
+
+        if (array && array.length > 0 && array.indexOf(curRanage) >= 0) {
+          var nodeName = '#chart_period_' + curRanage + '_v';
+          (0, _jquery.default)(nodeName).attr('style', "display:none");
+        }
+      }
+    }
+    /*********************************************
+     * Methods
+     *********************************************/
+
+  }, {
     key: "draw",
     value: function draw() {
       Kline.trade = new _kline_trade.KlineTrade();
@@ -5211,8 +5225,24 @@ function () {
         });
         (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").click(function () {
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
+
+          (0, _jquery.default)(".chart_str_period").removeClass('selected');
+          debugger;
+
+          if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
+            (0, _jquery.default)(".chart_str_period").text(Kline.instance.periodTitle);
+            console.log(Kline.instance.periodTitle);
+          }
         });
         (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
+          // 第一次时获取字符串保存起来
+          debugger;
+
+          if (!Kline.instance.periodTitle) {
+            Kline.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
+            console.log(Kline.instance.periodTitle);
+          }
+
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
 
           var pdescribe = (0, _jquery.default)(this).text();
@@ -9562,7 +9592,8 @@ function () {
       var mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
 
       (0, _jquery.default)(showIndic).hide();
-      (0, _jquery.default)(dropDownSettings).hide(); // 根据时间计算显示个数
+      (0, _jquery.default)(dropDownSettings).hide();
+      var chatPeriodToolRanages = []; // 根据时间计算显示个数
 
       var ranges = _kline.default.instance.ranges;
       var periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
@@ -9578,11 +9609,15 @@ function () {
         if (totalWidth > periodShowWidth - periodsVert.width()) {
           dom.hide();
           showCount--;
+        } else {
+          chatPeriodToolRanages.push(ranges[i]);
         }
       }
 
       if (showCount < ranges.length) {
         periodsVert.show();
+
+        _kline.default.instance.periodsVertDisplayNone(chatPeriodToolRanages);
       } else {
         periodsVert.hide();
       }

@@ -38,7 +38,7 @@ export default class Kline {
         this.showLanguageSelect = false;
         this.showDrawTool = false;
         this.theme = "dark";
-        this.ranges = ["1w", "1d", "1h", "30m", "15m", "5m", "1m", "line"];
+        this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "3d", "1w"];
         this.showTrade = true;
         this.tradeheight = 44;
         this.tradeWidth = 250;
@@ -81,6 +81,7 @@ export default class Kline {
         this.depthTimer = null;
         this.depthIntervalTime = 2000;
 
+        this.chatPeriodToolRanages = [];
         this.periodMap = {
             "01w": 7 * 86400 * 1000,
             "03d": 3 * 86400 * 1000,
@@ -115,6 +116,7 @@ export default class Kline {
             "line": "01m"
         };
 
+        this.periodTitle= null;
         Object.assign(this, option);
 
         if (!Kline.created) {
@@ -124,6 +126,17 @@ export default class Kline {
         return Kline.instance;
     }
 
+    periodsVertDisplayNone(array) {
+
+        for (let k in this.ranges) {
+            let curRanage = this.ranges[k];
+            if (array && array.length > 0 && array.indexOf(curRanage) >= 0) {
+                let nodeName = '#chart_period_' + curRanage + '_v';
+                $(nodeName).attr('style', "display:none");
+            }
+        }
+
+    }
 
     /*********************************************
      * Methods
@@ -369,8 +382,22 @@ export default class Kline {
             $(".chart_container .chart_toolbar_tabgroup a")
                 .click(function () {
                     Control.switchPeriod($(this).parent().attr('name'));
+                    $(".chart_str_period").removeClass('selected');
+                    debugger
+                    if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
+                        $(".chart_str_period").text(Kline.instance.periodTitle);
+                        console.log( Kline.instance.periodTitle)
+                    }
+
                 });
             $("#chart_toolbar_periods_vert ul a").click(function () {
+                // 第一次时获取字符串保存起来
+                debugger
+                if (!Kline.instance.periodTitle) {
+                    Kline.instance.periodTitle = $(".chart_str_period").text();
+                    console.log( Kline.instance.periodTitle)
+                }
+
                 Control.switchPeriod($(this).parent().attr('name'));
                 let pdescribe = $(this).text();
                 if (pdescribe != undefined && typeof (pdescribe) === "string") {

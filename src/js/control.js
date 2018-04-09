@@ -626,12 +626,13 @@ export class Control {
 
         $(showIndic).hide();
         $(dropDownSettings).hide();
-        
+
+        let chatPeriodToolRanages = [];
         // 根据时间计算显示个数
         let ranges = Kline.instance.ranges;
         let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
         let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
-     
+
         for (let i = 0; i < totalCount; i++) {
             let dom = $('#chart_period_' + ranges[i] + '_h');
             dom.show();
@@ -639,13 +640,17 @@ export class Control {
             if (totalWidth > periodShowWidth - periodsVert.width()) {
                 dom.hide();
                 showCount--;
+            } else {
+                chatPeriodToolRanages.push(ranges[i])
             }
         }
 
         if (showCount < ranges.length) {
             periodsVert.show();
+            Kline.instance.periodsVertDisplayNone(chatPeriodToolRanages);
         } else {
             periodsVert.hide();
+
         }
 
         let periodsVertNW = periodsVert[0].offsetWidth;
@@ -820,7 +825,7 @@ export class Control {
                 $(this).addClass('selected');
             }
         });
-        
+
         $("#chart_toolbar_periods_vert .chart_dropdown_t").removeClass("chart_dropdown-hover");
 
         ChartManager.instance.showCursor();
