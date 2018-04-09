@@ -59,6 +59,7 @@ export default class Kline {
         this.klineSizeName = 'size';
         this.klineSinceName = 'since';
         this.klineSizeValue = '1000';
+
         this.klineSinceValue = null;
         this.G_KLINE_HTTP_REQUEST = null;
         this.klineData = {};
@@ -71,7 +72,7 @@ export default class Kline {
         this.G_TRADES_HTTP_REQUEST = null;
         this.tradesData = {};
         this.tradesTimer = null;
-        this.tradesIntervalTime = 7000;
+        this.tradesIntervalTime = 8000;
 
         //市场深度数据
         this.depthBaseUrl = 'http://api.bitkk.com/data/v1/depth';
@@ -79,7 +80,7 @@ export default class Kline {
         this.G_DEPTH_HTTP_REQUEST = null;
         this.depthData = {};
         this.depthTimer = null;
-        this.depthIntervalTime = 2000;
+        this.depthIntervalTime = 8000;
 
         this.chatPeriodToolRanages = [];
         this.periodMap = {
@@ -171,12 +172,20 @@ export default class Kline {
         Control.onSize(this.width, this.height);
         Control.readCookie();
 
+       
         this.setTheme(this.theme);
         this.setLanguage(this.language);
-
+        let tmp = ChartSettings.get();
+        let period = tmp.charts.period;
+        let pdescribe =   $('#chart_period_' + period + '_v a').text();
         !this.showLanguageSelect && $("#chart_language_setting_div").hide();
         !this.showDrawTool && $(".chart_str_tools_cap").hide();
         $(this.element).css({ visibility: "visible" });
+
+        if (pdescribe != undefined && typeof (pdescribe) === "string" &&  pdescribe !== "" ) {
+           $(".chart_str_period").addClass('selected');
+           $(".chart_str_period").text(pdescribe);
+       }
     }
 
     resize(width, height) {
@@ -388,10 +397,10 @@ export default class Kline {
                     }
                 });
             $("#chart_toolbar_periods_vert ul a").click(function () {
-                // 第一次时获取字符串保存起来
-                if (!Kline.instance.periodTitle) {
-                    Kline.instance.periodTitle = $(".chart_str_period").text();
-                }
+                // // 第一次时获取字符串保存起来
+                // if (!Kline.instance.periodTitle) {
+                //     Kline.instance.periodTitle = $(".chart_str_period").text();
+                // }
                 Control.switchPeriod($(this).parent().attr('name'));
                 let pdescribe = $(this).text();
                 if (pdescribe != undefined && typeof (pdescribe) === "string") {

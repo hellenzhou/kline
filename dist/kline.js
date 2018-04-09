@@ -4872,14 +4872,14 @@ function () {
     this.G_TRADES_HTTP_REQUEST = null;
     this.tradesData = {};
     this.tradesTimer = null;
-    this.tradesIntervalTime = 7000; //市场深度数据
+    this.tradesIntervalTime = 8000; //市场深度数据
 
     this.depthBaseUrl = 'http://api.bitkk.com/data/v1/depth';
     this.depthMarketName = 'market';
     this.G_DEPTH_HTTP_REQUEST = null;
     this.depthData = {};
     this.depthTimer = null;
-    this.depthIntervalTime = 2000;
+    this.depthIntervalTime = 8000;
     this.chatPeriodToolRanages = [];
     this.periodMap = {
       "01w": 7 * 86400 * 1000,
@@ -4980,11 +4980,21 @@ function () {
 
       this.setTheme(this.theme);
       this.setLanguage(this.language);
+
+      var tmp = _chart_settings.ChartSettings.get();
+
+      var period = tmp.charts.period;
+      var pdescribe = (0, _jquery.default)('#chart_period_' + period + '_v a').text();
       !this.showLanguageSelect && (0, _jquery.default)("#chart_language_setting_div").hide();
       !this.showDrawTool && (0, _jquery.default)(".chart_str_tools_cap").hide();
       (0, _jquery.default)(this.element).css({
         visibility: "visible"
       });
+
+      if (pdescribe != undefined && typeof pdescribe === "string" && pdescribe !== "") {
+        (0, _jquery.default)(".chart_str_period").addClass('selected');
+        (0, _jquery.default)(".chart_str_period").text(pdescribe);
+      }
     }
   }, {
     key: "resize",
@@ -5233,11 +5243,10 @@ function () {
           }
         });
         (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
-          // 第一次时获取字符串保存起来
-          if (!Kline.instance.periodTitle) {
-            Kline.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
-          }
-
+          // // 第一次时获取字符串保存起来
+          // if (!Kline.instance.periodTitle) {
+          //     Kline.instance.periodTitle = $(".chart_str_period").text();
+          // }
           _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
 
           var pdescribe = (0, _jquery.default)(this).text();
@@ -9191,14 +9200,14 @@ function () {
       }
 
       _kline.default.instance.depthData = eval(res);
-      var intervalTime = _kline.default.instance.depthIntervalTime < _kline.default.instance.range ? _kline.default.instance.depthIntervalTime : _kline.default.instance.range;
+      var intervalTime = _kline.default.instance.depthIntervalTime;
 
       if (_kline.default.instance.depthData) {
         _kline_trade.KlineTrade.instance.updateDepth(_kline.default.instance.depthData);
       }
 
       if (_kline.default.instance.type === 'poll') {
-        _kline.default.instance.depthTimer = setTimeout(Control.depthTwoSecondThread, intervalTime);
+        _kline.default.instance.depthTimer = setTimeout(Control.depthRequestData, intervalTime);
       }
     }
   }, {
@@ -9265,7 +9274,7 @@ function () {
         return;
       }
 
-      var intervalTime = _kline.default.instance.tradesIntervalTime < _kline.default.instance.range ? _kline.default.instance.tradesIntervalTime : _kline.default.instance.range;
+      var intervalTime = _kline.default.instance.tradesIntervalTime;
 
       if (res && res.length > 0) {
         _kline_trade.KlineTrade.instance.pushTrades(res);
@@ -9274,13 +9283,8 @@ function () {
       }
 
       if (_kline.default.instance.type === 'poll') {
-        _kline.default.instance.tradesTimer = setTimeout(Control.tradesReqOnTwoSecondThread, intervalTime);
+        _kline.default.instance.tradesTimer = setTimeout(Control.tradesRequestData, intervalTime);
       }
-    }
-  }, {
-    key: "tradesReqOnTwoSecondThread",
-    value: function tradesReqOnTwoSecondThread() {
-      Control.tradesRequestData();
     }
   }, {
     key: "parseRequestParam",
@@ -9387,6 +9391,7 @@ function () {
       _kline.default.instance.symbol = symbol;
       Control.switchSymbolSelected(symbol);
       var period = tmp.charts.period;
+      _kline.default.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
       Control.switchPeriod(period);
       (0, _jquery.default)('#chart_period_' + period + '_v a').addClass('selected');
       (0, _jquery.default)('#chart_period_' + period + '_h a').addClass('selected');

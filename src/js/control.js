@@ -88,6 +88,7 @@ export class Control {
     static depthRequestData(showLoading) {
         Control.depthAbortRequest();
         window.clearTimeout(Kline.instance.depthTimer);
+        
         if (Kline.instance.paused) {
             return;
         }
@@ -259,13 +260,14 @@ export class Control {
         }
 
         Kline.instance.depthData = eval(res);
-        let intervalTime = Kline.instance.depthIntervalTime < Kline.instance.range ? Kline.instance.depthIntervalTime : Kline.instance.range;
-        if (Kline.instance.depthData) {
+     
+     let intervalTime = Kline.instance.depthIntervalTime;  
+     if (Kline.instance.depthData) {
             KlineTrade.instance.updateDepth(Kline.instance.depthData);
         }
 
         if (Kline.instance.type === 'poll') {
-            Kline.instance.depthTimer = setTimeout(Control.depthTwoSecondThread, intervalTime);
+            Kline.instance.depthTimer = setTimeout( Control.depthRequestData, intervalTime);
         }
     }
 
@@ -328,19 +330,14 @@ export class Control {
             return;
         }
 
-        let intervalTime = Kline.instance.tradesIntervalTime < Kline.instance.range ? Kline.instance.tradesIntervalTime : Kline.instance.range;
-
+       let intervalTime = Kline.instance.tradesIntervalTime;
         if (res && res.length > 0) {
             KlineTrade.instance.pushTrades(res);
             KlineTrade.instance.klineTradeInit = true;
         }
         if (Kline.instance.type === 'poll') {
-            Kline.instance.tradesTimer = setTimeout(Control.tradesReqOnTwoSecondThread, intervalTime);
+            Kline.instance.tradesTimer = setTimeout( Control.tradesRequestData, intervalTime);
         }
-    }
-
-    static tradesReqOnTwoSecondThread() {
-        Control.tradesRequestData();
     }
 
     static parseRequestParam(str) {
@@ -430,9 +427,14 @@ export class Control {
         Kline.instance.symbol = symbol;
         Control.switchSymbolSelected(symbol);
         let period = tmp.charts.period;
+
+         
+        Kline.instance.periodTitle = $(".chart_str_period").text();
         Control.switchPeriod(period);
+
         $('#chart_period_' + period + '_v a').addClass('selected');
         $('#chart_period_' + period + '_h a').addClass('selected');
+       
         if (tmp.charts.indicsStatus === 'close') {
             Control.switchIndic('off');
         } else if (tmp.charts.indicsStatus === 'open') {
