@@ -725,6 +725,11 @@ export default class Kline {
                     console.log("onMaximizeWindow")
                 }
                 if (Kline.instance.onMaximizeWindow !== null) {
+
+                    if (this.debug) {
+                        console.log("enter onMaximizeWindow")
+                    }
+
                     Kline.instance.onMaximizeWindow();
                 }
 
