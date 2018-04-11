@@ -5587,6 +5587,8 @@ function () {
           _chart_manager.ChartManager.instance.redraw('All', false);
         });
         (0, _jquery.default)('body').on('click', '#sizeIcon', function () {
+          alert('123onMaximizeWindow456');
+
           if (Kline.instance.debug) {
             console.log("onMaximizeWindow");
           }
