@@ -4,7 +4,7 @@ html, body {
     min-width: 100%
 }
 
-.kline{  
+.kline {  
     -webkit-overflow-scrolling:touch;
   }
 

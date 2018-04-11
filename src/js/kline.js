@@ -326,11 +326,6 @@ export default class Kline {
     }
 
     registerMouseEvent() {
-
-        // document.body.addEventListener('touchmove',function(e) {
-        //     e.preventDefault();
-        // },{passive:false});
-
         $(document).ready(function () {
             function __resize() {
                 if (navigator.userAgent.indexOf('Firefox') >= 0) {
@@ -413,10 +408,6 @@ export default class Kline {
                     }
                 });
             $("#chart_toolbar_periods_vert ul a").click(function () {
-                // // 第一次时获取字符串保存起来
-                // if (!Kline.instance.periodTitle) {
-                //     Kline.instance.periodTitle = $(".chart_str_period").text();
-                // }
                 Control.switchPeriod($(this).parent().attr('name'));
                 let pdescribe = $(this).text();
                 if (pdescribe != undefined && typeof (pdescribe) === "string") {
@@ -730,10 +721,14 @@ export default class Kline {
 
 
             $('body').on('click', '#sizeIcon', function () {
-                if (Kline.instance.onMaximizeWindow) Kline.instance.onMaximizeWindow();
+                if (this.debug) {
+                    console.log("onMaximizeWindow")
+                }
+                if (Kline.instance.onMaximizeWindow) {
+                    Kline.instance.onMaximizeWindow();
+                }
 
                 return;
-
                 Kline.instance.isSized = !Kline.instance.isSized;
                 if (Kline.instance.isSized) {
                     $(Kline.instance.element).css({
