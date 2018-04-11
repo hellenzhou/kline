@@ -4,6 +4,10 @@ html, body {
     min-width: 100%
 }
 
+body{  
+    -webkit-overflow-scrolling:touch;
+  }
+ 
 ul, li {
     padding: 0;
     margin: 0;
@@ -19,7 +23,8 @@ li {
     font-size: 12px;
     height: 100%;
     position: relative;
-    width: 100%
+    width: 100%;
+    overflow:auto;
 }
 
 .chart_container div, .chart_container ul, .chart_container form {

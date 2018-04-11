@@ -326,6 +326,11 @@ export default class Kline {
     }
 
     registerMouseEvent() {
+
+        // document.body.addEventListener('touchmove',function(e) {
+        //     e.preventDefault();
+        // },{passive:false});
+
         $(document).ready(function () {
             function __resize() {
                 if (navigator.userAgent.indexOf('Firefox') >= 0) {
@@ -336,6 +341,7 @@ export default class Kline {
                     Control.onSize(this.width, this.height)
                 }
             }
+
 
             $('#chart_overlayCanvas').bind("contextmenu", function (e) {
                 e.cancelBubble = true;
