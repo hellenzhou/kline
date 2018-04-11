@@ -4,10 +4,10 @@ html, body {
     min-width: 100%
 }
 
-body{  
+.kline{  
     -webkit-overflow-scrolling:touch;
   }
- 
+
 ul, li {
     padding: 0;
     margin: 0;
