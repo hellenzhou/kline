@@ -5587,14 +5587,12 @@ function () {
           _chart_manager.ChartManager.instance.redraw('All', false);
         });
         (0, _jquery.default)('body').on('click', '#sizeIcon', function () {
-          alert('sizeIcon');
-
-          if (this.debug) {
+          if (Kline.instance.debug) {
             console.log("onMaximizeWindow");
           }
 
           if (Kline.instance.onMaximizeWindow !== null) {
-            if (this.debug) {
+            if (Kline.instance.debug) {
               console.log("enter onMaximizeWindow");
             }
 

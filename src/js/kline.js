@@ -720,16 +720,14 @@ export default class Kline {
             });
 
 
-            $('body').on('click', '#sizeIcon', function () {
-                alert ('sizeIcon');
-                
-                if (this.debug) {
+            $('body').on('click', '#sizeIcon', function () {                
+                if (Kline.instance.debug) {
                     console.log("onMaximizeWindow")
                 }
                 
                 if (Kline.instance.onMaximizeWindow !== null) {
 
-                    if (this.debug) {
+                    if (Kline.instance.debug) {
                         console.log("enter onMaximizeWindow")
                     }
 
