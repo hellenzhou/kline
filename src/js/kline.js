@@ -5,16 +5,11 @@ import { ChartSettings } from './chart_settings'
 import { Template } from './templates'
 import '../css/main.css'
 import tpl from '../view/tpl.html'
-import fire from './firebase'
+// import fire from './firebase'
 import $ from 'jquery'
 import { isNull } from 'util';
 
-
 export default class Kline {
-
-    static created = false;
-    static instance = null;
-
     constructor(option) {
         this.element = "#kline_container";
         this.chartMgr = null;
@@ -49,10 +44,11 @@ export default class Kline {
         this.isSized = false;
         this.paused = false;
         this.subscribed = null;
-        this.disableFirebase = true;
+        // this.disableFirebase = true;
 
         /*api文档  https://www.zb.com/i/developer/restApi#config */
         /*k线数据 参考文档type  since  size */
+
         this.klineBaseUrl = 'http://api.bitkk.com/data/v1/kline';
         this.klineMarketName = 'market';
         this.klineTypeName = 'type';
@@ -81,7 +77,6 @@ export default class Kline {
         this.depthData = {};
         this.depthTimer = null;
         this.depthIntervalTime = 8000;
-
         this.chatPeriodToolRanages = [];
         this.periodMap = {
             "01w": 7 * 86400 * 1000,
@@ -120,8 +115,8 @@ export default class Kline {
         this.periodTitle = null;
         this.periodAreaRanages = null;
         this.deviceRatio = 2;
-
         Object.assign(this, option);
+
         if (!Kline.created) {
             Kline.instance = this;
             Kline.created = true;
@@ -132,6 +127,7 @@ export default class Kline {
 
     periodsVertDisplayNone(array) {
         this.periodAreaRanages = array;
+
         if (array && (array instanceof Array) && array.length > 0) {
             for (let k in this.ranges) {
                 let curPeriod = this.ranges[k];
@@ -165,9 +161,9 @@ export default class Kline {
             Control.socketConnect();
         }
 
-        if (!this.disableFirebase) {
-            fire();
-        }
+        // if (!this.disableFirebase) {
+        //     fire();
+        // }
 
         this.registerMouseEvent();
         ChartManager.instance.bindCanvas("main", document.getElementById("chart_mainCanvas"));
@@ -325,6 +321,12 @@ export default class Kline {
         }
     }
 
+    convertCanvasToImage(canvas) {
+        let image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
+    }
+
     registerMouseEvent() {
         $(document).ready(function () {
             function __resize() {
@@ -336,7 +338,6 @@ export default class Kline {
                     Control.onSize(this.width, this.height)
                 }
             }
-
 
             $('#chart_overlayCanvas').bind("contextmenu", function (e) {
                 e.cancelBubble = true;
@@ -380,25 +381,29 @@ export default class Kline {
                     $(this).prev().removeClass("chart_dropdown-hover");
                     $(this).removeClass("chart_dropdown-hover");
                 });
-            $("#chart_btn_parameter_settings").click(function () {
-                $('#chart_parameter_settings').addClass("clicked");
-                $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-                $("#chart_parameter_settings").find("th").each(function () {
-                    let name = $(this).html();
-                    let index = 0;
-                    let tmp = ChartSettings.get();
-                    let value = tmp.indics[name];
-                    $(this.nextElementSibling).find("input").each(function () {
-                        if (value !== null && index < value.length) {
-                            $(this).val(value[index]);
-                        }
-                        index++;
-                    });
-                });
-            });
-            $("#close_settings").click(function () {
-                $('#chart_parameter_settings').removeClass("clicked");
-            });
+            /*  
+          $("#chart_btn_parameter_settings").click(function () {
+              $('#chart_parameter_settings').addClass("clicked");
+              $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
+              $("#chart_parameter_settings").find("th").each(function () {
+                  let name = $(this).html();
+                  let index = 0;
+                  let tmp = ChartSettings.get();
+                  let value = tmp.indics[name];
+                  $(this.nextElementSibling).find("input").each(function () {
+                      if (value !== null && index < value.length) {
+                          $(this).val(value[index]);
+                      }
+                      index++;
+                  });
+              });
+          });
+        
+          $("#close_settings").click(function () {
+              $('#chart_parameter_settings').removeClass("clicked");
+          });
+           */
+
             $(".chart_container .chart_toolbar_tabgroup a")
                 .click(function () {
                     Control.switchPeriod($(this).parent().attr('name'));
@@ -722,11 +727,20 @@ export default class Kline {
 
             $('#kline_container').on('click', '#sizeIcon', function () {
                 if (Kline.instance.debug) {
-                    console.log("onMaximizeWindow")
+                    console.log("onMaximizeWindow");
                 }
 
-                if (Kline.instance.onMaximizeWindow !== null) {
+                debugger
+                let chart_mainCanvas = document.getElementById("chart_mainCanvas");
+                Kline.instance.convertCanvasToImage(chart_mainCanvas);
 
+                var newImg = document.createElement("img");
+                newImg.src = url;
+                document.body.appendChild(newImg);
+
+
+
+                if (Kline.instance.onMaximizeWindow !== null) {
                     if (Kline.instance.debug) {
                         console.log("enter onMaximizeWindow")
                     }

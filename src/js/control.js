@@ -88,7 +88,7 @@ export class Control {
     static depthRequestData(showLoading) {
         Control.depthAbortRequest();
         window.clearTimeout(Kline.instance.depthTimer);
-        
+
         if (Kline.instance.paused) {
             return;
         }
@@ -260,14 +260,14 @@ export class Control {
         }
 
         Kline.instance.depthData = eval(res);
-     
-     let intervalTime = Kline.instance.depthIntervalTime;  
-     if (Kline.instance.depthData) {
+
+        let intervalTime = Kline.instance.depthIntervalTime;
+        if (Kline.instance.depthData) {
             KlineTrade.instance.updateDepth(Kline.instance.depthData);
         }
 
         if (Kline.instance.type === 'poll') {
-            Kline.instance.depthTimer = setTimeout( Control.depthRequestData, intervalTime);
+            Kline.instance.depthTimer = setTimeout(Control.depthRequestData, intervalTime);
         }
     }
 
@@ -330,13 +330,13 @@ export class Control {
             return;
         }
 
-       let intervalTime = Kline.instance.tradesIntervalTime;
+        let intervalTime = Kline.instance.tradesIntervalTime;
         if (res && res.length > 0) {
             KlineTrade.instance.pushTrades(res);
             KlineTrade.instance.klineTradeInit = true;
         }
         if (Kline.instance.type === 'poll') {
-            Kline.instance.tradesTimer = setTimeout( Control.tradesRequestData, intervalTime);
+            Kline.instance.tradesTimer = setTimeout(Control.tradesRequestData, intervalTime);
         }
     }
 
@@ -433,7 +433,7 @@ export class Control {
 
         $('#chart_period_' + period + '_v a').addClass('selected');
         $('#chart_period_' + period + '_h a').addClass('selected');
-       
+
         if (tmp.charts.indicsStatus === 'close') {
             Control.switchIndic('off');
         } else if (tmp.charts.indicsStatus === 'open') {
@@ -508,14 +508,10 @@ export class Control {
         let width = w || window.innerWidth;
         let chartWidth = width;
         let height = h || window.innerHeight;
- 
-        let topDivHeight = $("#chart_trade_quotation").height();
-        if (topDivHeight === undefined) topDivHeight = 0;
-
-        let  remainHeight =  height;
+        let remainHeight = height;
         if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
             remainHeight -= Kline.instance.tradeHeight;
-        } 
+        }
 
         let container = $(Kline.instance.element);
         container.css({
@@ -531,7 +527,7 @@ export class Control {
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
-        toolBarRect.y = topDivHeight;
+        toolBarRect.y = 0;
         toolBarRect.w = chartWidth;
 
         toolBarRect.h = 29;
@@ -543,14 +539,14 @@ export class Control {
         let tabBarRect = {};
         tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
-        tabBarRect.x = chartWidth - tabBarRect.w;      
+        tabBarRect.x = chartWidth - tabBarRect.w;
         tabBarRect.y = remainHeight - (tabBarRect.h + 1);
 
         let canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
         canvasGroupRect.y = toolPanelRect.y;
         canvasGroupRect.w = tabBarRect.w;
-        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y - topDivHeight;
+        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
         toolBar.css({
             left: toolBarRect.x + 'px',
             top: toolBarRect.y + 'px',
@@ -604,6 +600,8 @@ export class Control {
                 height: tabBarRect.h + 'px'
             });
         }
+
+        /*
         let dlgSettings = $("#chart_parameter_settings");
         dlgSettings.css({
             left: (chartWidth - dlgSettings.width()) >> 1,
@@ -611,6 +609,9 @@ export class Control {
             width: canvasGroupRect.w,
             height: canvasGroupRect.h
         });
+        */
+
+
         let dlgLoading = $("#chart_loading");
         dlgLoading.css({
             left: (chartWidth - dlgLoading.width()) >> 1,

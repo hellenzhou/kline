@@ -785,7 +785,7 @@ li {
     color: #393c40
 }
 
-#chart_parameter_settings {
+/* #chart_parameter_settings {
     border-radius: 4px;
     border: 0px solid;
     width: 640px;
@@ -857,7 +857,7 @@ li {
 .chart_container.light #chart_parameter_settings #close_settings {
     background: #1478c8;
     color: #eee
-}
+} */
 
 .chart_container input, .chart_container button {
     border-radius: 4px;
@@ -1072,7 +1072,7 @@ li {
     padding-top: 20px;
 }
 
-#chart_trade_quotation {
+.chart_trade_quotation {
     height: 80px;
     background-color: #0a0a0a;
     position: relative;
@@ -1082,11 +1082,21 @@ li {
     list-style: none;
     padding: 0;
     margin: 0;
+   
+}
+
+.chart_trade_quotation .green {
+    color: #0F0
+}
+
+.chart_trade_quotation .red {
+    color: #F00
 }
 
 #chart_trade_quotation_content li {
     position: absolute;
     display: block;
+    font-size: 12px;
 }
 
 #chart_trade_quotation_content li:nth-of-type(1) {
@@ -1118,13 +1128,7 @@ li {
     right: 10px;
 }
 
-.class_chart_trade_quotation .green {
-    color: #0F0
-}
-
-.class_chart_trade_quotation .red {
-    color: #F00
-}
+ 
 
 .trade_container .green {
     color: #0F0
