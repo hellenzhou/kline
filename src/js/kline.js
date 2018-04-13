@@ -181,7 +181,6 @@ export default class Kline {
             && this.periodAreaRanages.length > 0
             && this.periodAreaRanages.indexOf(period) === -1) {
             let pdescribe = $('#chart_period_' + period + '_v a').text();
-
             if (pdescribe != undefined && typeof (pdescribe) === "string"
                 && pdescribe !== "") {
                 $(".chart_str_period").addClass('selected');

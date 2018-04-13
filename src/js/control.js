@@ -30,6 +30,7 @@ export class Control {
     };
 
     static klineAbortRequest() {
+        debugger
         if (Kline.instance.type !== "stomp" || !Kline.instance.stompClient) {
             if (Kline.instance.G_KLINE_HTTP_REQUEST && Kline.instance.G_KLINE_HTTP_REQUEST.readyState !== 4) {
                 Kline.instance.G_KLINE_HTTP_REQUEST.abort();
@@ -522,6 +523,10 @@ export class Control {
         let toolBar = $('#chart_toolbar');
         let toolPanel = $('#chart_toolpanel');
         let canvasGroup = $('#chart_canvasGroup');
+
+        let chart_container_clone = $('#chart_container_clone');
+
+
         let tabBar = $('#chart_tabbar');
         let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
@@ -568,6 +573,14 @@ export class Control {
             width: '100%',
             height: canvasGroupRect.h + 'px'
         });
+
+        chart_container_clone.css({
+            left: canvasGroupRect.x + 'px',
+            top: toolBarRect.y + toolBarRect.h + 'px',
+            width: '100%',
+            height: canvasGroupRect.h + 'px'
+        });
+
         let mainCanvas = $('#chart_mainCanvas')[0];
         let overlayCanvas = $('#chart_overlayCanvas')[0];
         let devicePixelRatio = window.devicePixelRatio;
@@ -655,7 +668,6 @@ export class Control {
             Kline.instance.periodsVertDisplayNone(chatPeriodToolRanages);
         } else {
             periodsVert.hide();
-
         }
 
         let periodsVertNW = periodsVert[0].offsetWidth;

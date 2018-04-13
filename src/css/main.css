@@ -1068,7 +1068,7 @@ li {
     text-align: left;
     font-size: 16px;
     font-weight: bold;
-    /* padding-left: 15px;   */
+    padding-left: 15px;    
     padding-top: 20px;
 }
 
@@ -1082,7 +1082,6 @@ li {
     list-style: none;
     padding: 0;
     margin: 0;
-   
 }
 
 .chart_trade_quotation .green {
@@ -1100,12 +1099,12 @@ li {
 }
 
 #chart_trade_quotation_content li:nth-of-type(1) {
-    left: 12px;
+    left: 20px;
     top: 24px;
 }
 
 #chart_trade_quotation_content li:nth-of-type(2) {
-    left: 12px;
+    left: 26px;
     top: 36px;
     color: whitesmoke;
 }

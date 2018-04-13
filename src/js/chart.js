@@ -1,7 +1,7 @@
-import {ChartManager} from './chart_manager'
-import {Control} from './control'
+import { ChartManager } from './chart_manager'
+import { Control } from './control'
 import Kline from './kline'
-import {Template} from './templates'
+import { Template } from './templates'
 
 export class Chart {
 
@@ -69,6 +69,7 @@ export class Chart {
             bids_ei: 0
         };
         this.strIsLine = false;
+        debugger
         this._range = Kline.instance.range;
         this._symbol = Kline.instance.symbol;
     }
@@ -79,6 +80,7 @@ export class Chart {
         title += ' ';
         title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
         title += (this._contract_unit + '/' + this._money_type).toUpperCase();
+        debugger
         ChartManager.instance.setTitle('frame0.k0', title);
     }
 
@@ -89,8 +91,10 @@ export class Chart {
     }
 
     updateDataAndDisplay() {
+        debugger
         Kline.instance.symbol = this._symbol;
         Kline.instance.range = this._range;
+
         ChartManager.instance.setCurrentDataSource('frame0.k0', this._symbol + '.' + this._range);
         ChartManager.instance.setNormalMode();
         let f = Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
@@ -100,15 +104,15 @@ export class Chart {
         if (f === -1) {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, Kline.instance.limit, null);
 
-           Control.klineRequestData(true);
-           Control.tradesRequestData();
-           Control.depthRequestData();
+            Control.klineRequestData(true);
+            Control.tradesRequestData();
+            Control.depthRequestData();
         } else {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, f.toString());
-   
-           Control.klineRequestData();
-           Control.tradesRequestData();
-           Control.depthRequestData();
+
+            Control.klineRequestData();
+            Control.tradesRequestData();
+            Control.depthRequestData();
         }
         ChartManager.instance.redraw('All', false);
     }
@@ -130,7 +134,10 @@ export class Chart {
             Kline.instance.subscribed.unsubscribe();
             Kline.instance.subscribed = Kline.instance.stompClient.subscribe(Kline.instance.subscribePath + '/' + Kline.instance.symbol + '/' + this._range, Control.subscribeCallback);
         }
+
         this.updateDataAndDisplay();
+
+        debugger
         Kline.instance.onRangeChange(this._range);
     }
 
@@ -170,7 +177,7 @@ export class Chart {
         for (let i = _data.asks_si; i >= _data.asks_ei; i--) {
             if (i === _data.asks_si && _data.array[i] !== undefined) {
                 _data.array[i].amounts = _data.array[i].amount;
-            } else if(_data.array[i + 1] !== undefined) {
+            } else if (_data.array[i + 1] !== undefined) {
                 _data.array[i].amounts = _data.array[i + 1].amounts + _data.array[i].amount;
             }
         }
