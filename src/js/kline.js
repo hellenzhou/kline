@@ -526,22 +526,22 @@ export default class Kline {
             //         Control.switchTheme('light');
             //     }
             // });
-            $('#chart_enable_tools li a').click(function () {
-                $('#chart_enable_tools a').removeClass('selected');
-                if ($(this).attr('name') === 'on') {
-                    Control.switchTools('on');
-                } else if ($(this).attr('name') === 'off') {
-                    Control.switchTools('off');
-                }
-            });
-            $('#chart_enable_indicator li a').click(function () {
-                $('#chart_enable_indicator a').removeClass('selected');
-                if ($(this).attr('name') === 'on') {
-                    Control.switchIndic('on');
-                } else if ($(this).attr('name') === 'off') {
-                    Control.switchIndic('off');
-                }
-            });
+            // $('#chart_enable_tools li a').click(function () {
+            //     $('#chart_enable_tools a').removeClass('selected');
+            //     if ($(this).attr('name') === 'on') {
+            //         Control.switchTools('on');
+            //     } else if ($(this).attr('name') === 'off') {
+            //         Control.switchTools('off');
+            //     }
+            // });
+            // $('#chart_enable_indicator li a').click(function () {
+            //     $('#chart_enable_indicator a').removeClass('selected');
+            //     if ($(this).attr('name') === 'on') {
+            //         Control.switchIndic('on');
+            //     } else if ($(this).attr('name') === 'off') {
+            //         Control.switchIndic('off');
+            //     }
+            // });
 
             /*
             $('#chart_language_setting_div li a').click(function () {

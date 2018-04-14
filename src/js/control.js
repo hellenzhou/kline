@@ -659,8 +659,8 @@ export class Control {
         });
         let domElemCache = $('#chart_dom_elem_cache');
         // let rowTheme = $('#chart_select_theme')[0];
-        let rowTools = $('#chart_enable_tools')[0];
-        let rowIndic = $('#chart_enable_indicator')[0];
+       // let rowTools = $('#chart_enable_tools')[0];
+      //  let rowIndic = $('#chart_enable_indicator')[0];
         let periodsVert = $('#chart_toolbar_periods_vert'); //周期
         let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
         let showIndic = $('#chart_show_indicator')[0];
@@ -715,13 +715,13 @@ export class Control {
         // } else {
         //     periodsVert.after(periodsHorz);
         // }
-        if (chartWidth < showIndicNW) {
-            domElemCache.append(showIndic);
-            rowIndic.style.display = "";
-        } else {
-            dropDownSettings.before(showIndic);
-            rowIndic.style.display = "none";
-        }
+        // if (chartWidth < showIndicNW) {
+        //     domElemCache.append(showIndic);
+        //     rowIndic.style.display = "";
+        // } else {
+        //     dropDownSettings.before(showIndic);
+        //     rowIndic.style.display = "none";
+        // }
         // if (chartWidth < showToolsNW) {
         //     domElemCache.append(showTools);
         //     rowTools.style.display = "";
@@ -797,14 +797,14 @@ export class Control {
     static switchTools(name) {
         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
         // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-        $('#chart_enable_tools a').removeClass('selected');
+      //  $('#chart_enable_tools a').removeClass('selected');
         if (name === 'on') {
             // $('#chart_show_tools').addClass('selected');
-            $('#chart_enable_tools a').each(function () {
-                if ($(this).attr('name') === 'on') {
-                    $(this).addClass('selected');
-                }
-            });
+            // $('#chart_enable_tools a').each(function () {
+            //     if ($(this).attr('name') === 'on') {
+            //         $(this).addClass('selected');
+            //     }
+            // });
             // $('#chart_toolpanel')[0].style.display = 'inline';
             if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.Cursor) {
                 $('#chart_Cursor').parent().addClass('selected');
@@ -813,11 +813,11 @@ export class Control {
             }
         } else if (name === 'off') {
             //  $('#chart_show_tools').removeClass('selected');
-            $('#chart_enable_tools a').each(function () {
-                if ($(this).attr('name') === 'off') {
-                    $(this).addClass('selected');
-                }
-            });
+            // $('#chart_enable_tools a').each(function () {
+            //     if ($(this).attr('name') === 'off') {
+            //         $(this).addClass('selected');
+            //     }
+            // });
             // $('#chart_toolpanel')[0].style.display = 'none';
             ChartManager.instance.setRunningMode(ChartManager.instance._beforeDrawingTool);
             ChartManager.instance.redraw("All", true);
@@ -830,8 +830,8 @@ export class Control {
     }
 
     static switchIndic(name) {
-        $('#chart_enable_indicator a').removeClass('selected');
-        $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
+        // $('#chart_enable_indicator a').removeClass('selected');
+        // $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
         if (name === 'on') {
             $('#chart_show_indicator').addClass('selected');
             let tmp = ChartSettings.get();
