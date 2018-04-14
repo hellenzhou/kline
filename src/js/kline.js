@@ -126,15 +126,13 @@ export default class Kline {
     }
 
     periodsVertDisplayNone(array) {
+        if (!(array && (array instanceof Array) && array.length > 0)) return;
         this.periodAreaRanages = array;
-
-        if (array && (array instanceof Array) && array.length > 0) {
-            for (let k in this.ranges) {
-                let curPeriod = this.ranges[k];
-                if (curPeriod && typeof (curPeriod) === "string" && array.indexOf(curPeriod) >= 0) {
-                    let nodeName = '#chart_period_' + curPeriod + '_v';
-                    $(nodeName).attr('style', "display:none");
-                }
+        for (let k in this.ranges) {
+            let curPeriod = this.ranges[k];
+            if (curPeriod && typeof (curPeriod) === "string" && array.indexOf(curPeriod) >= 0) {
+                let nodeName = '#chart_period_' + curPeriod + '_v';
+                $(nodeName).attr('style', "display:none");
             }
         }
     }
@@ -432,14 +430,14 @@ export default class Kline {
                         Control.switchTools('on');
                     }
                 });
-            $("#chart_toolpanel .chart_toolpanel_button")
-                .click(function () {
-                    $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-                    $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-                    $(this).addClass("selected");
-                    let name = $(this).children().attr('name');
-                    Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
-                });
+            // $("#chart_toolpanel .chart_toolpanel_button")
+            //     .click(function () {
+            //         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
+            //         $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+            //         $(this).addClass("selected");
+            //         let name = $(this).children().attr('name');
+            //         Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
+            //     });
             $('#chart_show_indicator')
                 .click(function () {
                     if ($(this).hasClass('selected')) {
@@ -729,25 +727,38 @@ export default class Kline {
                     console.log("onMaximizeWindow");
                 }
 
-                debugger
-                let chart_mainCanvas = document.getElementById("chart_mainCanvas");
-                Kline.instance.convertCanvasToImage(chart_mainCanvas);
+                Kline.instance.isSized = !Kline.instance.isSized;
+                if (Kline.instance.isSized) {
+                    debugger
 
-                var newImg = document.createElement("img");
-                newImg.src = url;
-                document.body.appendChild(newImg);
+                    let chart_container_fullscreen = $('#chart_container_fullscreen');
+                    $('.chart_container').appendTo(chart_container_fullscreen);
+                    $('#chart_container_fullscreen').css('display', "inline-block");
+                    $('.trade_container').css('display', "none");
+
+                    // 修改画布
 
 
 
-                if (Kline.instance.onMaximizeWindow !== null) {
-                    if (Kline.instance.debug) {
-                        console.log("enter onMaximizeWindow")
-                    }
 
-                    Kline.instance.onMaximizeWindow();
+                } else {
+                    let chart_container_fullscreen = $('#chart_container_fullscreen');
+                    let chart_trade_quotation = $('#chart_trade_quotation');
+                    chart_trade_quotation.after($('.chart_container'));
+                    $('#chart_container_fullscreen').css('display', "none");
+
+
+                    $('.trade_container').css('display', "block");
                 }
 
+                let chart_container_fullscreen = $('#chart_container_fullscreen');
+                debugger
+
+                $('.chart_container').appendTo(chart_container_fullscreen);
+                $('#chart_container_fullscreen').css('display', "inline-block");
                 return;
+
+
                 Kline.instance.isSized = !Kline.instance.isSized;
                 if (Kline.instance.isSized) {
                     $(Kline.instance.element).css({

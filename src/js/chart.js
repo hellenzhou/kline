@@ -69,7 +69,7 @@ export class Chart {
             bids_ei: 0
         };
         this.strIsLine = false;
-        debugger
+       // debugger
         this._range = Kline.instance.range;
         this._symbol = Kline.instance.symbol;
     }
@@ -80,7 +80,7 @@ export class Chart {
         title += ' ';
         title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
         title += (this._contract_unit + '/' + this._money_type).toUpperCase();
-        debugger
+       // debugger
         ChartManager.instance.setTitle('frame0.k0', title);
     }
 
@@ -91,7 +91,7 @@ export class Chart {
     }
 
     updateDataAndDisplay() {
-        debugger
+     //   debugger
         Kline.instance.symbol = this._symbol;
         Kline.instance.range = this._range;
 
@@ -129,6 +129,7 @@ export class Chart {
     }
 
     setCurrentPeriod(period) {
+     //   debugger
         this._range = Kline.instance.periodMap[period];
         if (Kline.instance.type === "stomp" && Kline.instance.stompClient.ws.readyState === 1) {
             Kline.instance.subscribed.unsubscribe();
@@ -136,8 +137,7 @@ export class Chart {
         }
 
         this.updateDataAndDisplay();
-
-        debugger
+     //   debugger
         Kline.instance.onRangeChange(this._range);
     }
 

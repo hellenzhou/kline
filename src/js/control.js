@@ -8,7 +8,7 @@ import $ from 'jquery'
 
 
 export class Control {
-
+    
     static refreshCounter = 0;
     static refreshHandler = null;
 
@@ -30,7 +30,7 @@ export class Control {
     };
 
     static klineAbortRequest() {
-        debugger
+        //  debugger
         if (Kline.instance.type !== "stomp" || !Kline.instance.stompClient) {
             if (Kline.instance.G_KLINE_HTTP_REQUEST && Kline.instance.G_KLINE_HTTP_REQUEST.readyState !== 4) {
                 Kline.instance.G_KLINE_HTTP_REQUEST.abort();
@@ -510,6 +510,8 @@ export class Control {
         let chartWidth = width;
         let height = h || window.innerHeight;
         let remainHeight = height;
+
+        debugger
         if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
             remainHeight -= Kline.instance.tradeHeight;
         }
@@ -521,14 +523,15 @@ export class Control {
         });
 
         let toolBar = $('#chart_toolbar');
-        let toolPanel = $('#chart_toolpanel');
+        // let toolPanel = $('#chart_toolpanel');
         let canvasGroup = $('#chart_canvasGroup');
 
         let chart_container_clone = $('#chart_container_clone');
-
+        let chart_container_fullscreen = $('#chart_container_fullscreen');
 
         let tabBar = $('#chart_tabbar');
-        let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
+
+     //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
@@ -539,10 +542,10 @@ export class Control {
         let toolPanelRect = {};
         toolPanelRect.x = 0;
         toolPanelRect.y = toolBarRect.h + 1;
-        toolPanelRect.w = toolPanelShown ? 32 : 0;
+        toolPanelRect.w =   0;
         toolPanelRect.h = height - toolPanelRect.y;
         let tabBarRect = {};
-        tabBarRect.w = toolPanelShown ? chartWidth - (toolPanelRect.w + 1) : chartWidth;
+        tabBarRect.w =   chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
         tabBarRect.y = remainHeight - (tabBarRect.h + 1);
@@ -552,20 +555,22 @@ export class Control {
         canvasGroupRect.y = toolPanelRect.y;
         canvasGroupRect.w = tabBarRect.w;
         canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+       
         toolBar.css({
             left: toolBarRect.x + 'px',
             top: toolBarRect.y + 'px',
             width: toolBarRect.w + 'px',
             height: toolBarRect.h + 'px'
         });
-        if (toolPanelShown) {
-            toolPanel.css({
-                left: toolPanelRect.x + 'px',
-                top: toolPanelRect.y + 'px',
-                width: toolPanelRect.w + 'px',
-                height: toolPanelRect.h + 'px'
-            });
-        }
+
+        // if (toolPanelShown) {
+        //     toolPanel.css({
+        //         left: toolPanelRect.x + 'px',
+        //         top: toolPanelRect.y + 'px',
+        //         width: toolPanelRect.w + 'px',
+        //         height: toolPanelRect.h + 'px'
+        //     });
+        // }
 
         canvasGroup.css({
             left: canvasGroupRect.x + 'px',
@@ -575,6 +580,22 @@ export class Control {
         });
 
         chart_container_clone.css({
+            left: canvasGroupRect.x + 'px',
+            top: toolBarRect.y + toolBarRect.h + 'px',
+            width: '100%',
+            height: canvasGroupRect.h + 'px'
+        });
+
+        chart_container_fullscreen.css({
+            left: canvasGroupRect.x + 'px',
+            top: 0 + 'px',
+            width: width + 'px',
+            height: height + 'px'
+        });
+
+        debugger
+        let chart_container_clone_image = $('#chart_container_image')
+        chart_container_clone_image .css({
             left: canvasGroupRect.x + 'px',
             top: toolBarRect.y + toolBarRect.h + 'px',
             width: '100%',
@@ -768,7 +789,7 @@ export class Control {
 
     static switchTools(name) {
         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-        $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+        // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
         $('#chart_enable_tools a').removeClass('selected');
         if (name === 'on') {
             $('#chart_show_tools').addClass('selected');
@@ -777,7 +798,7 @@ export class Control {
                     $(this).addClass('selected');
                 }
             });
-            $('#chart_toolpanel')[0].style.display = 'inline';
+            // $('#chart_toolpanel')[0].style.display = 'inline';
             if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.Cursor) {
                 $('#chart_Cursor').parent().addClass('selected');
             } else if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.CrossCursor) {
@@ -790,7 +811,7 @@ export class Control {
                     $(this).addClass('selected');
                 }
             });
-            $('#chart_toolpanel')[0].style.display = 'none';
+            // $('#chart_toolpanel')[0].style.display = 'none';
             ChartManager.instance.setRunningMode(ChartManager.instance._beforeDrawingTool);
             ChartManager.instance.redraw("All", true);
         }
@@ -908,6 +929,7 @@ export class Control {
     }
 
     static calcPeriodWeight(period) {
+        //  debugger
         let index = period;
         if (period !== 'line')
             index = Kline.instance.periodMap[Kline.instance.tagMapPeriod[period]];

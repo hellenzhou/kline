@@ -1,3 +1,6 @@
+<div id="chart_container_fullscreen" style="display: none">
+</div>
+
 <div class="chart_trade_quotation">
     <ul id="chart_trade_quotation_content">
         <li>
@@ -293,7 +296,7 @@
         </div>
     </div>
     <!-- ToolPanel -->
-    <div id="chart_toolpanel">
+    <!-- <div id="chart_toolpanel">
         <div class="chart_toolpanel_separator"></div>
 
         <div class="chart_toolpanel_button">
@@ -395,7 +398,7 @@
         <div style="padding-left: 3px;padding-top: 10px;">
             <button style="color: red;" id="clearCanvas" title="Clear All">X</button>
         </div>
-    </div>
+    </div> -->
     <div id="chart_canvasGroup" class="temp">
         <canvas class="chart_canvas" id="chart_mainCanvas" style="cursor: default;"></canvas>
         <canvas class="chart_canvas" id="chart_overlayCanvas" style="cursor: default;"></canvas>
@@ -697,8 +700,8 @@
     <div id="chart_loading" class="chart_str_loading">正在读取数据...</div>
 </div>
 
-<div id="chart_container_clone"  style="display: none">
-<img id= "chart_container_image"> </img>
+<div id="chart_container_clone" style="display: none">
+    <img id="chart_container_image"> </img>
 </div>
 
 <div class="trade_container dark">
@@ -727,6 +730,9 @@
         </div>
     </div>
 </div>
+
+
+
 <div style="display: none" id="chart_language_switch_tmp">
     <span name="chart_str_period" zh_tw="週期" zh_cn="周期" en_us="TIME"></span>
     <span name="chart_str_period_line" zh_tw="分時" zh_cn="分时" en_us="Line"></span>

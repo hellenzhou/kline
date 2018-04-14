@@ -16,7 +16,11 @@ ul, li {
 li {
     list-style: none;
 }
-
+                /*
+                    position: absolute;
+    left: 0;
+    top: 80px;
+                */
 .chart_container {
     cursor: default;
     font-family: arial, sans, serif;
