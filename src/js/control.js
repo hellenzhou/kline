@@ -8,7 +8,7 @@ import $ from 'jquery'
 
 
 export class Control {
-    
+
     static refreshCounter = 0;
     static refreshHandler = null;
 
@@ -69,8 +69,10 @@ export class Control {
     }
 
     static klineRequestData(showLoading) {
+        debugger
         Control.klineAbortRequest();
         window.clearTimeout(Kline.instance.klineTimer);
+
         if (Kline.instance.paused) {
             return;
         }
@@ -161,6 +163,7 @@ export class Control {
     }
 
     static klineRequestSuccessHandler(res) {
+        debugger
         if (!res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
@@ -180,7 +183,9 @@ export class Control {
         $("#chart_loading").removeClass("activated");
         if (!updateDataRes) {
             if (Kline.instance.type === 'poll') {
-                Kline.instance.klineTimer = setTimeout(Control.klineRequestData(true), intervalTime);
+                Kline.instance.klineTimer = setTimeout(function () {
+                    Control.klineRequestData(true);
+                }, intervalTime);
             }
             return;
         }
@@ -505,6 +510,7 @@ export class Control {
         Kline.instance.onLangChange(lang);
     }
 
+
     static onSize(w, h) {
         let width = w || window.innerWidth;
         let chartWidth = width;
@@ -531,7 +537,7 @@ export class Control {
 
         let tabBar = $('#chart_tabbar');
 
-     //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
+        //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
         let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
         let toolBarRect = {};
         toolBarRect.x = 0;
@@ -542,10 +548,10 @@ export class Control {
         let toolPanelRect = {};
         toolPanelRect.x = 0;
         toolPanelRect.y = toolBarRect.h + 1;
-        toolPanelRect.w =   0;
+        toolPanelRect.w = 0;
         toolPanelRect.h = height - toolPanelRect.y;
         let tabBarRect = {};
-        tabBarRect.w =   chartWidth;
+        tabBarRect.w = chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
         tabBarRect.x = chartWidth - tabBarRect.w;
         tabBarRect.y = remainHeight - (tabBarRect.h + 1);
@@ -555,7 +561,7 @@ export class Control {
         canvasGroupRect.y = toolPanelRect.y;
         canvasGroupRect.w = tabBarRect.w;
         canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
-       
+
         toolBar.css({
             left: toolBarRect.x + 'px',
             top: toolBarRect.y + 'px',
@@ -595,7 +601,7 @@ export class Control {
 
         debugger
         let chart_container_clone_image = $('#chart_container_image')
-        chart_container_clone_image .css({
+        chart_container_clone_image.css({
             left: canvasGroupRect.x + 'px',
             top: toolBarRect.y + toolBarRect.h + 'px',
             width: '100%',
@@ -652,14 +658,15 @@ export class Control {
             top: (height - dlgLoading.height()) >> 2
         });
         let domElemCache = $('#chart_dom_elem_cache');
-        let rowTheme = $('#chart_select_theme')[0];
+        // let rowTheme = $('#chart_select_theme')[0];
         let rowTools = $('#chart_enable_tools')[0];
         let rowIndic = $('#chart_enable_indicator')[0];
         let periodsVert = $('#chart_toolbar_periods_vert'); //周期
         let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
         let showIndic = $('#chart_show_indicator')[0];
-        let showTools = $('#chart_show_tools')[0];
-        let selectTheme = $('#chart_toolbar_theme')[0];
+        //   let showTools = $('#chart_show_tools')[0];
+        debugger
+        //  let selectTheme = $('#chart_toolbar_theme')[0];
         let dropDownSettings = $('#chart_dropdown_settings');
         let mainIndicator = $('#chart_main_indicator')[0]; //指标
 
@@ -694,8 +701,8 @@ export class Control {
         let periodsVertNW = periodsVert[0].offsetWidth;
         let periodsHorzNW = periodsVertNW + periodsHorz.offsetWidth;
         let showIndicNW = periodsHorzNW + showIndic.offsetWidth + 4;
-        let showToolsNW = showIndicNW + showTools.offsetWidth + 4;
-        let selectThemeNW = showToolsNW + selectTheme.offsetWidth;
+        let showToolsNW = showIndicNW + 4;
+        let selectThemeNW = showToolsNW;
         let dropDownSettingsW = dropDownSettings.find(".chart_dropdown_t")[0].offsetWidth + 150;
         periodsVertNW += dropDownSettingsW;
         periodsHorzNW += dropDownSettingsW;
@@ -715,20 +722,20 @@ export class Control {
             dropDownSettings.before(showIndic);
             rowIndic.style.display = "none";
         }
-        if (chartWidth < showToolsNW) {
-            domElemCache.append(showTools);
-            rowTools.style.display = "";
-        } else {
-            dropDownSettings.before(showTools);
-            rowTools.style.display = "none";
-        }
-        if (chartWidth < selectThemeNW) {
-            domElemCache.append(selectTheme);
-            rowTheme.style.display = "";
-        } else {
-            dropDownSettings.before(selectTheme);
-            rowTheme.style.display = "none";
-        }
+        // if (chartWidth < showToolsNW) {
+        //     domElemCache.append(showTools);
+        //     rowTools.style.display = "";
+        // } else {
+        //     dropDownSettings.before(showTools);
+        //     rowTools.style.display = "none";
+        // }
+        // if (chartWidth < selectThemeNW) {
+        //     domElemCache.append(selectTheme);
+        //     rowTheme.style.display = "";
+        // } else {
+        //     dropDownSettings.before(selectTheme);
+        //     rowTheme.style.display = "none";
+        // }
 
         if (Kline.instance.showTrade) {
             $(".trade_container").show();
@@ -748,18 +755,18 @@ export class Control {
 
     static switchTheme(name) {
 
-        $('#chart_toolbar_theme a').removeClass('selected');
-        $('#chart_select_theme a').removeClass('selected');
-        $('#chart_toolbar_theme').find('a').each(function () {
-            if ($(this).attr('name') === name) {
-                $(this).addClass('selected');
-            }
-        });
-        $('#chart_select_theme a').each(function () {
-            if ($(this).attr('name') === name) {
-                $(this).addClass('selected');
-            }
-        });
+        // $('#chart_toolbar_theme a').removeClass('selected');
+        //  $('#chart_select_theme a').removeClass('selected');
+        // $('#chart_toolbar_theme').find('a').each(function () {
+        //     if ($(this).attr('name') === name) {
+        //         $(this).addClass('selected');
+        //     }
+        // });
+        // $('#chart_select_theme a').each(function () {
+        //     if ($(this).attr('name') === name) {
+        //         $(this).addClass('selected');
+        //     }
+        // });
         $(".chart_container").attr('class', "chart_container " + name);
         $(".marketName_ a").attr('class', name);
 
@@ -792,7 +799,7 @@ export class Control {
         // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
         $('#chart_enable_tools a').removeClass('selected');
         if (name === 'on') {
-            $('#chart_show_tools').addClass('selected');
+            // $('#chart_show_tools').addClass('selected');
             $('#chart_enable_tools a').each(function () {
                 if ($(this).attr('name') === 'on') {
                     $(this).addClass('selected');
@@ -805,7 +812,7 @@ export class Control {
                 $('#chart_CrossCursor').parent().addClass('selected');
             }
         } else if (name === 'off') {
-            $('#chart_show_tools').removeClass('selected');
+            //  $('#chart_show_tools').removeClass('selected');
             $('#chart_enable_tools a').each(function () {
                 if ($(this).attr('name') === 'off') {
                     $(this).addClass('selected');

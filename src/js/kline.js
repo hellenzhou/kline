@@ -422,14 +422,14 @@ export default class Kline {
                 Control.switchSymbol($(this).attr('name'));
             });
 
-            $('#chart_show_tools')
-                .click(function () {
-                    if ($(this).hasClass('selected')) {
-                        Control.switchTools('off');
-                    } else {
-                        Control.switchTools('on');
-                    }
-                });
+            // $('#chart_show_tools')
+            //     .click(function () {
+            //         if ($(this).hasClass('selected')) {
+            //             Control.switchTools('off');
+            //         } else {
+            //             Control.switchTools('on');
+            //         }
+            //     });
             // $("#chart_toolpanel .chart_toolpanel_button")
             //     .click(function () {
             //         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
@@ -510,22 +510,22 @@ export default class Kline {
                     $("#chart_main_indicator .chart_dropdown_data").removeClass("chart_dropdown-hover");
                     $("#chart_main_indicator .chart_dropdown_t").removeClass("chart_dropdown-hover");
                 });
-            $('#chart_toolbar_theme a').click(function () {
-                $('#chart_toolbar_theme a').removeClass('selected');
-                if ($(this).attr('name') === 'dark') {
-                    Control.switchTheme('dark');
-                } else if ($(this).attr('name') === 'light') {
-                    Control.switchTheme('light');
-                }
-            });
-            $('#chart_select_theme li a').click(function () {
-                $('#chart_select_theme a').removeClass('selected');
-                if ($(this).attr('name') === 'dark') {
-                    Control.switchTheme('dark');
-                } else if ($(this).attr('name') === 'light') {
-                    Control.switchTheme('light');
-                }
-            });
+            // $('#chart_toolbar_theme a').click(function () {
+            //     $('#chart_toolbar_theme a').removeClass('selected');
+            //     if ($(this).attr('name') === 'dark') {
+            //         Control.switchTheme('dark');
+            //     } else if ($(this).attr('name') === 'light') {
+            //         Control.switchTheme('light');
+            //     }
+            // });
+            // $('#chart_select_theme li a').click(function () {
+            //     $('#chart_select_theme a').removeClass('selected');
+            //     if ($(this).attr('name') === 'dark') {
+            //         Control.switchTheme('dark');
+            //     } else if ($(this).attr('name') === 'light') {
+            //         Control.switchTheme('light');
+            //     }
+            // });
             $('#chart_enable_tools li a').click(function () {
                 $('#chart_enable_tools a').removeClass('selected');
                 if ($(this).attr('name') === 'on') {
