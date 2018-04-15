@@ -91,7 +91,8 @@ export class Chart {
     }
 
     updateDataAndDisplay() {
-     //   debugger
+    
+        debugger
         Kline.instance.symbol = this._symbol;
         Kline.instance.range = this._range;
 
@@ -103,19 +104,17 @@ export class Chart {
 
         if (f === -1) {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, Kline.instance.limit, null);
-
-            Control.klineRequestData(true);
-            Control.tradesRequestData();
-            Control.depthRequestData();
         } else {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, f.toString());
-
-            Control.klineRequestData();
-            Control.tradesRequestData();
-            Control.depthRequestData();
         }
+
+        Control.klineRequestData(true);
+        Control.tradesRequestData();
+        Control.depthRequestData();
+
         ChartManager.instance.redraw('All', false);
     }
+
 
 
     setCurrentContractUnit(contractUnit) {

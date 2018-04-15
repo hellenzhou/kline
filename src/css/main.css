@@ -596,13 +596,13 @@ li {
     background: url("../img/size_l.png") no-repeat;
 }
 
-.chart_container #chart_toolpanel #chart_Cursor {
+/* .chart_container #chart_toolpanel #chart_Cursor {
     background-position: 0 0
-}
+} */
 
-.chart_container #chart_toolpanel #chart_CrossCursor {
+/* .chart_container #chart_toolpanel #chart_CrossCursor {
     background-position: 0 -20px
-}
+} */
 
 .chart_container #chart_toolpanel #chart_SegLine {
     background-position: 0 -40px

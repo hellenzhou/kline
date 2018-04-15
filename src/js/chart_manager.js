@@ -221,12 +221,12 @@ export class ChartManager {
         this._drawingTool = this._beforeDrawingTool;
         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
         // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-        $("#chart_CrossCursor").parent().addClass("selected");
+        // $("#chart_CrossCursor").parent().addClass("selected");
         if (this._drawingTool === ChartManager.DrawingTool.Cursor) {
             this.showCursor();
             $("#mode a").removeClass("selected");
             // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-            $("#chart_Cursor").parent().addClass("selected");
+            // $("#chart_Cursor").parent().addClass("selected");
         } else {
             this.hideCursor();
         }

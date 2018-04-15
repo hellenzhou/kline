@@ -69,7 +69,7 @@ export class Control {
     }
 
     static klineRequestData(showLoading) {
-        debugger
+  
         Control.klineAbortRequest();
         window.clearTimeout(Kline.instance.klineTimer);
 
@@ -162,8 +162,7 @@ export class Control {
         );
     }
 
-    static klineRequestSuccessHandler(res) {
-        debugger
+    static klineRequestSuccessHandler(res) {       
         if (!res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
@@ -173,8 +172,12 @@ export class Control {
             return;
         }
 
+        debugger 
+
         let chart = ChartManager.instance.getChart();
         chart.setTitle();
+
+        
         Kline.instance.klineData = eval(res.data);
         let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.klineData);
         Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
@@ -517,7 +520,6 @@ export class Control {
         let height = h || window.innerHeight;
         let remainHeight = height;
 
-        debugger
         if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
             remainHeight -= Kline.instance.tradeHeight;
         }
@@ -806,11 +808,11 @@ export class Control {
             //     }
             // });
             // $('#chart_toolpanel')[0].style.display = 'inline';
-            if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.Cursor) {
-                $('#chart_Cursor').parent().addClass('selected');
-            } else if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.CrossCursor) {
-                $('#chart_CrossCursor').parent().addClass('selected');
-            }
+            // if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.Cursor) {
+            //     $('#chart_Cursor').parent().addClass('selected');
+            // } else if (ChartManager.instance._drawingTool === ChartManager.DrawingTool.CrossCursor) {
+            //     $('#chart_CrossCursor').parent().addClass('selected');
+            // }
         } else if (name === 'off') {
             //  $('#chart_show_tools').removeClass('selected');
             // $('#chart_enable_tools a').each(function () {

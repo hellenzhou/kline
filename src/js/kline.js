@@ -729,8 +729,6 @@ export default class Kline {
 
                 Kline.instance.isSized = !Kline.instance.isSized;
                 if (Kline.instance.isSized) {
-                    debugger
-
                     let chart_container_fullscreen = $('#chart_container_fullscreen');
                     $('.chart_container').appendTo(chart_container_fullscreen);
                     $('#chart_container_fullscreen').css('display', "inline-block");
@@ -752,8 +750,6 @@ export default class Kline {
                 }
 
                 let chart_container_fullscreen = $('#chart_container_fullscreen');
-                debugger
-
                 $('.chart_container').appendTo(chart_container_fullscreen);
                 $('#chart_container_fullscreen').css('display', "inline-block");
                 return;
