@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("jquery")) : factory(root["$"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_62__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,11 +70,7171 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 104);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 104:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _kline = _interopRequireDefault(__webpack_require__(17));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+window.Kline = _kline.default;
+var _default = _kline.default;
+exports.default = _default;
+
+/***/ }),
+
+/***/ 105:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Chart = void 0;
+
+var _chart_manager = __webpack_require__(4);
+
+var _control = __webpack_require__(38);
+
+var _kline = _interopRequireDefault(__webpack_require__(17));
+
+var _templates = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Chart =
+/*#__PURE__*/
+function () {
+  function Chart() {
+    _classCallCheck(this, Chart);
+
+    this._data = null;
+    this._charStyle = "CandleStick";
+    this._depthData = {
+      array: null,
+      asks_count: 0,
+      bids_count: 0,
+      asks_si: 0,
+      asks_ei: 0,
+      bids_si: 0,
+      bids_ei: 0
+    };
+    this.strIsLine = false; // debugger
+
+    this._range = _kline.default.instance.range;
+    this._symbol = _kline.default.instance.symbol;
+  }
+
+  _createClass(Chart, [{
+    key: "setTitle",
+    value: function setTitle() {
+      var lang = _chart_manager.ChartManager.instance.getLanguage();
+
+      var title = _kline.default.instance.symbolName;
+      title += ' ';
+      title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
+      title += (this._contract_unit + '/' + this._money_type).toUpperCase(); // debugger
+
+      _chart_manager.ChartManager.instance.setTitle('frame0.k0', title);
+    }
+  }, {
+    key: "setSymbol",
+    value: function setSymbol(symbol) {
+      this._symbol = symbol;
+      this.updateDataAndDisplay();
+    }
+  }, {
+    key: "updateDataAndDisplay",
+    value: function updateDataAndDisplay() {
+      //   debugger
+      _kline.default.instance.symbol = this._symbol;
+      _kline.default.instance.range = this._range;
+
+      _chart_manager.ChartManager.instance.setCurrentDataSource('frame0.k0', this._symbol + '.' + this._range);
+
+      _chart_manager.ChartManager.instance.setNormalMode();
+
+      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
+
+      $('.symbol-title>a').text(_kline.default.instance.symbolName);
+
+      if (f === -1) {
+        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
+
+        _control.Control.klineRequestData(true);
+
+        _control.Control.tradesRequestData();
+
+        _control.Control.depthRequestData();
+      } else {
+        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
+
+        _control.Control.klineRequestData();
+
+        _control.Control.tradesRequestData();
+
+        _control.Control.depthRequestData();
+      }
+
+      _chart_manager.ChartManager.instance.redraw('All', false);
+    }
+  }, {
+    key: "setCurrentContractUnit",
+    value: function setCurrentContractUnit(contractUnit) {
+      this._contract_unit = contractUnit;
+      this.updateDataAndDisplay();
+    }
+  }, {
+    key: "setCurrentMoneyType",
+    value: function setCurrentMoneyType(moneyType) {
+      this._money_type = moneyType;
+      this.updateDataAndDisplay();
+    }
+  }, {
+    key: "setCurrentPeriod",
+    value: function setCurrentPeriod(period) {
+      //   debugger
+      this._range = _kline.default.instance.periodMap[period];
+
+      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient.ws.readyState === 1) {
+        _kline.default.instance.subscribed.unsubscribe();
+
+        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + _kline.default.instance.symbol + '/' + this._range, _control.Control.subscribeCallback);
+      }
+
+      this.updateDataAndDisplay(); //   debugger
+
+      _kline.default.instance.onRangeChange(this._range);
+    }
+  }, {
+    key: "updateDataSource",
+    value: function updateDataSource(data) {
+      this._data = data;
+
+      _chart_manager.ChartManager.instance.updateData("frame0.k0", this._data);
+    }
+  }, {
+    key: "updateDepth",
+    value: function updateDepth(array) {
+      if (array === null) {
+        this._depthData.array = [];
+
+        _chart_manager.ChartManager.instance.redraw('All', false);
+
+        return;
+      }
+
+      if (!array.asks || !array.bids || array.asks === '' || array.bids === '') return;
+      var _data = this._depthData;
+      _data.array = [];
+
+      for (var i = 0; i < array.asks.length; i++) {
+        var data = {};
+        data.rate = array.asks[i][0];
+        data.amount = array.asks[i][1];
+
+        _data.array.push(data);
+      }
+
+      for (var _i = 0; _i < array.bids.length; _i++) {
+        var _data2 = {};
+        _data2.rate = array.bids[_i][0];
+        _data2.amount = array.bids[_i][1];
+
+        _data.array.push(_data2);
+      }
+
+      _data.asks_count = array.asks.length;
+      _data.bids_count = array.bids.length;
+      _data.asks_si = _data.asks_count - 1;
+      _data.asks_ei = 0;
+      _data.bids_si = _data.asks_count - 1;
+      _data.bids_ei = _data.asks_count + _data.bids_count - 2;
+
+      for (var _i2 = _data.asks_si; _i2 >= _data.asks_ei; _i2--) {
+        if (_i2 === _data.asks_si && _data.array[_i2] !== undefined) {
+          _data.array[_i2].amounts = _data.array[_i2].amount;
+        } else if (_data.array[_i2 + 1] !== undefined) {
+          _data.array[_i2].amounts = _data.array[_i2 + 1].amounts + _data.array[_i2].amount;
+        }
+      }
+
+      for (var _i3 = _data.bids_si; _i3 <= _data.bids_ei; _i3++) {
+        if (_i3 === _data.bids_si && _data.array[_i3] !== undefined) {
+          _data.array[_i3].amounts = _data.array[_i3].amount;
+        } else if (_data.array[_i3 - 1] !== undefined) {
+          _data.array[_i3].amounts = _data.array[_i3 - 1].amounts + _data.array[_i3].amount;
+        }
+      }
+
+      _chart_manager.ChartManager.instance.redraw('All', false);
+    }
+  }, {
+    key: "setMainIndicator",
+    value: function setMainIndicator(indicName) {
+      this._mainIndicator = indicName;
+
+      if (indicName === 'NONE') {
+        _chart_manager.ChartManager.instance.removeMainIndicator('frame0.k0');
+      } else {
+        _chart_manager.ChartManager.instance.setMainIndicator('frame0.k0', indicName);
+      }
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+    }
+  }, {
+    key: "setIndicator",
+    value: function setIndicator(index, indicName) {
+      if (indicName === 'NONE') {
+        var _index = 2;
+        if (_templates.Template.displayVolume === false) _index = 1;
+
+        var areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName('frame0.k0', _index);
+
+        if (areaName !== '') _chart_manager.ChartManager.instance.removeIndicator(areaName);
+      } else {
+        var _index2 = 2;
+        if (_templates.Template.displayVolume === false) _index2 = 1;
+
+        var _areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName('frame0.k0', _index2);
+
+        if (_areaName === '') {
+          _templates.Template.createIndicatorChartComps('frame0.k0', indicName);
+        } else {
+          _chart_manager.ChartManager.instance.setIndicator(_areaName, indicName);
+        }
+      }
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+    }
+  }, {
+    key: "addIndicator",
+    value: function addIndicator(indicName) {
+      _chart_manager.ChartManager.instance.addIndicator(indicName);
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+    }
+  }, {
+    key: "removeIndicator",
+    value: function removeIndicator(indicName) {
+      var areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName(2);
+
+      _chart_manager.ChartManager.instance.removeIndicator(areaName);
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+    }
+  }]);
+
+  return Chart;
+}();
+
+exports.Chart = Chart;
+Chart.strPeriod = {
+  'zh-cn': {
+    'line': '(分时)',
+    '1min': '(1分钟)',
+    '5min': '(5分钟)',
+    '15min': '(15分钟)',
+    '30min': '(30分钟)',
+    '1hour': '(1小时)',
+    '1day': '(日线)',
+    '1week': '(周线)',
+    '3min': '(3分钟)',
+    '2hour': '(2小时)',
+    '4hour': '(4小时)',
+    '6hour': '(6小时)',
+    '12hour': '(12小时)',
+    '3day': '(3天)'
+  },
+  'en-us': {
+    'line': '(Line)',
+    '1min': '(1m)',
+    '5min': '(5m)',
+    '15min': '(15m)',
+    '30min': '(30m)',
+    '1hour': '(1h)',
+    '1day': '(1d)',
+    '1week': '(1w)',
+    '3min': '(3m)',
+    '2hour': '(2h)',
+    '4hour': '(4h)',
+    '6hour': '(6h)',
+    '12hour': '(12h)',
+    '3day': '(3d)'
+  },
+  'zh-tw': {
+    'line': '(分時)',
+    '1min': '(1分鐘)',
+    '5min': '(5分鐘)',
+    '15min': '(15分鐘)',
+    '30min': '(30分鐘)',
+    '1hour': '(1小時)',
+    '1day': '(日線)',
+    '1week': '(周線)',
+    '3min': '(3分鐘)',
+    '2hour': '(2小時)',
+    '4hour': '(4小時)',
+    '6hour': '(6小時)',
+    '12hour': '(12小時)',
+    '3day': '(3天)'
+  }
+};
+
+/***/ }),
+
+/***/ 106:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CToolManager = void 0;
+
+var _named_object = __webpack_require__(9);
+
+var _cpoint = __webpack_require__(39);
+
+var ctools = _interopRequireWildcard(__webpack_require__(40));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CToolManager =
+/*#__PURE__*/
+function (_NamedObject) {
+  _inherits(CToolManager, _NamedObject);
+
+  function CToolManager(name) {
+    var _this;
+
+    _classCallCheck(this, CToolManager);
+
+    _this = _possibleConstructorReturn(this, (CToolManager.__proto__ || Object.getPrototypeOf(CToolManager)).call(this, name));
+    _this.selectedObject = -1;
+    _this.toolObjects = [];
+    return _this;
+  }
+
+  _createClass(CToolManager, [{
+    key: "getToolObjectCount",
+    value: function getToolObjectCount() {
+      return this.toolObjects.length;
+    }
+  }, {
+    key: "addToolObject",
+    value: function addToolObject(o) {
+      this.toolObjects.push(o);
+    }
+  }, {
+    key: "getToolObject",
+    value: function getToolObject(i) {
+      if (i < this.toolObjects.length && i >= 0) {
+        return this.toolObjects[i];
+      }
+
+      return null;
+    }
+  }, {
+    key: "getCurrentObject",
+    value: function getCurrentObject() {
+      return this.getToolObject(this.getToolObjectCount() - 1);
+    }
+  }, {
+    key: "getSelectedObject",
+    value: function getSelectedObject() {
+      return this.getToolObject(this.selectedObject);
+    }
+  }, {
+    key: "delCurrentObject",
+    value: function delCurrentObject() {
+      this.toolObjects.splice(this.getToolObjectCount() - 1, 1);
+    }
+  }, {
+    key: "delSelectedObject",
+    value: function delSelectedObject() {
+      this.toolObjects.splice(this.selectedObject, 1);
+      this.selectedObject = -1;
+    }
+  }, {
+    key: "acceptMouseMoveEvent",
+    value: function acceptMouseMoveEvent(x, y) {
+      if (this.selectedObject === -1) {
+        var curr = this.toolObjects[this.getToolObjectCount() - 1];
+        if (curr !== null && curr !== undefined && curr.getState() !== ctools.CToolObject.state.AfterDraw) return curr.acceptMouseMoveEvent(x, y);
+      } else {
+        var sel = this.toolObjects[this.selectedObject];
+
+        if (sel.getState() === ctools.CToolObject.state.Draw) {
+          return sel.acceptMouseMoveEvent(x, y);
+        }
+
+        sel.unselect();
+        this.selectedObject = -1;
+      }
+
+      for (var index in this.toolObjects) {
+        if (this.toolObjects[index].isSelected(x, y)) {
+          this.selectedObject = index;
+          return false;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "acceptMouseDownEvent",
+    value: function acceptMouseDownEvent(x, y) {
+      this.mouseDownMove = false;
+
+      if (this.selectedObject === -1) {
+        var curr = this.toolObjects[this.getToolObjectCount() - 1];
+        if (curr !== null && curr !== undefined && curr.getState() !== ctools.CToolObject.state.AfterDraw) return curr.acceptMouseDownEvent(x, y);
+      } else {
+        var sel = this.toolObjects[this.selectedObject];
+        if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) return sel.acceptMouseDownEvent(x, y);
+      }
+
+      return false;
+    }
+  }, {
+    key: "acceptMouseDownMoveEvent",
+    value: function acceptMouseDownMoveEvent(x, y) {
+      this.mouseDownMove = true;
+
+      if (this.selectedObject === -1) {
+        var curr = this.toolObjects[this.getToolObjectCount() - 1];
+        if (curr !== null && curr !== undefined && curr.getState() === ctools.CToolObject.state.Draw) return curr.acceptMouseDownMoveEvent(x, y);
+        return false;
+      } else {
+        var sel = this.toolObjects[this.selectedObject];
+
+        if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) {
+          if (sel.acceptMouseDownMoveEvent(x, y) === true) {
+            var point = this.toolObjects[this.selectedObject].points;
+
+            for (var i = 0; i < point.length; i++) {
+              if (point[i].state === _cpoint.CPoint.state.Highlight || point[i].state === _cpoint.CPoint.state.Show) {
+                return true;
+              }
+            }
+          }
+
+          return true;
+        }
+      }
+    }
+  }, {
+    key: "acceptMouseUpEvent",
+    value: function acceptMouseUpEvent(x, y) {
+      if (this.mouseDownMove === true) {
+        if (this.selectedObject === -1) {
+          var _curr = this.toolObjects[this.getToolObjectCount() - 1];
+          if (_curr !== null && _curr !== undefined && _curr.getState() === ctools.CToolObject.state.Draw) return _curr.acceptMouseUpEvent(x, y);
+          return true;
+        } else {
+          var sel = this.toolObjects[this.selectedObject];
+          if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) return sel.acceptMouseUpEvent(x, y);
+        }
+      }
+
+      if (this.selectedObject !== -1) {
+        return true;
+      }
+
+      var curr = this.toolObjects[this.getToolObjectCount() - 1];
+
+      if (curr !== null && curr !== undefined) {
+        if (curr.getState() === ctools.CToolObject.state.Draw) return true;
+
+        if (!curr.isValidMouseXY(x, y)) {
+          return false;
+        }
+
+        if (curr.isSelected(x, y)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }]);
+
+  return CToolManager;
+}(_named_object.NamedObject);
+
+exports.CToolManager = CToolManager;
+
+/***/ }),
+
+/***/ 107:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Timeline = void 0;
+
+var _named_object = __webpack_require__(9);
+
+var _chart_manager = __webpack_require__(4);
+
+var _data_sources = __webpack_require__(12);
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Timeline =
+/*#__PURE__*/
+function (_NamedObject) {
+  _inherits(Timeline, _NamedObject);
+
+  function Timeline(name) {
+    var _this;
+
+    _classCallCheck(this, Timeline);
+
+    _this = _possibleConstructorReturn(this, (Timeline.__proto__ || Object.getPrototypeOf(Timeline)).call(this, name));
+    _this._updated = false;
+    _this._innerLeft = 0;
+    _this._innerWidth = 0;
+    _this._firstColumnLeft = 0;
+    _this._scale = 3;
+    _this._lastScale = -1;
+    _this._maxItemCount = 0;
+    _this._maxIndex = 0;
+    _this._firstIndex = -1;
+    _this._selectedIndex = -1;
+    _this._savedFirstIndex = -1;
+    return _this;
+  }
+
+  _createClass(Timeline, [{
+    key: "isLatestShown",
+    value: function isLatestShown() {
+      return this.getLastIndex() === this._maxIndex;
+    }
+  }, {
+    key: "isUpdated",
+    value: function isUpdated() {
+      return this._updated;
+    }
+  }, {
+    key: "setUpdated",
+    value: function setUpdated(v) {
+      this._updated = v;
+    }
+  }, {
+    key: "getItemWidth",
+    value: function getItemWidth() {
+      return Timeline.itemWidth[this._scale];
+    }
+  }, {
+    key: "getSpaceWidth",
+    value: function getSpaceWidth() {
+      return Timeline.spaceWidth[this._scale];
+    }
+  }, {
+    key: "getColumnWidth",
+    value: function getColumnWidth() {
+      return this.getSpaceWidth() + this.getItemWidth();
+    }
+  }, {
+    key: "getInnerWidth",
+    value: function getInnerWidth() {
+      return this._innerWidth;
+    }
+  }, {
+    key: "getItemLeftOffset",
+    value: function getItemLeftOffset() {
+      return this.getSpaceWidth();
+    }
+  }, {
+    key: "getItemCenterOffset",
+    value: function getItemCenterOffset() {
+      return this.getSpaceWidth() + (this.getItemWidth() >> 1);
+    }
+  }, {
+    key: "getFirstColumnLeft",
+    value: function getFirstColumnLeft() {
+      return this._firstColumnLeft;
+    }
+  }, {
+    key: "getMaxItemCount",
+    value: function getMaxItemCount() {
+      return this._maxItemCount;
+    }
+  }, {
+    key: "getFirstIndex",
+    value: function getFirstIndex() {
+      return this._firstIndex;
+    }
+  }, {
+    key: "getLastIndex",
+    value: function getLastIndex() {
+      return Math.min(this._firstIndex + this._maxItemCount, this._maxIndex);
+    }
+  }, {
+    key: "getSelectedIndex",
+    value: function getSelectedIndex() {
+      return this._selectedIndex;
+    }
+  }, {
+    key: "getMaxIndex",
+    value: function getMaxIndex() {
+      return this._maxIndex;
+    }
+  }, {
+    key: "calcColumnCount",
+    value: function calcColumnCount(w) {
+      return Math.floor(w / this.getColumnWidth()) << 0;
+    }
+  }, {
+    key: "calcFirstColumnLeft",
+    value: function calcFirstColumnLeft(maxItemCount) {
+      return this._innerLeft + this._innerWidth - this.getColumnWidth() * maxItemCount;
+    }
+  }, {
+    key: "calcFirstIndexAlignRight",
+    value: function calcFirstIndexAlignRight(oldFirstIndex, oldMaxItemCount, newMaxItemCount) {
+      return Math.max(0, oldFirstIndex + Math.max(oldMaxItemCount, 1) - Math.max(newMaxItemCount, 1));
+    }
+  }, {
+    key: "calcFirstIndex",
+    value: function calcFirstIndex(newMaxItemCount) {
+      return this.validateFirstIndex(this.calcFirstIndexAlignRight(this._firstIndex, this._maxItemCount, newMaxItemCount), newMaxItemCount);
+    }
+  }, {
+    key: "updateMaxItemCount",
+    value: function updateMaxItemCount() {
+      var newMaxItemCount = this.calcColumnCount(this._innerWidth);
+      var newFirstIndex;
+
+      if (this._maxItemCount < 1) {
+        newFirstIndex = this.calcFirstIndex(newMaxItemCount);
+      } else if (this._lastScale === this._scale) {
+        newFirstIndex = this.validateFirstIndex(this._firstIndex - (newMaxItemCount - this._maxItemCount));
+      } else {
+        var focusedIndex = this._selectedIndex >= 0 ? this._selectedIndex : this.getLastIndex() - 1;
+        newFirstIndex = this.validateFirstIndex(focusedIndex - Math.round((focusedIndex - this._firstIndex) * newMaxItemCount / this._maxItemCount));
+      }
+
+      this._lastScale = this._scale;
+
+      if (this._firstIndex !== newFirstIndex) {
+        if (this._selectedIndex === this._firstIndex) this._selectedIndex = newFirstIndex;
+        this._firstIndex = newFirstIndex;
+        this._updated = true;
+      }
+
+      if (this._maxItemCount !== newMaxItemCount) {
+        this._maxItemCount = newMaxItemCount;
+        this._updated = true;
+      }
+
+      this._firstColumnLeft = this.calcFirstColumnLeft(newMaxItemCount);
+    }
+  }, {
+    key: "validateFirstIndex",
+    value: function validateFirstIndex(firstIndex, maxItemCount) {
+      if (this._maxIndex < 1) {
+        return -1;
+      }
+
+      if (firstIndex < 0) {
+        return 0;
+      }
+
+      var lastFirst = Math.max(0, this._maxIndex - 1
+      /*maxItemCount*/
+      );
+
+      if (firstIndex > lastFirst) {
+        return lastFirst;
+      }
+
+      return firstIndex;
+    }
+  }, {
+    key: "validateSelectedIndex",
+    value: function validateSelectedIndex() {
+      if (this._selectedIndex < this._firstIndex) this._selectedIndex = -1;else if (this._selectedIndex >= this.getLastIndex()) this._selectedIndex = -1;
+    }
+  }, {
+    key: "onLayout",
+    value: function onLayout() {
+      var mgr = _chart_manager.ChartManager.instance;
+      var area = mgr.getArea(this.getDataSourceName() + ".main");
+
+      if (area !== null) {
+        this._innerLeft = area.getLeft() + Timeline.PADDING_LEFT;
+        var w = Math.max(0, area.getWidth() - (Timeline.PADDING_LEFT + Timeline.PADDING_RIGHT));
+
+        if (this._innerWidth !== w) {
+          this._innerWidth = w;
+          this.updateMaxItemCount();
+        }
+      }
+    }
+  }, {
+    key: "toIndex",
+    value: function toIndex(x) {
+      return this._firstIndex + this.calcColumnCount(x - this._firstColumnLeft);
+    }
+  }, {
+    key: "toColumnLeft",
+    value: function toColumnLeft(index) {
+      return this._firstColumnLeft + this.getColumnWidth() * (index - this._firstIndex);
+    }
+  }, {
+    key: "toItemLeft",
+    value: function toItemLeft(index) {
+      return this.toColumnLeft(index) + this.getItemLeftOffset();
+    }
+  }, {
+    key: "toItemCenter",
+    value: function toItemCenter(index) {
+      return this.toColumnLeft(index) + this.getItemCenterOffset();
+    }
+  }, {
+    key: "selectAt",
+    value: function selectAt(x) {
+      this._selectedIndex = this.toIndex(x);
+      this.validateSelectedIndex();
+      return this._selectedIndex >= 0;
+    }
+  }, {
+    key: "unselect",
+    value: function unselect() {
+      this._selectedIndex = -1;
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      var mgr = _chart_manager.ChartManager.instance;
+      var ds = mgr.getDataSource(this.getDataSourceName());
+      var oldMaxIndex = this._maxIndex;
+      this._maxIndex = ds.getDataCount();
+
+      switch (ds.getUpdateMode()) {
+        case _data_sources.DataSource.UpdateMode.Refresh:
+          if (this._maxIndex < 1) this._firstIndex = -1;else this._firstIndex = Math.max(this._maxIndex - this._maxItemCount, 0);
+          this._selectedIndex = -1;
+          this._updated = true;
+          break;
+
+        case _data_sources.DataSource.UpdateMode.Append:
+          var lastIndex = this.getLastIndex();
+          var erasedCount = ds.getErasedCount();
+
+          if (lastIndex < oldMaxIndex) {
+            if (erasedCount > 0) {
+              this._firstIndex = Math.max(this._firstIndex - erasedCount, 0);
+
+              if (this._selectedIndex >= 0) {
+                this._selectedIndex -= erasedCount;
+                this.validateSelectedIndex();
+              }
+
+              this._updated = true;
+            }
+          } else if (lastIndex === oldMaxIndex) {
+            this._firstIndex += this._maxIndex - oldMaxIndex;
+
+            if (this._selectedIndex >= 0) {
+              this._selectedIndex -= erasedCount;
+              this.validateSelectedIndex();
+            }
+
+            this._updated = true;
+          }
+
+          break;
+      }
+    }
+  }, {
+    key: "move",
+    value: function move(x) {
+      if (this.isLatestShown()) {
+        _chart_manager.ChartManager.instance.getArea(this.getDataSourceName() + ".mainRange").setChanged(true);
+      }
+
+      this._firstIndex = this.validateFirstIndex(this._savedFirstIndex - this.calcColumnCount(x), this._maxItemCount);
+      this._updated = true;
+      if (this._selectedIndex >= 0) this.validateSelectedIndex();
+    }
+  }, {
+    key: "startMove",
+    value: function startMove() {
+      this._savedFirstIndex = this._firstIndex;
+    }
+  }, {
+    key: "scale",
+    value: function scale(s) {
+      this._scale += s;
+
+      if (this._scale < 0) {
+        this._scale = 0;
+      } else if (this._scale >= Timeline.itemWidth.length) {
+        this._scale = Timeline.itemWidth.length - 1;
+      }
+
+      this.updateMaxItemCount();
+
+      if (this._selectedIndex >= 0) {
+        this.validateSelectedIndex();
+      }
+    }
+  }]);
+
+  return Timeline;
+}(_named_object.NamedObject);
+
+exports.Timeline = Timeline;
+Timeline.devicePixelRatio = window.devicePixelRatio || 1;
+Timeline.itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio, 15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio, 23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
+Timeline.spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio, 2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
+Timeline.PADDING_LEFT = 4;
+Timeline.PADDING_RIGHT = 8;
+
+/***/ }),
+
+/***/ 108:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DockableLayout = exports.TableLayout = void 0;
+
+var areas = _interopRequireWildcard(__webpack_require__(43));
+
+var _chart_manager = __webpack_require__(4);
+
+var themes = _interopRequireWildcard(__webpack_require__(22));
+
+var _chart_settings = __webpack_require__(20);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return _get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TableLayout =
+/*#__PURE__*/
+function (_areas$ChartAreaGroup) {
+  _inherits(TableLayout, _areas$ChartAreaGroup);
+
+  function TableLayout(name) {
+    var _this;
+
+    _classCallCheck(this, TableLayout);
+
+    _this = _possibleConstructorReturn(this, (TableLayout.__proto__ || Object.getPrototypeOf(TableLayout)).call(this, name));
+    _this._nextRowId = 0;
+    _this._focusedRowIndex = -1;
+    return _this;
+  }
+
+  _createClass(TableLayout, [{
+    key: "getNextRowId",
+    value: function getNextRowId() {
+      return this._nextRowId++;
+    }
+  }, {
+    key: "measure",
+    value: function measure(context, width, height) {
+      this.setMeasuredDimension(width, height);
+      var rowH,
+          prevH = 0,
+          totalH = 0;
+      var h, rows;
+      var rh = [];
+      var i,
+          cnt = this._areas.length;
+
+      for (i = 0; i < cnt; i += 2) {
+        rowH = this._areas[i].getHeight();
+
+        if (rowH === 0) {
+          if (i === 0) {
+            rows = cnt + 1 >> 1;
+            var n = rows * 2 + 5;
+            var nh = height / n * 2 << 0;
+            h = height;
+
+            for (i = rows - 1; i > 0; i--) {
+              rh.unshift(nh);
+              h -= nh;
+            }
+
+            rh.unshift(h);
+            break;
+          } else if (i === 2) {
+            rowH = prevH / 3;
+          } else {
+            rowH = prevH;
+          }
+        }
+
+        totalH += rowH;
+        prevH = rowH;
+        rh.push(rowH);
+      }
+
+      if (totalH > 0) {
+        var rate = height / totalH;
+        rows = cnt + 1 >> 1;
+        h = height;
+
+        for (i = rows - 1; i > 0; i--) {
+          rh[i] *= rate;
+          h -= rh[i];
+        }
+
+        rh[0] = h;
+      }
+
+      var nw = 8; // chart depths sidebar (深度图侧边栏宽度)
+
+      var minRW = 76;
+      var maxRW = Math.min(240, width >> 1);
+      var rw = minRW;
+      var mgr = _chart_manager.ChartManager.instance;
+      var timeline = mgr.getTimeline(this.getDataSourceName());
+
+      if (timeline.getFirstIndex() >= 0) {
+        var firstIndexes = [];
+
+        for (rw = minRW; rw < maxRW; rw += nw) {
+          firstIndexes.push(timeline.calcFirstIndex(timeline.calcColumnCount(width - rw)));
+        }
+
+        var lastIndex = timeline.getLastIndex();
+        var dpNames = [".main", ".secondary"];
+        var minmaxes = new Array(firstIndexes.length);
+        var iArea, iIndex;
+
+        for (iArea = 0, iIndex = 0, rw = minRW; iArea < this._areas.length && iIndex < firstIndexes.length; iArea += 2) {
+          var area = this._areas[iArea];
+          var plotter = mgr.getPlotter(area.getName() + "Range.main");
+
+          for (var iDp in dpNames) {
+            var dp = mgr.getDataProvider(area.getName() + dpNames[iDp]);
+
+            if (dp === undefined) {
+              continue;
+            }
+
+            dp.calcRange(firstIndexes, lastIndex, minmaxes, null);
+
+            while (iIndex < firstIndexes.length) {
+              var minW = plotter.getRequiredWidth(context, minmaxes[iIndex].min);
+              var maxW = plotter.getRequiredWidth(context, minmaxes[iIndex].max);
+
+              if (Math.max(minW, maxW) < rw) {
+                break;
+              }
+
+              iIndex++;
+              rw += nw;
+            }
+          }
+        }
+      }
+
+      for (i = 1; i < this._areas.length; i += 2) {
+        this._areas[i].measure(context, rw, rh[i >> 1]);
+      }
+
+      var lw = width - rw;
+
+      for (i = 0; i < this._areas.length; i += 2) {
+        this._areas[i].measure(context, lw, rh[i >> 1]);
+      }
+    }
+  }, {
+    key: "layout",
+    value: function layout(left, top, right, bottom, forceChange) {
+      _get(TableLayout.prototype.__proto__ || Object.getPrototypeOf(TableLayout.prototype), "layout", this).call(this, left, top, right, bottom, forceChange);
+
+      if (this._areas.length < 1) return;
+      var area;
+
+      var center = left + this._areas[0].getMeasuredWidth();
+
+      var t = top,
+          b;
+      if (!forceChange) forceChange = this.isChanged();
+      var i,
+          cnt = this._areas.length;
+
+      for (i = 0; i < cnt; i++) {
+        area = this._areas[i];
+        b = t + area.getMeasuredHeight();
+        area.layout(left, t, center, b, forceChange);
+        i++;
+        area = this._areas[i];
+        area.layout(center, t, this.getRight(), b, forceChange);
+        t = b;
+      }
+
+      this.setChanged(false);
+    }
+  }, {
+    key: "drawGrid",
+    value: function drawGrid(context) {
+      if (this._areas.length < 1) {
+        return;
+      }
+
+      var mgr = _chart_manager.ChartManager.instance;
+      var theme = mgr.getTheme(this.getFrameName());
+      context.fillStyle = theme.getColor(themes.Theme.Color.Grid1);
+      context.fillRect(this._areas[0].getRight(), this.getTop(), 1, this.getHeight());
+      var i,
+          cnt = this._areas.length - 2;
+
+      for (i = 0; i < cnt; i += 2) {
+        context.fillRect(this.getLeft(), this._areas[i].getBottom(), this.getWidth(), 1);
+      }
+
+      if (!mgr.getCaptureMouseWheelDirectly()) {
+        for (i = 0, cnt += 2; i < cnt; i += 2) {
+          if (this._areas[i].isSelected()) {
+            context.strokeStyle = theme.getColor(themes.Theme.Color.Indicator1);
+            context.strokeRect(this.getLeft() + 0.5, this.getTop() + 0.5, this.getWidth() - 1, this.getHeight() - 1);
+            break;
+          }
+        }
+      }
+    }
+  }, {
+    key: "highlight",
+    value: function highlight(area) {
+      this._highlightedArea = null;
+      var e,
+          i,
+          cnt = this._areas.length;
+
+      for (i = 0; i < cnt; i++) {
+        e = this._areas[i];
+
+        if (e === area) {
+          i &= ~1;
+          e = this._areas[i];
+          e.highlight(e);
+          this._highlightedArea = e;
+          i++;
+          e = this._areas[i];
+          e.highlight(null);
+          e.highlight(e);
+        } else {
+          e.highlight(null);
+        }
+      }
+
+      return this._highlightedArea !== null ? this : null;
+    }
+  }, {
+    key: "select",
+    value: function select(area) {
+      this._selectedArea = null;
+      var e,
+          i,
+          cnt = this._areas.length;
+
+      for (i = 0; i < cnt; i++) {
+        e = this._areas[i];
+
+        if (e === area) {
+          i &= ~1;
+          e = this._areas[i];
+          e.select(e);
+          this._selectedArea = e;
+          i++;
+          e = this._areas[i];
+          e.select(e);
+        } else {
+          e.select(null);
+        }
+      }
+
+      return this._selectedArea !== null ? this : null;
+    }
+  }, {
+    key: "onMouseMove",
+    value: function onMouseMove(x, y) {
+      if (this._focusedRowIndex >= 0) {
+        var upper = this._areas[this._focusedRowIndex];
+        var lower = this._areas[this._focusedRowIndex + 2];
+        var d = y - this._oldY;
+        if (d === 0) return this;
+        var upperBottom = this._oldUpperBottom + d;
+        var lowerTop = this._oldLowerTop + d;
+
+        if (upperBottom - upper.getTop() >= 60 && lower.getBottom() - lowerTop >= 60) {
+          upper.setBottom(upperBottom);
+          lower.setTop(lowerTop);
+        }
+
+        return this;
+      }
+
+      var i,
+          cnt = this._areas.length - 2;
+
+      for (i = 0; i < cnt; i += 2) {
+        var b = this._areas[i].getBottom();
+
+        if (y >= b - 4 && y < b + 4) {
+          _chart_manager.ChartManager.instance.showCursor('n-resize');
+
+          return this;
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "onMouseLeave",
+    value: function onMouseLeave(x, y) {
+      this._focusedRowIndex = -1;
+    }
+  }, {
+    key: "onMouseDown",
+    value: function onMouseDown(x, y) {
+      var i,
+          cnt = this._areas.length - 2;
+
+      for (i = 0; i < cnt; i += 2) {
+        var b = this._areas[i].getBottom();
+
+        if (y >= b - 4 && y < b + 4) {
+          this._focusedRowIndex = i;
+          this._oldY = y;
+          this._oldUpperBottom = b;
+          this._oldLowerTop = this._areas[i + 2].getTop();
+          return this;
+        }
+      }
+
+      return null;
+    }
+  }, {
+    key: "onMouseUp",
+    value: function onMouseUp(x, y) {
+      if (this._focusedRowIndex >= 0) {
+        this._focusedRowIndex = -1;
+        var i,
+            cnt = this._areas.length;
+        var height = [];
+
+        for (i = 0; i < cnt; i += 2) {
+          height.push(this._areas[i].getHeight());
+        }
+
+        _chart_settings.ChartSettings.get().charts.areaHeight = height;
+
+        _chart_settings.ChartSettings.save();
+      }
+
+      return this;
+    }
+  }]);
+
+  return TableLayout;
+}(areas.ChartAreaGroup);
+
+exports.TableLayout = TableLayout;
+
+var DockableLayout =
+/*#__PURE__*/
+function (_areas$ChartAreaGroup2) {
+  _inherits(DockableLayout, _areas$ChartAreaGroup2);
+
+  function DockableLayout(name) {
+    _classCallCheck(this, DockableLayout);
+
+    return _possibleConstructorReturn(this, (DockableLayout.__proto__ || Object.getPrototypeOf(DockableLayout)).call(this, name));
+  }
+
+  _createClass(DockableLayout, [{
+    key: "measure",
+    value: function measure(context, width, height) {
+      _get(DockableLayout.prototype.__proto__ || Object.getPrototypeOf(DockableLayout.prototype), "measure", this).call(this, context, width, height);
+
+      width = this.getMeasuredWidth();
+      height = this.getMeasuredHeight();
+
+      for (var i in this._areas) {
+        var area = this._areas[i];
+        area.measure(context, width, height);
+
+        switch (area.getDockStyle()) {
+          case areas.ChartArea.DockStyle.left:
+          case areas.ChartArea.DockStyle.Right:
+            width -= area.getMeasuredWidth();
+            break;
+
+          case areas.ChartArea.DockStyle.Top:
+          case areas.ChartArea.DockStyle.Bottom:
+            height -= area.getMeasuredHeight();
+            break;
+
+          case areas.ChartArea.DockStyle.Fill:
+            width = 0;
+            height = 0;
+            break;
+        }
+      }
+    }
+  }, {
+    key: "layout",
+    value: function layout(left, top, right, bottom, forceChange) {
+      _get(DockableLayout.prototype.__proto__ || Object.getPrototypeOf(DockableLayout.prototype), "layout", this).call(this, left, top, right, bottom, forceChange);
+
+      left = this.getLeft();
+      top = this.getTop();
+      right = this.getRight();
+      bottom = this.getBottom();
+      var w, h;
+
+      if (!forceChange) {
+        forceChange = this.isChanged();
+      }
+
+      for (var i in this._areas) {
+        var area = this._areas[i];
+
+        switch (area.getDockStyle()) {
+          case areas.ChartArea.DockStyle.left:
+            w = area.getMeasuredWidth();
+            area.layout(left, top, left + w, bottom, forceChange);
+            left += w;
+            break;
+
+          case areas.ChartArea.DockStyle.Top:
+            h = area.getMeasuredHeight();
+            area.layout(left, top, right, top + h, forceChange);
+            top += h;
+            break;
+
+          case areas.ChartArea.DockStyle.Right:
+            w = area.getMeasuredWidth();
+            area.layout(right - w, top, right, bottom, forceChange);
+            right -= w;
+            break;
+
+          case areas.ChartArea.DockStyle.Bottom:
+            h = area.getMeasuredHeight();
+            area.layout(left, bottom - h, right, bottom, forceChange);
+            bottom -= h;
+            break;
+
+          case areas.ChartArea.DockStyle.Fill:
+            area.layout(left, top, right, bottom, forceChange);
+            left = right;
+            top = bottom;
+            break;
+        }
+      }
+
+      this.setChanged(false);
+    }
+  }, {
+    key: "drawGrid",
+    value: function drawGrid(context) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var theme = mgr.getTheme(this.getFrameName());
+      var left = this.getLeft();
+      var top = this.getTop();
+      var right = this.getRight();
+      var bottom = this.getBottom();
+      context.fillStyle = theme.getColor(this._gridColor);
+
+      for (var i in this._areas) {
+        var area = this._areas[i];
+
+        switch (area.getDockStyle()) {
+          case areas.ChartArea.DockStyle.Left:
+            context.fillRect(area.getRight(), top, 1, bottom - top);
+            left += area.getWidth();
+            break;
+
+          case areas.ChartArea.DockStyle.Top:
+            context.fillRect(left, area.getBottom(), right - left, 1);
+            top += area.getHeight();
+            break;
+
+          case areas.ChartArea.DockStyle.Right:
+            context.fillRect(area.getLeft(), top, 1, bottom - top);
+            right -= area.getWidth();
+            break;
+
+          case areas.ChartArea.DockStyle.Bottom:
+            context.fillRect(left, area.getTop(), right - left, 1);
+            bottom -= area.getHeight();
+            break;
+        }
+      }
+    }
+  }]);
+
+  return DockableLayout;
+}(areas.ChartAreaGroup);
+
+exports.DockableLayout = DockableLayout;
+
+/***/ }),
+
+/***/ 109:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.STOCHRSIIndicator = exports.PSYIndicator = exports.BOLLIndicator = exports.MTMIndicator = exports.ROCIndicator = exports.KDJIndicator = exports.SARIndicator = exports.WRIndicator = exports.RSIIndicator = exports.EMVIndicator = exports.OBVIndicator = exports.VRIndicator = exports.BRARIndicator = exports.TRIXIndicator = exports.DMAIndicator = exports.DMIIndicator = exports.MACDIndicator = exports.VOLUMEIndicator = exports.EMAIndicator = exports.MAIndicator = exports.HLCIndicator = exports.Indicator = void 0;
+
+var exprs = _interopRequireWildcard(__webpack_require__(59));
+
+var themes = _interopRequireWildcard(__webpack_require__(22));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Indicator =
+/*#__PURE__*/
+function () {
+  function Indicator() {
+    _classCallCheck(this, Indicator);
+
+    this._exprEnv = new exprs.ExprEnv();
+    this._rid = 0;
+    this._params = [];
+    this._assigns = [];
+    this._outputs = [];
+  }
+
+  _createClass(Indicator, [{
+    key: "addParameter",
+    value: function addParameter(expr) {
+      this._params.push(expr);
+    }
+  }, {
+    key: "addAssign",
+    value: function addAssign(expr) {
+      this._assigns.push(expr);
+    }
+  }, {
+    key: "addOutput",
+    value: function addOutput(expr) {
+      this._outputs.push(expr);
+    }
+  }, {
+    key: "getParameterCount",
+    value: function getParameterCount() {
+      return this._params.length;
+    }
+  }, {
+    key: "getParameterAt",
+    value: function getParameterAt(index) {
+      return this._params[index];
+    }
+  }, {
+    key: "getOutputCount",
+    value: function getOutputCount() {
+      return this._outputs.length;
+    }
+  }, {
+    key: "getOutputAt",
+    value: function getOutputAt(index) {
+      return this._outputs[index];
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this._exprEnv.setFirstIndex(-1);
+
+      var i, cnt;
+      cnt = this._assigns.length;
+
+      for (i = 0; i < cnt; i++) {
+        this._assigns[i].clear();
+      }
+
+      cnt = this._outputs.length;
+
+      for (i = 0; i < cnt; i++) {
+        this._outputs[i].clear();
+      }
+    }
+  }, {
+    key: "reserve",
+    value: function reserve(count) {
+      this._rid++;
+      var i, cnt;
+      cnt = this._assigns.length;
+
+      for (i = 0; i < cnt; i++) {
+        this._assigns[i].reserve(this._rid, count);
+      }
+
+      cnt = this._outputs.length;
+
+      for (i = 0; i < cnt; i++) {
+        this._outputs[i].reserve(this._rid, count);
+      }
+    }
+  }, {
+    key: "execute",
+    value: function execute(ds, index) {
+      if (index < 0) {
+        return;
+      }
+
+      this._exprEnv.setDataSource(ds);
+
+      exprs.ExprEnv.set(this._exprEnv);
+
+      try {
+        var i, cnt;
+        cnt = this._assigns.length;
+
+        for (i = 0; i < cnt; i++) {
+          this._assigns[i].assign(index);
+        }
+
+        cnt = this._outputs.length;
+
+        for (i = 0; i < cnt; i++) {
+          this._outputs[i].assign(index);
+        }
+
+        if (this._exprEnv.getFirstIndex() < 0) {
+          this._exprEnv.setFirstIndex(index);
+        }
+      } catch (e) {
+        if (this._exprEnv.getFirstIndex() >= 0) {
+          alert(e);
+          throw e;
+        }
+      }
+    }
+  }, {
+    key: "getParameters",
+    value: function getParameters() {
+      var params = [];
+      var i,
+          cnt = this._params.length;
+
+      for (i = 0; i < cnt; i++) {
+        params.push(this._params[i].getValue());
+      }
+
+      return params;
+    }
+  }, {
+    key: "setParameters",
+    value: function setParameters(params) {
+      if (params instanceof Array && params.length === this._params.length) {
+        for (var i in this._params) {
+          this._params[i].setValue(params[i]);
+        }
+      }
+    }
+  }]);
+
+  return Indicator;
+}();
+
+exports.Indicator = Indicator;
+
+var HLCIndicator =
+/*#__PURE__*/
+function (_Indicator) {
+  _inherits(HLCIndicator, _Indicator);
+
+  function HLCIndicator() {
+    var _this;
+
+    _classCallCheck(this, HLCIndicator);
+
+    _this = _possibleConstructorReturn(this, (HLCIndicator.__proto__ || Object.getPrototypeOf(HLCIndicator)).call(this));
+    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 60);
+
+    _this.addParameter(M1);
+
+    _this.addOutput(new exprs.OutputExpr("HIGH", new exprs.HighExpr(), exprs.OutputExpr.outputStyle.None));
+
+    _this.addOutput(new exprs.OutputExpr("LOW", new exprs.LowExpr(), exprs.OutputExpr.outputStyle.None));
+
+    _this.addOutput(new exprs.OutputExpr("CLOSE", new exprs.CloseExpr(), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator0));
+
+    _this.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M1), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator1));
+
+    return _this;
+  }
+
+  _createClass(HLCIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "CLOSE";
+    }
+  }]);
+
+  return HLCIndicator;
+}(Indicator);
+
+exports.HLCIndicator = HLCIndicator;
+
+var MAIndicator =
+/*#__PURE__*/
+function (_Indicator2) {
+  _inherits(MAIndicator, _Indicator2);
+
+  function MAIndicator() {
+    var _this2;
+
+    _classCallCheck(this, MAIndicator);
+
+    _this2 = _possibleConstructorReturn(this, (MAIndicator.__proto__ || Object.getPrototypeOf(MAIndicator)).call(this));
+    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 7);
+    var M2 = new exprs.ParameterExpr("M2", 2, 1000, 30);
+    var M3 = new exprs.ParameterExpr("M3", 2, 1000, 0);
+    var M4 = new exprs.ParameterExpr("M4", 2, 1000, 0);
+    var M5 = new exprs.ParameterExpr("M5", 2, 1000, 0);
+    var M6 = new exprs.ParameterExpr("M6", 2, 1000, 0);
+
+    _this2.addParameter(M1);
+
+    _this2.addParameter(M2);
+
+    _this2.addParameter(M3);
+
+    _this2.addParameter(M4);
+
+    _this2.addParameter(M5);
+
+    _this2.addParameter(M6);
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M1)));
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M2)));
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M3)));
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M4)));
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M5)));
+
+    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M6)));
+
+    return _this2;
+  }
+
+  _createClass(MAIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "MA";
+    }
+  }]);
+
+  return MAIndicator;
+}(Indicator);
+
+exports.MAIndicator = MAIndicator;
+
+var EMAIndicator =
+/*#__PURE__*/
+function (_Indicator3) {
+  _inherits(EMAIndicator, _Indicator3);
+
+  function EMAIndicator() {
+    var _this3;
+
+    _classCallCheck(this, EMAIndicator);
+
+    _this3 = _possibleConstructorReturn(this, (EMAIndicator.__proto__ || Object.getPrototypeOf(EMAIndicator)).call(this));
+    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 7);
+    var M2 = new exprs.ParameterExpr("M2", 2, 1000, 30);
+    var M3 = new exprs.ParameterExpr("M3", 2, 1000, 0);
+    var M4 = new exprs.ParameterExpr("M4", 2, 1000, 0);
+    var M5 = new exprs.ParameterExpr("M5", 2, 1000, 0);
+    var M6 = new exprs.ParameterExpr("M6", 2, 1000, 0);
+
+    _this3.addParameter(M1);
+
+    _this3.addParameter(M2);
+
+    _this3.addParameter(M3);
+
+    _this3.addParameter(M4);
+
+    _this3.addParameter(M5);
+
+    _this3.addParameter(M6);
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M1)));
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M2)));
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M3)));
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M4)));
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M5)));
+
+    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M6)));
+
+    return _this3;
+  }
+
+  _createClass(EMAIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "EMA";
+    }
+  }]);
+
+  return EMAIndicator;
+}(Indicator);
+
+exports.EMAIndicator = EMAIndicator;
+
+var VOLUMEIndicator =
+/*#__PURE__*/
+function (_Indicator4) {
+  _inherits(VOLUMEIndicator, _Indicator4);
+
+  function VOLUMEIndicator() {
+    var _this4;
+
+    _classCallCheck(this, VOLUMEIndicator);
+
+    _this4 = _possibleConstructorReturn(this, (VOLUMEIndicator.__proto__ || Object.getPrototypeOf(VOLUMEIndicator)).call(this));
+    var M1 = new exprs.ParameterExpr("M1", 2, 500, 5);
+    var M2 = new exprs.ParameterExpr("M2", 2, 500, 10);
+
+    _this4.addParameter(M1);
+
+    _this4.addParameter(M2);
+
+    var VOLUME = new exprs.OutputExpr("VOLUME", new exprs.VolumeExpr(), exprs.OutputExpr.outputStyle.VolumeStick, themes.Theme.Color.Text4);
+
+    _this4.addOutput(VOLUME);
+
+    _this4.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(VOLUME, M1), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator0));
+
+    _this4.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(VOLUME, M2), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator1));
+
+    return _this4;
+  }
+
+  _createClass(VOLUMEIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "VOLUME";
+    }
+  }]);
+
+  return VOLUMEIndicator;
+}(Indicator);
+
+exports.VOLUMEIndicator = VOLUMEIndicator;
+
+var MACDIndicator =
+/*#__PURE__*/
+function (_Indicator5) {
+  _inherits(MACDIndicator, _Indicator5);
+
+  function MACDIndicator() {
+    var _this5;
+
+    _classCallCheck(this, MACDIndicator);
+
+    _this5 = _possibleConstructorReturn(this, (MACDIndicator.__proto__ || Object.getPrototypeOf(MACDIndicator)).call(this));
+    var SHORT = new exprs.ParameterExpr("SHORT", 2, 200, 12);
+    var LONG = new exprs.ParameterExpr("LONG", 2, 200, 26);
+    var MID = new exprs.ParameterExpr("MID", 2, 200, 9);
+
+    _this5.addParameter(SHORT);
+
+    _this5.addParameter(LONG);
+
+    _this5.addParameter(MID);
+
+    var DIF = new exprs.OutputExpr("DIF", new exprs.SubExpr(new exprs.EmaExpr(new exprs.CloseExpr(), SHORT), new exprs.EmaExpr(new exprs.CloseExpr(), LONG)));
+
+    _this5.addOutput(DIF);
+
+    var DEA = new exprs.OutputExpr("DEA", new exprs.EmaExpr(DIF, MID));
+
+    _this5.addOutput(DEA);
+
+    var MACD = new exprs.OutputExpr("MACD", new exprs.MulExpr(new exprs.SubExpr(DIF, DEA), new exprs.ConstExpr(2)), exprs.OutputExpr.outputStyle.MACDStick);
+
+    _this5.addOutput(MACD);
+
+    return _this5;
+  }
+
+  _createClass(MACDIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "MACD";
+    }
+  }]);
+
+  return MACDIndicator;
+}(Indicator);
+
+exports.MACDIndicator = MACDIndicator;
+
+var DMIIndicator =
+/*#__PURE__*/
+function (_Indicator6) {
+  _inherits(DMIIndicator, _Indicator6);
+
+  function DMIIndicator() {
+    var _this6;
+
+    _classCallCheck(this, DMIIndicator);
+
+    _this6 = _possibleConstructorReturn(this, (DMIIndicator.__proto__ || Object.getPrototypeOf(DMIIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 90, 14);
+    var MM = new exprs.ParameterExpr("MM", 2, 60, 6);
+
+    _this6.addParameter(N);
+
+    _this6.addParameter(MM);
+
+    var MTR = new exprs.AssignExpr("MTR", new exprs.ExpmemaExpr(new exprs.MaxExpr(new exprs.MaxExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.AbsExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1))))), new exprs.AbsExpr(new exprs.SubExpr(new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)), new exprs.LowExpr()))), N));
+
+    _this6.addAssign(MTR);
+
+    var HD = new exprs.AssignExpr("HD", new exprs.SubExpr(new exprs.HighExpr(), new exprs.RefExpr(new exprs.HighExpr(), new exprs.ConstExpr(1))));
+
+    _this6.addAssign(HD);
+
+    var LD = new exprs.AssignExpr("LD", new exprs.SubExpr(new exprs.RefExpr(new exprs.LowExpr(), new exprs.ConstExpr(1)), new exprs.LowExpr()));
+
+    _this6.addAssign(LD);
+
+    var DMP = new exprs.AssignExpr("DMP", new exprs.ExpmemaExpr(new exprs.IfExpr(new exprs.AndExpr(new exprs.GtExpr(HD, new exprs.ConstExpr(0)), new exprs.GtExpr(HD, LD)), HD, new exprs.ConstExpr(0)), N));
+
+    _this6.addAssign(DMP);
+
+    var DMM = new exprs.AssignExpr("DMM", new exprs.ExpmemaExpr(new exprs.IfExpr(new exprs.AndExpr(new exprs.GtExpr(LD, new exprs.ConstExpr(0)), new exprs.GtExpr(LD, HD)), LD, new exprs.ConstExpr(0)), N));
+
+    _this6.addAssign(DMM);
+
+    var PDI = new exprs.OutputExpr("PDI", new exprs.MulExpr(new exprs.DivExpr(DMP, MTR), new exprs.ConstExpr(100)));
+
+    _this6.addOutput(PDI);
+
+    var MDI = new exprs.OutputExpr("MDI", new exprs.MulExpr(new exprs.DivExpr(DMM, MTR), new exprs.ConstExpr(100)));
+
+    _this6.addOutput(MDI);
+
+    var ADX = new exprs.OutputExpr("ADX", new exprs.ExpmemaExpr(new exprs.MulExpr(new exprs.DivExpr(new exprs.AbsExpr(new exprs.SubExpr(MDI, PDI)), new exprs.AddExpr(MDI, PDI)), new exprs.ConstExpr(100)), MM));
+
+    _this6.addOutput(ADX);
+
+    var ADXR = new exprs.OutputExpr("ADXR", new exprs.ExpmemaExpr(ADX, MM));
+
+    _this6.addOutput(ADXR);
+
+    return _this6;
+  }
+
+  _createClass(DMIIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "DMI";
+    }
+  }]);
+
+  return DMIIndicator;
+}(Indicator);
+
+exports.DMIIndicator = DMIIndicator;
+
+var DMAIndicator =
+/*#__PURE__*/
+function (_Indicator7) {
+  _inherits(DMAIndicator, _Indicator7);
+
+  function DMAIndicator() {
+    var _this7;
+
+    _classCallCheck(this, DMAIndicator);
+
+    _this7 = _possibleConstructorReturn(this, (DMAIndicator.__proto__ || Object.getPrototypeOf(DMAIndicator)).call(this));
+    var N1 = new exprs.ParameterExpr("N1", 2, 60, 10);
+    var N2 = new exprs.ParameterExpr("N2", 2, 250, 50);
+    var M = new exprs.ParameterExpr("M", 2, 100, 10);
+
+    _this7.addParameter(N1);
+
+    _this7.addParameter(N2);
+
+    _this7.addParameter(M);
+
+    var DIF = new exprs.OutputExpr("DIF", new exprs.SubExpr(new exprs.MaExpr(new exprs.CloseExpr(), N1), new exprs.MaExpr(new exprs.CloseExpr(), N2)));
+
+    _this7.addOutput(DIF);
+
+    var DIFMA = new exprs.OutputExpr("DIFMA", new exprs.MaExpr(DIF, M));
+
+    _this7.addOutput(DIFMA);
+
+    return _this7;
+  }
+
+  _createClass(DMAIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "DMA";
+    }
+  }]);
+
+  return DMAIndicator;
+}(Indicator);
+
+exports.DMAIndicator = DMAIndicator;
+
+var TRIXIndicator =
+/*#__PURE__*/
+function (_Indicator8) {
+  _inherits(TRIXIndicator, _Indicator8);
+
+  function TRIXIndicator() {
+    var _this8;
+
+    _classCallCheck(this, TRIXIndicator);
+
+    _this8 = _possibleConstructorReturn(this, (TRIXIndicator.__proto__ || Object.getPrototypeOf(TRIXIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 100, 12);
+    var M = new exprs.ParameterExpr("M", 2, 100, 9);
+
+    _this8.addParameter(N);
+
+    _this8.addParameter(M);
+
+    var MTR = new exprs.AssignExpr("MTR", new exprs.EmaExpr(new exprs.EmaExpr(new exprs.EmaExpr(new exprs.CloseExpr(), N), N), N));
+
+    _this8.addAssign(MTR);
+
+    var TRIX = new exprs.OutputExpr("TRIX", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(MTR, new exprs.RefExpr(MTR, new exprs.ConstExpr(1))), new exprs.RefExpr(MTR, new exprs.ConstExpr(1))), new exprs.ConstExpr(100)));
+
+    _this8.addOutput(TRIX);
+
+    var MATRIX = new exprs.OutputExpr("MATRIX", new exprs.MaExpr(TRIX, M));
+
+    _this8.addOutput(MATRIX);
+
+    return _this8;
+  }
+
+  _createClass(TRIXIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "TRIX";
+    }
+  }]);
+
+  return TRIXIndicator;
+}(Indicator);
+
+exports.TRIXIndicator = TRIXIndicator;
+
+var BRARIndicator =
+/*#__PURE__*/
+function (_Indicator9) {
+  _inherits(BRARIndicator, _Indicator9);
+
+  function BRARIndicator() {
+    var _this9;
+
+    _classCallCheck(this, BRARIndicator);
+
+    _this9 = _possibleConstructorReturn(this, (BRARIndicator.__proto__ || Object.getPrototypeOf(BRARIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 120, 26);
+
+    _this9.addParameter(N);
+
+    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
+
+    _this9.addAssign(REF_CLOSE_1);
+
+    var BR = new exprs.OutputExpr("BR", new exprs.MulExpr(new exprs.DivExpr(new exprs.SumExpr(new exprs.MaxExpr(new exprs.ConstExpr(0), new exprs.SubExpr(new exprs.HighExpr(), REF_CLOSE_1)), N), new exprs.SumExpr(new exprs.MaxExpr(new exprs.ConstExpr(0), new exprs.SubExpr(REF_CLOSE_1, new exprs.LowExpr())), N)), new exprs.ConstExpr(100)));
+
+    _this9.addOutput(BR);
+
+    var AR = new exprs.OutputExpr("AR", new exprs.MulExpr(new exprs.DivExpr(new exprs.SumExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.OpenExpr()), N), new exprs.SumExpr(new exprs.SubExpr(new exprs.OpenExpr(), new exprs.LowExpr()), N)), new exprs.ConstExpr(100)));
+
+    _this9.addOutput(AR);
+
+    return _this9;
+  }
+
+  _createClass(BRARIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "BRAR";
+    }
+  }]);
+
+  return BRARIndicator;
+}(Indicator);
+
+exports.BRARIndicator = BRARIndicator;
+
+var VRIndicator =
+/*#__PURE__*/
+function (_Indicator10) {
+  _inherits(VRIndicator, _Indicator10);
+
+  function VRIndicator() {
+    var _this10;
+
+    _classCallCheck(this, VRIndicator);
+
+    _this10 = _possibleConstructorReturn(this, (VRIndicator.__proto__ || Object.getPrototypeOf(VRIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 100, 26);
+    var M = new exprs.ParameterExpr("M", 2, 100, 6);
+
+    _this10.addParameter(N);
+
+    _this10.addParameter(M);
+
+    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
+
+    _this10.addAssign(REF_CLOSE_1);
+
+    var TH = new exprs.AssignExpr("TH", new exprs.SumExpr(new exprs.IfExpr(new exprs.GtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
+
+    _this10.addAssign(TH);
+
+    var TL = new exprs.AssignExpr("TL", new exprs.SumExpr(new exprs.IfExpr(new exprs.LtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
+
+    _this10.addAssign(TL);
+
+    var TQ = new exprs.AssignExpr("TQ", new exprs.SumExpr(new exprs.IfExpr(new exprs.EqExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
+
+    _this10.addAssign(TQ);
+
+    var VR = new exprs.OutputExpr("VR", new exprs.MulExpr(new exprs.DivExpr(new exprs.AddExpr(new exprs.MulExpr(TH, new exprs.ConstExpr(2)), TQ), new exprs.AddExpr(new exprs.MulExpr(TL, new exprs.ConstExpr(2)), TQ)), new exprs.ConstExpr(100)));
+
+    _this10.addOutput(VR);
+
+    var MAVR = new exprs.OutputExpr("MAVR", new exprs.MaExpr(VR, M));
+
+    _this10.addOutput(MAVR);
+
+    return _this10;
+  }
+
+  _createClass(VRIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "VR";
+    }
+  }]);
+
+  return VRIndicator;
+}(Indicator);
+
+exports.VRIndicator = VRIndicator;
+
+var OBVIndicator =
+/*#__PURE__*/
+function (_Indicator11) {
+  _inherits(OBVIndicator, _Indicator11);
+
+  function OBVIndicator() {
+    var _this11;
+
+    _classCallCheck(this, OBVIndicator);
+
+    _this11 = _possibleConstructorReturn(this, (OBVIndicator.__proto__ || Object.getPrototypeOf(OBVIndicator)).call(this));
+    var M = new exprs.ParameterExpr("M", 2, 100, 30);
+
+    _this11.addParameter(M);
+
+    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
+
+    _this11.addAssign(REF_CLOSE_1);
+
+    var VA = new exprs.AssignExpr("VA", new exprs.IfExpr(new exprs.GtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.NegExpr(new exprs.VolumeExpr())));
+
+    _this11.addAssign(VA);
+
+    var OBV = new exprs.OutputExpr("OBV", new exprs.SumExpr(new exprs.IfExpr(new exprs.EqExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.ConstExpr(0), VA), new exprs.ConstExpr(0)));
+
+    _this11.addOutput(OBV);
+
+    var MAOBV = new exprs.OutputExpr("MAOBV", new exprs.MaExpr(OBV, M));
+
+    _this11.addOutput(MAOBV);
+
+    return _this11;
+  }
+
+  _createClass(OBVIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "OBV";
+    }
+  }]);
+
+  return OBVIndicator;
+}(Indicator);
+
+exports.OBVIndicator = OBVIndicator;
+
+var EMVIndicator =
+/*#__PURE__*/
+function (_Indicator12) {
+  _inherits(EMVIndicator, _Indicator12);
+
+  function EMVIndicator() {
+    var _this12;
+
+    _classCallCheck(this, EMVIndicator);
+
+    _this12 = _possibleConstructorReturn(this, (EMVIndicator.__proto__ || Object.getPrototypeOf(EMVIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 90, 14);
+    var M = new exprs.ParameterExpr("M", 2, 60, 9);
+
+    _this12.addParameter(N);
+
+    _this12.addParameter(M);
+
+    var VOLUME = new exprs.AssignExpr("VOLUME", new exprs.DivExpr(new exprs.MaExpr(new exprs.VolumeExpr(), N), new exprs.VolumeExpr()));
+
+    _this12.addAssign(VOLUME);
+
+    var MID = new exprs.AssignExpr("MID", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.RefExpr(new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.ConstExpr(1))), new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr())), new exprs.ConstExpr(100)));
+
+    _this12.addAssign(MID);
+
+    var EMV = new exprs.OutputExpr("EMV", new exprs.MaExpr(new exprs.DivExpr(new exprs.MulExpr(MID, new exprs.MulExpr(VOLUME, new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()))), new exprs.MaExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()), N)), N));
+
+    _this12.addOutput(EMV);
+
+    var MAEMV = new exprs.OutputExpr("MAEMV", new exprs.MaExpr(EMV, M));
+
+    _this12.addOutput(MAEMV);
+
+    return _this12;
+  }
+
+  _createClass(EMVIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "EMV";
+    }
+  }]);
+
+  return EMVIndicator;
+}(Indicator);
+
+exports.EMVIndicator = EMVIndicator;
+
+var RSIIndicator =
+/*#__PURE__*/
+function (_Indicator13) {
+  _inherits(RSIIndicator, _Indicator13);
+
+  function RSIIndicator() {
+    var _this13;
+
+    _classCallCheck(this, RSIIndicator);
+
+    _this13 = _possibleConstructorReturn(this, (RSIIndicator.__proto__ || Object.getPrototypeOf(RSIIndicator)).call(this));
+    var N1 = new exprs.ParameterExpr("N1", 2, 120, 6);
+    var N2 = new exprs.ParameterExpr("N2", 2, 250, 12);
+    var N3 = new exprs.ParameterExpr("N3", 2, 500, 24);
+
+    _this13.addParameter(N1);
+
+    _this13.addParameter(N2);
+
+    _this13.addParameter(N3);
+
+    var LC = new exprs.AssignExpr("LC", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
+
+    _this13.addAssign(LC);
+
+    var CLOSE_LC = new exprs.AssignExpr("CLOSE_LC", new exprs.SubExpr(new exprs.CloseExpr(), LC));
+
+    _this13.addAssign(CLOSE_LC);
+
+    _this13.addOutput(new exprs.OutputExpr("RSI1", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N1, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N1, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
+
+    _this13.addOutput(new exprs.OutputExpr("RSI2", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N2, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N2, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
+
+    _this13.addOutput(new exprs.OutputExpr("RSI3", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N3, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N3, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
+
+    return _this13;
+  }
+
+  _createClass(RSIIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "RSI";
+    }
+  }]);
+
+  return RSIIndicator;
+}(Indicator);
+
+exports.RSIIndicator = RSIIndicator;
+
+var WRIndicator =
+/*#__PURE__*/
+function (_Indicator14) {
+  _inherits(WRIndicator, _Indicator14);
+
+  function WRIndicator() {
+    var _this14;
+
+    _classCallCheck(this, WRIndicator);
+
+    _this14 = _possibleConstructorReturn(this, (WRIndicator.__proto__ || Object.getPrototypeOf(WRIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 100, 10);
+    var N1 = new exprs.ParameterExpr("N1", 2, 100, 6);
+
+    _this14.addParameter(N);
+
+    _this14.addParameter(N1);
+
+    var HHV = new exprs.AssignExpr("HHV", new exprs.HhvExpr(new exprs.HighExpr(), N));
+
+    _this14.addAssign(HHV);
+
+    var HHV1 = new exprs.AssignExpr("HHV1", new exprs.HhvExpr(new exprs.HighExpr(), N1));
+
+    _this14.addAssign(HHV1);
+
+    var LLV = new exprs.AssignExpr("LLV", new exprs.LlvExpr(new exprs.LowExpr(), N));
+
+    _this14.addAssign(LLV);
+
+    var LLV1 = new exprs.AssignExpr("LLV1", new exprs.LlvExpr(new exprs.LowExpr(), N1));
+
+    _this14.addAssign(LLV1);
+
+    var WR1 = new exprs.OutputExpr("WR1", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(HHV, new exprs.CloseExpr()), new exprs.SubExpr(HHV, LLV)), new exprs.ConstExpr(100)));
+
+    _this14.addOutput(WR1);
+
+    var WR2 = new exprs.OutputExpr("WR2", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(HHV1, new exprs.CloseExpr()), new exprs.SubExpr(HHV1, LLV1)), new exprs.ConstExpr(100)));
+
+    _this14.addOutput(WR2);
+
+    return _this14;
+  }
+
+  _createClass(WRIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "WR";
+    }
+  }]);
+
+  return WRIndicator;
+}(Indicator);
+
+exports.WRIndicator = WRIndicator;
+
+var SARIndicator =
+/*#__PURE__*/
+function (_Indicator15) {
+  _inherits(SARIndicator, _Indicator15);
+
+  function SARIndicator() {
+    var _this15;
+
+    _classCallCheck(this, SARIndicator);
+
+    _this15 = _possibleConstructorReturn(this, (SARIndicator.__proto__ || Object.getPrototypeOf(SARIndicator)).call(this));
+    var N = new exprs.ConstExpr(4);
+    var MIN = new exprs.ConstExpr(2);
+    var STEP = new exprs.ConstExpr(2);
+    var MAX = new exprs.ConstExpr(20);
+
+    _this15.addOutput(new exprs.OutputExpr("SAR", new exprs.SarExpr(N, MIN, STEP, MAX), exprs.OutputExpr.outputStyle.SARPoint));
+
+    return _this15;
+  }
+
+  _createClass(SARIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "SAR";
+    }
+  }]);
+
+  return SARIndicator;
+}(Indicator);
+
+exports.SARIndicator = SARIndicator;
+
+var KDJIndicator =
+/*#__PURE__*/
+function (_Indicator16) {
+  _inherits(KDJIndicator, _Indicator16);
+
+  function KDJIndicator() {
+    var _this16;
+
+    _classCallCheck(this, KDJIndicator);
+
+    _this16 = _possibleConstructorReturn(this, (KDJIndicator.__proto__ || Object.getPrototypeOf(KDJIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 90, 9);
+    var M1 = new exprs.ParameterExpr("M1", 2, 30, 3);
+    var M2 = new exprs.ParameterExpr("M2", 2, 30, 3);
+
+    _this16.addParameter(N);
+
+    _this16.addParameter(M1);
+
+    _this16.addParameter(M2);
+
+    var HHV = new exprs.AssignExpr("HHV", new exprs.HhvExpr(new exprs.HighExpr(), N));
+
+    _this16.addAssign(HHV);
+
+    var LLV = new exprs.AssignExpr("LLV", new exprs.LlvExpr(new exprs.LowExpr(), N));
+
+    _this16.addAssign(LLV);
+
+    var RSV = new exprs.AssignExpr("RSV", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.CloseExpr(), LLV), new exprs.SubExpr(HHV, LLV)), new exprs.ConstExpr(100)));
+
+    _this16.addAssign(RSV);
+
+    var K = new exprs.OutputExpr("K", new exprs.SmaExpr(RSV, M1, new exprs.ConstExpr(1)));
+
+    _this16.addOutput(K);
+
+    var D = new exprs.OutputExpr("D", new exprs.SmaExpr(K, M2, new exprs.ConstExpr(1)));
+
+    _this16.addOutput(D);
+
+    var J = new exprs.OutputExpr("J", new exprs.SubExpr(new exprs.MulExpr(K, new exprs.ConstExpr(3)), new exprs.MulExpr(D, new exprs.ConstExpr(2))));
+
+    _this16.addOutput(J);
+
+    return _this16;
+  }
+
+  _createClass(KDJIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "KDJ";
+    }
+  }]);
+
+  return KDJIndicator;
+}(Indicator);
+
+exports.KDJIndicator = KDJIndicator;
+
+var ROCIndicator =
+/*#__PURE__*/
+function (_Indicator17) {
+  _inherits(ROCIndicator, _Indicator17);
+
+  function ROCIndicator() {
+    var _this17;
+
+    _classCallCheck(this, ROCIndicator);
+
+    _this17 = _possibleConstructorReturn(this, (ROCIndicator.__proto__ || Object.getPrototypeOf(ROCIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 120, 12);
+    var M = new exprs.ParameterExpr("M", 2, 60, 6);
+
+    _this17.addParameter(N);
+
+    _this17.addParameter(M);
+
+    var REF_CLOSE_N = new exprs.AssignExpr("REF_CLOSE_N", new exprs.RefExpr(new exprs.CloseExpr(), N));
+
+    _this17.addAssign(REF_CLOSE_N);
+
+    var ROC = new exprs.OutputExpr("ROC", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.CloseExpr(), REF_CLOSE_N), REF_CLOSE_N), new exprs.ConstExpr(100)));
+
+    _this17.addOutput(ROC);
+
+    var MAROC = new exprs.OutputExpr("MAROC", new exprs.MaExpr(ROC, M));
+
+    _this17.addOutput(MAROC);
+
+    return _this17;
+  }
+
+  _createClass(ROCIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "ROC";
+    }
+  }]);
+
+  return ROCIndicator;
+}(Indicator);
+
+exports.ROCIndicator = ROCIndicator;
+
+var MTMIndicator =
+/*#__PURE__*/
+function (_Indicator18) {
+  _inherits(MTMIndicator, _Indicator18);
+
+  function MTMIndicator() {
+    var _this18;
+
+    _classCallCheck(this, MTMIndicator);
+
+    _this18 = _possibleConstructorReturn(this, (MTMIndicator.__proto__ || Object.getPrototypeOf(MTMIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 120, 12);
+    var M = new exprs.ParameterExpr("M", 2, 60, 6);
+
+    _this18.addParameter(N);
+
+    _this18.addParameter(M);
+
+    var MTM = new exprs.OutputExpr("MTM", new exprs.SubExpr(new exprs.CloseExpr(), new exprs.RefExpr(new exprs.CloseExpr(), N)));
+
+    _this18.addOutput(MTM);
+
+    var MTMMA = new exprs.OutputExpr("MTMMA", new exprs.MaExpr(MTM, M));
+
+    _this18.addOutput(MTMMA);
+
+    return _this18;
+  }
+
+  _createClass(MTMIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "MTM";
+    }
+  }]);
+
+  return MTMIndicator;
+}(Indicator);
+
+exports.MTMIndicator = MTMIndicator;
+
+var BOLLIndicator =
+/*#__PURE__*/
+function (_Indicator19) {
+  _inherits(BOLLIndicator, _Indicator19);
+
+  function BOLLIndicator() {
+    var _this19;
+
+    _classCallCheck(this, BOLLIndicator);
+
+    _this19 = _possibleConstructorReturn(this, (BOLLIndicator.__proto__ || Object.getPrototypeOf(BOLLIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 120, 20);
+
+    _this19.addParameter(N);
+
+    var STD_CLOSE_N = new exprs.AssignExpr("STD_CLOSE_N", new exprs.StdExpr(new exprs.CloseExpr(), N));
+
+    _this19.addAssign(STD_CLOSE_N);
+
+    var BOLL = new exprs.OutputExpr("BOLL", new exprs.MaExpr(new exprs.CloseExpr(), N));
+
+    _this19.addOutput(BOLL);
+
+    var UB = new exprs.OutputExpr("UB", new exprs.AddExpr(BOLL, new exprs.MulExpr(new exprs.ConstExpr(2), STD_CLOSE_N)));
+
+    _this19.addOutput(UB);
+
+    var LB = new exprs.OutputExpr("LB", new exprs.SubExpr(BOLL, new exprs.MulExpr(new exprs.ConstExpr(2), STD_CLOSE_N)));
+
+    _this19.addOutput(LB);
+
+    return _this19;
+  }
+
+  _createClass(BOLLIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "BOLL";
+    }
+  }]);
+
+  return BOLLIndicator;
+}(Indicator);
+
+exports.BOLLIndicator = BOLLIndicator;
+
+var PSYIndicator =
+/*#__PURE__*/
+function (_Indicator20) {
+  _inherits(PSYIndicator, _Indicator20);
+
+  function PSYIndicator() {
+    var _this20;
+
+    _classCallCheck(this, PSYIndicator);
+
+    _this20 = _possibleConstructorReturn(this, (PSYIndicator.__proto__ || Object.getPrototypeOf(PSYIndicator)).call(this));
+    var N = new exprs.ParameterExpr("N", 2, 100, 12);
+    var M = new exprs.ParameterExpr("M", 2, 100, 6);
+
+    _this20.addParameter(N);
+
+    _this20.addParameter(M);
+
+    var PSY = new exprs.OutputExpr("PSY", new exprs.MulExpr(new exprs.DivExpr(new exprs.CountExpr(new exprs.GtExpr(new exprs.CloseExpr(), new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1))), N), N), new exprs.ConstExpr(100)));
+
+    _this20.addOutput(PSY);
+
+    var PSYMA = new exprs.OutputExpr("PSYMA", new exprs.MaExpr(PSY, M));
+
+    _this20.addOutput(PSYMA);
+
+    return _this20;
+  }
+
+  _createClass(PSYIndicator, [{
+    key: "getName",
+    value: function getName() {
+      return "PSY";
+    }
+  }]);
+
+  return PSYIndicator;
+}(Indicator);
+
+exports.PSYIndicator = PSYIndicator;
+
+var STOCHRSIIndicator =
+/*#__PURE__*/
+function (_Indicator21) {
+  _inherits(STOCHRSIIndicator, _Indicator21);
+
+  function STOCHRSIIndicator() {
+    var _this21;
+
+    _classCallCheck(this, STOCHRSIIndicator);
+
+    _this21 = _possibleConstructorReturn(this, (STOCHRSIIndicator.__proto__ || Object.getPrototypeOf(STOCHRSIIndicator)).call(this));
+
+    _this21.getName = function () {
+      return "StochRSI";
+    };
+
+    var N = new exprs.ParameterExpr("N", 3, 100, 14);
+    var M = new exprs.ParameterExpr("M", 3, 100, 14);
+    var P1 = new exprs.ParameterExpr("P1", 2, 50, 3);
+    var P2 = new exprs.ParameterExpr("P2", 2, 50, 3);
+
+    _this21.addParameter(N);
+
+    _this21.addParameter(M);
+
+    _this21.addParameter(P1);
+
+    _this21.addParameter(P2);
+
+    var LC = new exprs.AssignExpr("LC", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
+
+    _this21.addAssign(LC);
+
+    var CLOSE_LC = new exprs.AssignExpr("CLOSE_LC", new exprs.SubExpr(new exprs.CloseExpr(), LC));
+
+    _this21.addAssign(CLOSE_LC);
+
+    var RSI = new exprs.AssignExpr("RSI", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N, new exprs.ConstExpr(1))), new exprs.ConstExpr(100)));
+
+    _this21.addAssign(RSI);
+
+    var STOCHRSI = new exprs.OutputExpr("STOCHRSI", new exprs.MulExpr(new exprs.DivExpr(new exprs.MaExpr(new exprs.SubExpr(RSI, new exprs.LlvExpr(RSI, M)), P1), new exprs.MaExpr(new exprs.SubExpr(new exprs.HhvExpr(RSI, M), new exprs.LlvExpr(RSI, M)), P1)), new exprs.ConstExpr(100)));
+
+    _this21.addOutput(STOCHRSI);
+
+    _this21.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(STOCHRSI, P2)));
+
+    return _this21;
+  }
+
+  return STOCHRSIIndicator;
+}(Indicator);
+
+exports.STOCHRSIIndicator = STOCHRSIIndicator;
+
+/***/ }),
+
+/***/ 110:
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(111);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {"hmr":true}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(124)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./main.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./main.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ 111:
+/***/ (function(module, exports, __webpack_require__) {
+
+var escape = __webpack_require__(112);
+exports = module.exports = __webpack_require__(113)(false);
+// imports
+
+
+// module
+exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\n.kline {  \n    -webkit-overflow-scrolling:touch;\n  }\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n                /*\n                    position: absolute;\n    left: 0;\n    top: 80px;\n                */\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%;\n    overflow:auto;\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(114)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(115)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n#chart_toolbar_periods_vert div a.selected {\n    color: #ffac00\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(116)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(117)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n/* .chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n} */\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(118)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(119)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(120)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(121)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(122)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(123)) + ") no-repeat;\n}\n\n.chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n}\n\n.chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n}\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n/* #chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n} */\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    padding-left: 15px;    \n    padding-top: 20px;\n}\n\n.chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n.chart_trade_quotation .green {\n    color: #0F0\n}\n\n.chart_trade_quotation .red {\n    color: #F00\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n    font-size: 12px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 20px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 26px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: orchid;\n    top: 49px;\n    right: 10px;\n}\n\n \n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ 112:
+/***/ (function(module, exports) {
+
+module.exports = function escape(url) {
+    if (typeof url !== 'string') {
+        return url
+    }
+    // If url is already wrapped in quotes, remove them
+    if (/^['"].*['"]$/.test(url)) {
+        url = url.slice(1, -1);
+    }
+    // Should url be wrapped?
+    // See https://drafts.csswg.org/css-values-3/#urls
+    if (/["'() \t\n]/.test(url)) {
+        return '"' + url.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"'
+    }
+
+    return url
+}
+
+
+/***/ }),
+
+/***/ 113:
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+
+/***/ 114:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAJn2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyI+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NTwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDx4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+eG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDY8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkhpc3Rvcnk+CiAgICAgICAgICAgIDxyZGY6U2VxPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNC0xMi0wM1QxNzo1Njo1MiswODowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDozNjIzYmJlYi1iNGU2LWNhNDktOTRjZi05MTIyY2Q1Y2NiZTk8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+eG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBODwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkRlcml2ZWRGcm9tIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgPHN0UmVmOmluc3RhbmNlSUQ+eG1wLmlpZDo4MzE3OTEwZi1kOTE5LTY4NDAtYWVhOS0zNzI5NWE2NGI1NmU8L3N0UmVmOmluc3RhbmNlSUQ+CiAgICAgICAgICAgIDxzdFJlZjpkb2N1bWVudElEPnhtcC5kaWQ6MWYwY2U2ZjQtZTRlNS1jODQ3LWIyOTgtNGNkNjRiYzBkYzA2PC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZWRGcm9tPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOkNyZWF0ZURhdGU+MjAxNC0xMi0wM1QxNzo1NjoyOCswODowMDwveG1wOkNyZWF0ZURhdGU+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqC9xe+AAAAWUlEQVQIHWO8cOHCFgYGBm8gRgZbmRgZGXOBIj+QRH8wMTHlMenr69////9/J0wCxNbT07vHCBK4f/8+x8ePH6+B2Pz8/FqKioo/mEAcEAOoEmRkHogNEgMA0qYfb8X3frQAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 115:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA21pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6M0E5Qjc0ODc3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6M0E5Qjc0ODY3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvrZrC8AAABOSURBVHjaYvz//z8DCFy8eNEbSDHq6+tvAfEZQRJAQQ4g+xoDBGgBJX8wQTkVQKwIxRVgHRcuXFCEquaAKvoBxNogHZORBBmg7EkAAQYAImEV+46peUgAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 116:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkMxOTJFRDk2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkMxOTJFRDg2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjgzMTc5MTBmLWQ5MTktNjg0MC1hZWE5LTM3Mjk1YTY0YjU2ZSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5MkIK1AAAAPklEQVR42mJ0CUvewsDA4M2ACrYyAYlcIP6BJAhi54Ek7gNxJ5IEiH2PCcrpgCq4D2UzsCBpBxnJCDMWIMAAVuANgw9cJ2UAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 117:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADcWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMTQgNzkuMTUxNDgxLCAyMDEzLzAzLzEzLTEyOjA5OjE1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2QzE5MkVEODY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODMxNzkxMGYtZDkxOS02ODQwLWFlYTktMzcyOTVhNjRiNTZlIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkyQgrUAAABCSURBVBhXY3QJS2aAAh8g/g/EW0EcJhABBBxAPAmIJ0PZcIkKIFaEYhAbLKEExOUgDhSA2IogCZARYO1QAGQzTAYAPbkH1E4jJr8AAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 118:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6N0EwQTE5MkI4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6N0EwQTE5MkE4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjYzNEUzRUIyODExOTExRTRBNkJDQzhDODM5MEQxQTkwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjYzNEUzRUIzODExOTExRTRBNkJDQzhDODM5MEQxQTkwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+VsD84AAABMxJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBEEQJ3jITVDUgxL1YoggHlSU6MHlKkEQ3FFREEEviogexJlTDqIxcQl60Is4oujFDVFhfN+p1kqlu7ZZMhN+w6My1f1fVXf9ev2r+6eDfD4fRMhkMpeBaXKdCalg5NYFPMpms0sDy62OWKINhtGPn8ABoC+dTud1BKmE+onAUeAOSBt8CKKtExgESafrKagb1fcB+3FKv1x68K8hYA/Qj0aafAiijUZnACRdUUVoYfQbuA8MAy+BF8BzG4LPwARgCtCLcx9wGYVXwHLgqvjd6zKMGWAZWqRunhF1a3HeC2wITtHYw/gT/UD5AMWQOG6v0Q/iNrTcI4jJvZtA+sZ1GK8AX4V773J1ZTqNLyjOi16ccD4Fp+lcmwRavYM+Zlw10XljghIQ1NFQafa3k6xr5kkH+8H48AOWtDEgGBUGuQSVYoLl5b8r6wfofqu43QcuMZJsfARYAiEZdOqBZHxINrYNMBKNjQQmYy2BjXEiga1xLIGLcVy0HhkfhPGQ7Y1FPYd2W+NCWKr4tuvcKHouhIaVCktaOQlw4etRvE95GpPHngUafVR5xFyxVST1oP+y5iPlJXVlW00cUsK7uirVRO3Vtlmx+IhL6UbBdLW1BD5qLKvyLJSnfYwjTXwHNMD4A0taBQkw7ItQbAXmWhMIo/UCLaK6L3RoeAP5ilJ30TVOpOcoPeLnMHynJeWoxrOlh1PXrZc8irhQDw4D1zhO5DiR48SaeZ5oiJvqqfQV1chjt1cmTtRNNBdZj52lJkUyx0y+EWr5I1XbmIk1kTWRCZig/ASqeyet4HTvWNKRkSDLOt0bbad56Pjkgv2ACZiACewjFJunV6MIrLRPF2AoPejgCIUJmIAJakMTVfEJZSPaCWRMrcrHO2tibA9cNVE+nv2ACaqDgPPSqjqtzHbtXPTStzRPsopZO7MncoIjE5SDALMvJ8SjMfpbEpTYurgZmHOpCzVakLOpS+xBXKtOPVBbjLsGVTSMscPjShAZCbL+omQdZOucCWLHmKdzrROY3vpp8xMtjEfnJ9omtankYdJ6UDbWkVvfXIk8akAmD6VueT1TC5OywZVzTiQPA807VhP53w3q2paguq3ADaBdt98rP1EeSufwVu2ZU4ykzT8wvWvX5h+Y3nhrc/dN+YmmiWWTn6h9F8+ayJrImlikJkbgnG3O2WZNLLUmOhrH5ycmGetmaWg7hZMEN6UTzKIfxtlqYuLOymui7VBqPZHzEz2f6vLb/zHOjCs+sc3mFanoUaYspzBOXlxn2JXZlVnSKkSAEZmB4gKwG6PxWt5ne2vbCdxWjbUxUsztblJ5XNn34qGHZDvZ650r6ueh2AfcSgqyiPgccAkXLqvUbwZWAcew72HSKGwEcorx/KDwr4nTgW1kHDsKOHAOijVAt/hNn/vaAqwUrQ7oojSasseBezjwJn43B4UPbD2h9QHqvpv8YHVQ+DbaXRhTD1YEhe/Gxa0b6LtZzfLSd6a4cPQtrE3AY9HqD7F/KorFAMWS9F+mRDAcLX1HxYrAW6BNGC0EiOgZ8JRKEH8bcQpKpugO4KMwoI+tnVS/FSc/Q4nz8W7T9/LU1bt3sitrYhD8EWAAdoU1AmCjen8AAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 119:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NjI0MkEyMUI4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NjI0MkEyMUE4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjZDNzdDQUY4NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjZDNzdDQUY5NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+s3AxtQAABPZJREFUeNrsXE1oHkUYnvkYq0IFC5ImubRI1WolSUEoFIqWHnIr6KqHStWLtaceJFhyUryG4ElKf8RaKELNYkFETyYXPYhNW3+CHtqL+NX+XdoKxQrTZ3bny7ffdv43+Wziu/BssrP7Pjs7M++z7+683zIpJVvEDDsBPNJT5kGL9S57gTMs58+xwKVlKHsC+A4kEwBPIVDLGmAK+Bok61MIOss4cA4k46kEahnUNZkCHkghUItqiwnge5BsSiHoLKp35kGyt1MgAoz+Bb4FFoDfgd+AX0MIbgDqmh8GJlkm52Ma8QKwHfhMb0/G9MIssA1nVNU8rMtewnU/FUJwqOj7TF4vtjL5A9bn9XHvGrtHOYRzyfl+TfwPsAmkf8R240nglh7e79R3+rsxkzdRi481wUfxl5DojauGIOez//s2WBEEHLcyV1eNFbJu95Od7nsfyGPvjdSN/804IElrTCCiLXIum9cgk7xA/8dBzkf07T6hDUrjD4CtqH5XZIKC6hk2ApwGxur7Ghn7CTzGboIAYztBoLGZIML4XoKu8WjoI4+oj+3iZpLJ88HjA2eTlRrImAeuJbmxCJOLkqgutyZ29WEA68utRGMlLkeAYRY7cOq+IlKkvEfWAs9qHe596IWywazDXSRJeY87N9REEdzaVkEJbO1lFpSA1vYpUqe14wRVi+pgrJTXe+ESsB5nvkKa2E9NzPkzWL8JbBSRRq9obNGl0zE1eBV4r1b2SWycqN7m7NdbCxg7W1qRUj5UeTn1eXgjdn3l/UIfcv4X/j8VpsoUJ1KcSHHi/U5QxomsWZyY86HGcWIj4zgCi5f6ojR/zJQaofYhUg2MmURyhGptA9JE0kQioGjdJ6j6Jey9Q9k+x/LColFJNhf77Bzk5rH3BfJGIiACInBoYqD2uUW1qn0BKQNuVVaT0RShEAEREMHK0MTa8WmaWDk+XhONNYjVxMrxpIlEsBIIKD+xPwR2PQjUypZX+zwiu8yTdSFaSRmSlOBIBMvhjTlvax0YXvy/qw3mMoMHtmPKXK8D2yFlwiNpw9ZtTeZTpLazDe4LXxDGxqlfe9A46BgpspzPNJP1TL4cT2Dqd1KkFU+gpgxzfhoYs+wfULf/ltW4mndi3l/kJwpHMLHVYdwhvyRsz4M9xg7y8EasBlwV8mpeWtI7NeGdoPWRO+dYg3JxUo31/l53TunK6JmdWs3ifMEwQsPzE23DO2jG25m778tP9OZkqcaaYQOOgNs5F0+qTJpImthUE43ORDnblLNNmpisicmRifl3LLYzO7xUBLuwRXBbLsFs/jIuwEtFYFjj+B1LQ02knG1G+YmMMuOW5O2+CE4bsRzXeIJiFYwDEZt7syrbgIYySVrfCHK+DvgCeDy1BgeAr9CVF9OHMmMP+h+6ljzd2N0uyvahtDnXnKtPoh0EvhQO9uPAp2i4uVr568Au4EPs+9HWC3uAds34SVb+NPFR4C1lbO6FnG/A+kVgn95Wn/t6A3hen3XePg7KT7xNFNXP5FVsb9ZnXQu8bfpeWL0Gu1n5bbRvYKxqsAOYtjx0qM9ebe7qQc4fw/ooK7+F9RpwtngqyeRtvV/V4llAxc/qV6aKYKEkMMWKjP0JjGqjpwFF9Avwc/E3k393Fal8iKhmyR8DrmmDn5j6yFom79hE1TTG98EgSOvMlxCR7EqiythdAQYAbEvqZUahHBUAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 12:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MainDataSource = exports.DataSource = void 0;
+
+var _named_object = __webpack_require__(9);
+
+var _ctool_manager = __webpack_require__(106);
+
+var _kline = _interopRequireDefault(__webpack_require__(17));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DataSource =
+/*#__PURE__*/
+function (_NamedObject) {
+  _inherits(DataSource, _NamedObject);
+
+  function DataSource(name) {
+    _classCallCheck(this, DataSource);
+
+    return _possibleConstructorReturn(this, (DataSource.__proto__ || Object.getPrototypeOf(DataSource)).call(this, name));
+  }
+
+  _createClass(DataSource, [{
+    key: "getUpdateMode",
+    value: function getUpdateMode() {
+      return this._updateMode;
+    }
+  }, {
+    key: "setUpdateMode",
+    value: function setUpdateMode(mode) {
+      this._updateMode = mode;
+    }
+  }, {
+    key: "getCacheSize",
+    value: function getCacheSize() {
+      return 0;
+    }
+  }, {
+    key: "getDataCount",
+    value: function getDataCount() {
+      return 0;
+    }
+  }, {
+    key: "getDataAt",
+    value: function getDataAt(index) {
+      return this._dataItems[index];
+    }
+  }]);
+
+  return DataSource;
+}(_named_object.NamedObject);
+
+exports.DataSource = DataSource;
+DataSource.UpdateMode = {
+  DoNothing: 0,
+  Refresh: 1,
+  Update: 2,
+  Append: 3
+};
+
+var MainDataSource =
+/*#__PURE__*/
+function (_DataSource) {
+  _inherits(MainDataSource, _DataSource);
+
+  function MainDataSource(name) {
+    var _this;
+
+    _classCallCheck(this, MainDataSource);
+
+    _this = _possibleConstructorReturn(this, (MainDataSource.__proto__ || Object.getPrototypeOf(MainDataSource)).call(this, name));
+    _this._erasedCount = 0;
+    _this._dataItems = [];
+    _this._decimalDigits = 0;
+    _this.toolManager = new _ctool_manager.CToolManager(name);
+    return _this;
+  }
+
+  _createClass(MainDataSource, [{
+    key: "getCacheSize",
+    value: function getCacheSize() {
+      return this._dataItems.length;
+    }
+  }, {
+    key: "getDataCount",
+    value: function getDataCount() {
+      return this._dataItems.length;
+    }
+  }, {
+    key: "getUpdatedCount",
+    value: function getUpdatedCount() {
+      return this._updatedCount;
+    }
+  }, {
+    key: "getAppendedCount",
+    value: function getAppendedCount() {
+      return this._appendedCount;
+    }
+  }, {
+    key: "getErasedCount",
+    value: function getErasedCount() {
+      return this._erasedCount;
+    }
+  }, {
+    key: "getDecimalDigits",
+    value: function getDecimalDigits() {
+      return this._decimalDigits;
+    }
+  }, {
+    key: "calcDecimalDigits",
+    value: function calcDecimalDigits(v) {
+      var str = "" + v;
+      var i = str.indexOf('.');
+
+      if (i < 0) {
+        return 0;
+      }
+
+      return str.length - 1 - i;
+    }
+  }, {
+    key: "getLastDate",
+    value: function getLastDate() {
+      var count = this.getDataCount();
+
+      if (count < 1) {
+        return -1;
+      }
+
+      return this.getDataAt(count - 1).date;
+    }
+  }, {
+    key: "getDataAt",
+    value: function getDataAt(index) {
+      return this._dataItems[index];
+    }
+  }, {
+    key: "update",
+    value: function update(data) {
+      this._updatedCount = 0;
+      this._appendedCount = 0;
+      this._erasedCount = 0;
+      var len = this._dataItems.length;
+
+      if (len > 0) {
+        var lastIndex = len - 1;
+        var lastItem = this._dataItems[lastIndex];
+
+        var _e,
+            _i,
+            _cnt = data.length;
+
+        for (_i = 0; _i < _cnt; _i++) {
+          _e = data[_i];
+
+          if (_e[0] === lastItem.date) {
+            if (lastItem.open === _e[1] && lastItem.high === _e[2] && lastItem.low === _e[3] && lastItem.close === _e[4] && lastItem.volume === _e[5]) {
+              this.setUpdateMode(DataSource.UpdateMode.DoNothing);
+            } else {
+              this.setUpdateMode(DataSource.UpdateMode.Update);
+              this._dataItems[lastIndex] = {
+                date: _e[0],
+                open: _e[1],
+                high: _e[2],
+                low: _e[3],
+                close: _e[4],
+                volume: _e[5]
+              };
+              this._updatedCount++;
+            }
+
+            _i++;
+
+            if (_i < _cnt) {
+              //  this.setUpdateMode(DataSource.UpdateMode.Append);
+              this.setUpdateMode(DataSource.UpdateMode.Refresh);
+
+              for (; _i < _cnt; _i++, this._appendedCount++) {
+                _e = data[_i];
+
+                this._dataItems.push({
+                  date: _e[0],
+                  open: _e[1],
+                  high: _e[2],
+                  low: _e[3],
+                  close: _e[4],
+                  volume: _e[5]
+                });
+              }
+            }
+
+            return true;
+          }
+        }
+
+        if (_cnt < _kline.default.instance.limit) {
+          this.setUpdateMode(DataSource.UpdateMode.DoNothing);
+          return false;
+        }
+      }
+
+      this.setUpdateMode(DataSource.UpdateMode.Refresh);
+      this._dataItems = [];
+      var d,
+          n,
+          e,
+          i,
+          cnt = data.length;
+
+      for (i = 0; i < cnt; i++) {
+        e = data[i];
+
+        for (n = 1; n <= 4; n++) {
+          d = this.calcDecimalDigits(e[n]);
+          if (this._decimalDigits < d) this._decimalDigits = d;
+        }
+
+        this._dataItems.push({
+          date: e[0],
+          open: e[1],
+          high: e[2],
+          low: e[3],
+          close: e[4],
+          volume: e[5]
+        });
+      }
+
+      return true;
+    }
+  }, {
+    key: "select",
+    value: function select(id) {
+      this.toolManager.selecedObject = id;
+    }
+  }, {
+    key: "unselect",
+    value: function unselect() {
+      this.toolManager.selecedObject = -1;
+    }
+  }, {
+    key: "addToolObject",
+    value: function addToolObject(toolObject) {
+      this.toolManager.addToolObject(toolObject);
+    }
+  }, {
+    key: "delToolObject",
+    value: function delToolObject() {
+      this.toolManager.delCurrentObject();
+    }
+  }, {
+    key: "getToolObject",
+    value: function getToolObject(index) {
+      return this.toolManager.getToolObject(index);
+    }
+  }, {
+    key: "getToolObjectCount",
+    value: function getToolObjectCount() {
+      return this.toolManager.toolObjects.length;
+    }
+  }, {
+    key: "getCurrentToolObject",
+    value: function getCurrentToolObject() {
+      return this.toolManager.getCurrentObject();
+    }
+  }, {
+    key: "getSelectToolObjcet",
+    value: function getSelectToolObjcet() {
+      return this.toolManager.getSelectedObject();
+    }
+  }, {
+    key: "delSelectToolObject",
+    value: function delSelectToolObject() {
+      this.toolManager.delSelectedObject();
+    }
+  }]);
+
+  return MainDataSource;
+}(DataSource);
+
+exports.MainDataSource = MainDataSource;
+
+/***/ }),
+
+/***/ 120:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABC0lEQVQ4T7WTYVEDMRSEv1VAJYCDOmgdgAPAASigKGhx0CoACcUBEsDBVcFj9ibpvF6TDn/IzM0kL9l9t5usImIFvHA6niVtcikinoB1qg3AmyIiSnEslPle0n5CsAT8eZjsChgqwaEUtpIeJ39zsoyILXAPjJhK8Apcl40uSQLvgG9LPxJIWqUDZyQZLOmhemcC6/mqmlskU7A1RYT9mKultwDuLEvSEBE2+MOdp+ebBKXDzOBLhnrvfwiKhFvgJkl4b13xJRN3VXPH2Dmw6F3jEVw9mJLka/RTzg/pDNwiAX7yQ7LbM6ALbpCMGEvwZAwGUBP42QnTIoXJDQ8mcJxrumqjv8TZYdr8Ai/uwaXkPGIcAAAAAElFTkSuQmCC"
+
+/***/ }),
+
+/***/ 121:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEI1Q0Q4QzI4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEI1Q0Q4QzE4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDc2N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDc3N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+R+XfywAABNVJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBFEMJnjITVDUgxL1YogXDypK9OBylSAI4r6CCOpBEdGDOAEhB9GYuIR40Is4QdGLG6LC+H6mWsua7lq6Z8aZ8Bsela7u/7q669ebX10/7WWzWS/A0uWtl4Apcp0JKe/frQN4vKylbbFnuVURS7DBMNj5AewDevoepLM6glRE/XjgMHAHpDVxCIKtHRgASbvrLagb1fcAe3FLP11a8OdCwC6gDxepi0MQbNQ7/SDpCCp8C6NfwH1gCHgJDAMvbAg+AeOASUA37r3fpRde0TMFroj9bpduTANLcEVq5klRtwb3Pc+G4Dj1PYw/0g7KhygGxXm7jX4QtuHKXYKY3LsOpG9cu/Ey8EW49w5XV6bb+IzirGjFMedbcBrOlUmg1TvoY9pVE503JigAQRV1leZ4M8m6Zpy0sR+MDT9gSUtO4Lsa5IVBLkGlGGBZ+e/S+gGa3yh+7t2fgTA+BCyCkAw4tUAyPiAb2wYYkcZGApOxlsDGOJLA1jiUwMU4LFoPjPfDeND2h0W9h2Zb49FN9W3XsZF4LPiGmQprYjE0UXK6ahTvUjGNyWNPAbV+TONgrIzYKpJ60l9ZiyPlBXVlW00cVMK7qjLVRO3TtpmxxBGXwvWC6WlrCeKosazKM1CeiGMcDOcRoAbG71kTS6iJ6PYFKLYAs61bIIzWCTSI6h6XFqwnX1HqzrvGifQepUvsDsF3GlKOajxTejl1zXrKo4gLteAgcJXjRI4TOU6smPeJhripmspYLZA8dltp4kTdQHOR9dBRalIkc8wUN0ItfqRqGzOxJrImMgETFJ9Ade+oGZxujaU1MBJkvU6/jbbD3Hd8c8F+wARMwAT2EYrN26s8Aivts32HMroYzREKEzABE1SEJqri48tGdBBIm64qn++siaEtcNVE+Xz2AyYoDwLOSyvrtDLbuXPiqW9h3mQlmTuzJ3KCIxMUgwCjLyPEozb4WxKU0LqwEZhxqfM1WpCxqYtsQdhVnVqgXjHsGZRRN4Z2j6sqB0ZEBlxPJOsgW+tMENrHPJwrhEA3nLWrftr8RAvj/PxE26Q2dd3Zj5oPysY6cusfVyIPLiCT+1KzYr1T86OywZV7jiT3Pc0aq4l8dIO6NkWobiNwA2jWHY+Vnyh3pXN4q7bMKUbS5h+Y1tq1+QemFW9t7r4pP9E0sGzyE7Vr8ayJrImsiQk1MQDnbHPONmtioTXR0Tg8PzHKWDdKfdshHCW4KZ1gJn4ZZ6uJkQdLr4m2Xal1Zc5PjDmcefX/P2fGJU9ss1kiFS1KF+UWxsjCdZpdmV2ZJa1EBOiRaSjOATvRG6/lY7Y/bduB26qxKVJVmzahOK4c9+GhhWQ7MdaaK+rnoNgD3PI17BeAi3hwvUr9JmAlcATHHkX1wgYgoxjP9XL/mjgV2ErGob2AE2ehWA10in363NdmYIW4ar8uSqMhexS4hxNvYr/ey31g6ynND1D3zeQHq7zct9Huwpha0OLlvhsXNm+g72bVy1Pf6ShOe7lvYW0EnoirfhfHJ6NYCFAsSf9lSgRDwdQ3L1YE3gJNwmg+QETPgWdUgvirPHdWM0XPAB+EAd3/sPqtOPkdSpiPd5q+l6fO3mMnu7Imet5vAQYAtaODAARZxFkAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 122:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEY5QjlCQTA4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEY5QjlCOUY4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDdBN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDdCN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+2tcnMAAABOxJREFUeNrsXDtoFUEU3SzjDwwoiNE0WsS/aAQ/IIiKRTpBUQvBT+MPxEKDEhs1hU0IVvEHahREUAtBRCu10UI0RtSghTbiE39NoiAqPM9NZnWzmZm9My/vaeIdOGx2svfs7Myds3d37tuoWCxGCbqbFl0AqtN1eYij/mUT8Kjn4OKFEbPEhrppwD2QNAJVIQRURgItwE2Q1IQQJKUB6ARJQygBlUm6JS3AiBACKtQXjcB9kNSFECSFRqcDJJuSCsUw+gncBrqAl8AL4DmHoBugax4DNFUffdDh04mvgKXAJb3f5DMKd4AlOCM185SuW4vrnsEhOEFjD+PPtIPtA2ye6OP2G4eHJoSr4Mw7NfF3oA6kb3yH8SLwRbv3Xm9Hwhl7sDmjW9HmfQmhs3G4EGAI7/zvfTA0CKpwK3MNVT3JumOerHTe94jc994ow/hX/EAkrXQC5WsAnSyW3ALMwipC5f0AzZ+nb/f+faCNm4EFaH6nVx+kjA+njVkELmPOrc1p7CTgGFsJuMZGAh/jAcOYMj4E4yfcG0vWk+q5xn0BMQhSN5KizwPXoNxYlGmKiqiWWRNTTjcRm/dxoDF57GmgNg40TubKO8U0yo71H1njuKvL3cs/Cvqare6uQqR8UDVRsXvbVri9XV5B4fR2niIlHeYnqFqV6SXLSR8pz7bgHVAD4w+iiRXURAz7bGy2AlOVp9F6jTm6utWnBRvIVzJ153zjRHqPslPvdsF35sQexuTuk1Mvp66ExonUgiPAZe6LKIkTJU6UOPGfJtBxYlgnpjx2V8lxYlyCcadXH9hmaV6Ulh8zhUao5Y9UuTGTCo1QRRNFE4VACHwUqZ+LJi9hTdPZtsayIjHSZHdzn1xDnmJ97wsyG4VACISAH6HYtM8pqmnt46QMOFW5dzFaIhQhEAIh+CtxIjcetAVeQZqYPt5bE40t8NXE9PGiiUIwBAgkP7FScaJND7haGedpX57IlnexjqWVkiEpCY5CUIbZiNlX0DpQm/yd0gZjnWkGFnzqXK8DC5w6lSNptbb9hCxPkQquPvg35oIydU722ll+kBgRGXC1JFkH2TpvAlMPiyINSUHJTCTnqp8zP5Fh/Ds/UTmCiQUOY3N+Yvp5MG3sImd3YjrgGrDuHJrUljw7OxdoOfmJ1jVWzuqvYhi7hrK533QOGUrvlR3UzwOuAfXecaLpstj5ic78g7z8RFeH5uYn5o0GJz/RuRYvqiyaKJqoC2bjfI7y2BCkidZnZ8nZlpzt/1gT40BjsybajF2zVHGnsE1wY5dglvwyjquJnLCmQprIHUqnK0t+YvgLCFn9L5MmVubtvuKmjdiOK3mBYhj4gfLNvRmOfSCuLJIWVeq3fRiR8dicBfZhNF6HtGAPcCNr7OXKKKNyH7oGPd04p1/IdnTQmivq6ZNoB4DrysHeDpxHx93N1G8GVgHH8L+HtlHYCBQyxtOjvp8mjgO2kbFxFHDgFGzWANv1Pn3uawuwXJ+1w+oH+hNv9Fmzdhz4Efsz9VnHAjtM3wvLtmB11PdttFswphYsA1otzw303ayZ6UffCVHfT0/b9IPoY32t3/T/qRVzAYol6VemRNDVKyiG4aKPCr0F5mujWQARPQOe0hbEX/tdQiZLfjfwSRvQx9aO4/8/bKJq8vHtMGBpnfESfJJdRVSj6JcAAwDMequ4kXXO2QAAAABJRU5ErkJggg=="
+
+/***/ }),
+
+/***/ 123:
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKElEQVQ4T7VTwU0DMRCcrYArwby9j3QQOoAOgA5CBYQKCB0kFUAJoQMe9v/o4JD8X7SWfVo5vhMfLJ1krT3jm9kdYuY9gGeYJSJPMcaDrXnvd0T0amoTgDdiZinFXCj7cwjhbAmY+QaAfrp2AK4ATJXgRwsicowxPlpgu/feH4noHkDGVIIXEXF6sEZSwSJyIqJRpc8EIYS9uXDxJxYcY3yo3lEx56tq7pG0YJWlnojIhnp6C+AupeTGcZyYeRKRD325vd8l0EvOuUHBa4bq2f8QFAm3KaVrI+G91+I1E09V84KxGyLaLrVxBlcPWpK5jWWU7SBdgHskRPRtB0ndHnTCeq1qQlVHOWNUgm5yMADUBH4uhGlrwjRoHpRA41zTlc//GGcN0+EXyGXo9iBlz1cAAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 124:
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			var styleTarget = fn.call(this, selector);
+			// Special case to return head of iframe instead of iframe itself
+			if (styleTarget instanceof window.HTMLIFrameElement) {
+				try {
+					// This will throw an exception if access to iframe is blocked
+					// due to cross-origin restrictions
+					styleTarget = styleTarget.contentDocument.head;
+				} catch(e) {
+					styleTarget = null;
+				}
+			}
+			memo[selector] = styleTarget;
+		}
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(125);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
+		var nextSibling = getElement(options.insertInto + " " + options.insertAt.before);
+		target.insertBefore(style, nextSibling);
+	} else {
+		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+
+/***/ 125:
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+
+/***/ 126:
+/***/ (function(module, exports) {
+
+module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        <div id=\"chart_show_indicator\" class=\"chart_toolbar_button chart_str_indicator_cap selected\">技术指标</div>\n        <!-- <div id=\"chart_show_tools\" class=\"chart_toolbar_button chart_str_tools_cap\">画线工具</div> -->\n        <!-- <div id=\"chart_toolbar_theme\">\n            <div class=\"chart_toolbar_label chart_str_theme_cap\">\n                主题选择\n            </div>\n            <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n            <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n        </div> -->\n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_dropdown_settings\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_settings\">更多</a>\n            </div>\n\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <table>\n                    <tbody>\n                        <tr id=\"chart_select_main_indicator\">\n                            <td class=\"chart_str_main_indicator\">主指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"MA\" class=\"selected\">MA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"EMA\" class=\"\">EMA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"SAR\" class=\"\">SAR</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"NONE\" class=\"\">None</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <tr id=\"chart_select_chart_style\">\n                            <td class=\"chart_str_chart_style\">主图样式</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a class=\"selected\">CandleStick</a>\n                                    </li>\n                                    <li>\n                                        <a>CandleStickHLC</a>\n                                    </li>\n                                    <li>\n                                        <a class=\"\">OHLC</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <!-- <tr id=\"chart_select_theme\" style=\"display: none;\">\n                            <td class=\"chart_str_theme\">主题选择</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n                                    </li>\n\n                                    <li>\n                                        <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr id=\"chart_enable_tools\" style=\"display: none;\">\n                            <td class=\"chart_str_tools\">画线工具</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off selected\">关闭</a>\n                                    </li>\n\n                                </ul>\n\n                            </td>\n                        </tr> -->\n                        <!-- <tr id=\"chart_enable_indicator\" style=\"display: none;\">\n                            <td class=\"chart_str_indicator\">技术指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on selected\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off\">关闭</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr> -->\n                        <!-- <tr>\n                            <td></td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a id=\"chart_btn_parameter_settings\" class=\"chart_str_indicator_parameters\">指标参数设置</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr> -->\n                    </tbody>\n                </table>\n            </div>\n        </div>\n\n        <div class=\"chart_dropdown\" id=\"chart_language_setting_div\" style=\"padding-left: 5px;\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_language_setting\">语言(LANG)</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"padding-top: 15px; margin-left: -12px;\">\n                <ul>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-cn\" class=\"selected\">简体中文(zh-CN)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"en-us\">English(en-US)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-tw\">繁體中文(zh-HK)</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n    <!-- ToolPanel -->\n    <!-- <div id=\"chart_toolpanel\">\n        <div class=\"chart_toolpanel_separator\"></div>\n\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_Cursor\" name=\"Cursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cursor\">\n                光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_CrossCursor\" name=\"CrossCursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cross_cursor\">\n                十字光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_SegLine\" name=\"SegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_seg_line\">\n                线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_StraightLine\" name=\"StraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_straight_line\">\n                直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_RayLine\" name=\"RayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_ray_line\">\n                射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_ArrowLine\" name=\"ArrowLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_arrow_line\">\n                箭头\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriSegLine\" name=\"HoriSegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_seg_line\">\n                水平线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriStraightLine\" name=\"HoriStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_straight_line\">\n                水平直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriRayLine\" name=\"HoriRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_ray_line\">\n                水平射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_VertiStraightLine\" name=\"VertiStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_vert_straight_line\">\n                垂直直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_PriceLine\" name=\"PriceLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_price_line\">\n                价格线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_TriParallelLine\" name=\"TriParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_tri_parallel_line\">\n                价格通道线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelLine\" name=\"BiParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_line\">\n                平行直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelRayLine\" name=\"BiParallelRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_ray\">\n                平行射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibRetrace\" name=\"DrawFibRetrace\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_retrace\">\n                斐波纳契回调\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibFans\" name=\"DrawFibFans\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_fans\">\n                斐波纳契扇形\n            </div>\n        </div>\n        <div style=\"padding-left: 3px;padding-top: 10px;\">\n            <button style=\"color: red;\" id=\"clearCanvas\" title=\"Clear All\">X</button>\n        </div>\n    </div> -->\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n\n    </div>\n\n    <!-- <div id=\"chart_parameter_settings\">\n        <h2 class=\"chart_str_indicator_parameters\">指标参数设置</h2>\n        <table>\n            <tbody>\n                <tr>\n                    <th>MA</th>\n                    <td>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <br>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>DMA</th>\n                    <td>\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>EMA</th>\n                    <td>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <br>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>TRIX</th>\n                    <td>\n                        <input name=\"TRIX\">\n                        <input name=\"TRIX\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>VOLUME</th>\n                    <td>\n                        <input name=\"VOLUME\">\n                        <input name=\"VOLUME\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>BRAR</th>\n                    <td>\n                        <input name=\"BRAR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>MACD</th>\n                    <td>\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>VR</th>\n                    <td>\n                        <input name=\"VR\">\n                        <input name=\"VR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>KDJ</th>\n                    <td>\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>EMV</th>\n                    <td>\n                        <input name=\"EMV\">\n                        <input name=\"EMV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>StochRSI</th>\n                    <td>\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>WR</th>\n                    <td>\n                        <input name=\"WR\">\n                        <input name=\"WR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>RSI</th>\n                    <td>\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>ROC</th>\n                    <td>\n                        <input name=\"ROC\">\n                        <input name=\"ROC\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>DMI</th>\n                    <td>\n                        <input name=\"DMI\">\n                        <input name=\"DMI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>MTM</th>\n                    <td>\n                        <input name=\"MTM\">\n                        <input name=\"MTM\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>OBV</th>\n                    <td>\n                        <input name=\"OBV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>PSY</th>\n                    <td>\n                        <input name=\"PSY\">\n                        <input name=\"PSY\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>BOLL</th>\n                    <td>\n                        <input name=\"BOLL\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n\n        <div id=\"close_settings\">\n            <a class=\"chart_str_close\">关闭</a>\n        </div>\n\n    </div> -->\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
+
+/***/ }),
+
+/***/ 17:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _control = __webpack_require__(38);
+
+var _kline_trade = __webpack_require__(57);
+
+var _chart_manager = __webpack_require__(4);
+
+var _chart_settings = __webpack_require__(20);
+
+var _templates = __webpack_require__(27);
+
+__webpack_require__(110);
+
+var _tpl = _interopRequireDefault(__webpack_require__(126));
+
+var _jquery = _interopRequireDefault(__webpack_require__(62));
+
+var _util = __webpack_require__(213);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Kline =
+/*#__PURE__*/
+function () {
+  function Kline(option) {
+    _classCallCheck(this, Kline);
+
+    this.element = "#kline_container";
+    this.chartMgr = null;
+    this.buttonDown = false;
+    this.init = false;
+    this.requestParam = "";
+    this.data = {};
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.symbol = "";
+    this.symbolName = "";
+    this.range = null;
+    this.limit = 1000;
+    this.type = "poll";
+    this.subscribePath = "";
+    this.sendPath = "";
+    this.stompClient = null;
+    this.intervalTime = 5000;
+    this.debug = true;
+    this.language = "zh-cn";
+    this.showLanguageSelect = false;
+    this.showDrawTool = false;
+    this.theme = "dark";
+    this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "12h", "1w"];
+    this.showTrade = true;
+    this.tradeHeight = 44;
+    this.tradeWidth = 250;
+    this.onMaximizeWindow = null;
+    this.socketConnected = false;
+    this.enableSockjs = true;
+    this.reverseColor = false;
+    this.isSized = false;
+    this.paused = false;
+    this.subscribed = null; // this.disableFirebase = true;
+
+    /*api文档  https://www.zb.com/i/developer/restApi#config */
+
+    /*k线数据 参考文档type  since  size */
+
+    this.klineBaseUrl = 'http://api.bitkk.com/data/v1/kline';
+    this.klineMarketName = 'market';
+    this.klineTypeName = 'type';
+    this.klineSizeName = 'size';
+    this.klineSinceName = 'since';
+    this.klineSizeValue = '1000';
+    this.klineSinceValue = null;
+    this.G_KLINE_HTTP_REQUEST = null;
+    this.klineData = {};
+    this.klineTimer = null;
+    this.klineIntervalTime = 3000; //行情数据
+
+    this.tradesBaseUrl = 'http://api.bitkk.com/data/v1/trades';
+    this.tradesMarketName = 'market';
+    this.G_TRADES_HTTP_REQUEST = null;
+    this.tradesData = {};
+    this.tradesTimer = null;
+    this.tradesIntervalTime = 8000; //市场深度数据
+
+    this.depthBaseUrl = 'http://api.bitkk.com/data/v1/depth';
+    this.depthMarketName = 'market';
+    this.G_DEPTH_HTTP_REQUEST = null;
+    this.depthData = {};
+    this.depthTimer = null;
+    this.depthIntervalTime = 8000;
+    this.chatPeriodToolRanages = [];
+    this.periodMap = {
+      "01w": 7 * 86400 * 1000,
+      "03d": 3 * 86400 * 1000,
+      "01d": 86400 * 1000,
+      "12h": 12 * 3600 * 1000,
+      "06h": 6 * 3600 * 1000,
+      "04h": 4 * 3600 * 1000,
+      "02h": 2 * 3600 * 1000,
+      "01h": 3600 * 1000,
+      "30m": 30 * 60 * 1000,
+      "15m": 15 * 60 * 1000,
+      "05m": 5 * 60 * 1000,
+      "03m": 3 * 60 * 1000,
+      "01m": 60 * 1000,
+      "line": 60 * 1000
+    };
+    this.tagMapPeriod = {
+      "1w": "01w",
+      "3d": "03d",
+      "1d": "01d",
+      "12h": "12h",
+      "6h": "06h",
+      "4h": "04h",
+      "2h": "02h",
+      "1h": "01h",
+      "30m": "30m",
+      "15m": "15m",
+      "5m": "05m",
+      "3m": "03m",
+      "1m": "01m",
+      "line": "01m"
+    };
+    this.periodTitle = null;
+    this.periodAreaRanages = null;
+    this.deviceRatio = 2;
+    Object.assign(this, option);
+
+    if (!Kline.created) {
+      Kline.instance = this;
+      Kline.created = true;
+    }
+
+    return Kline.instance;
+  }
+
+  _createClass(Kline, [{
+    key: "periodsVertDisplayNone",
+    value: function periodsVertDisplayNone(array) {
+      if (!(array && array instanceof Array && array.length > 0)) return;
+      this.periodAreaRanages = array;
+
+      for (var k in this.ranges) {
+        var curPeriod = this.ranges[k];
+
+        if (curPeriod && typeof curPeriod === "string" && array.indexOf(curPeriod) >= 0) {
+          var nodeName = '#chart_period_' + curPeriod + '_v';
+          (0, _jquery.default)(nodeName).attr('style', "display:none");
+        }
+      }
+    }
+    /*********************************************
+     * Methods
+     *********************************************/
+
+  }, {
+    key: "draw",
+    value: function draw() {
+      Kline.trade = new _kline_trade.KlineTrade();
+      Kline.chartMgr = new _chart_manager.ChartManager();
+
+      var view = _jquery.default.parseHTML(_tpl.default);
+
+      for (var k in this.ranges) {
+        var res = (0, _jquery.default)(view).find('[name="' + this.ranges[k] + '"]');
+        res.each(function (i, e) {
+          (0, _jquery.default)(e).attr("style", "display:inline-block");
+        });
+      }
+
+      (0, _jquery.default)(this.element).html(view);
+      setInterval(_control.Control.refreshFunction, this.intervalTime);
+
+      if (this.type === "stomp") {
+        _control.Control.socketConnect();
+      } // if (!this.disableFirebase) {
+      //     fire();
+      // }
+
+
+      this.registerMouseEvent();
+
+      _chart_manager.ChartManager.instance.bindCanvas("main", document.getElementById("chart_mainCanvas"));
+
+      _chart_manager.ChartManager.instance.bindCanvas("overlay", document.getElementById("chart_overlayCanvas"));
+
+      _control.Control.refreshTemplate();
+
+      _control.Control.onSize(this.width, this.height);
+
+      _control.Control.readCookie();
+
+      this.setTheme(this.theme);
+      this.setLanguage(this.language);
+
+      var tmp = _chart_settings.ChartSettings.get();
+
+      var period = tmp.charts.period;
+
+      if (this.periodAreaRanages instanceof Array && this.periodAreaRanages.length > 0 && this.periodAreaRanages.indexOf(period) === -1) {
+        var pdescribe = (0, _jquery.default)('#chart_period_' + period + '_v a').text();
+
+        if (pdescribe != undefined && typeof pdescribe === "string" && pdescribe !== "") {
+          (0, _jquery.default)(".chart_str_period").addClass('selected');
+          (0, _jquery.default)(".chart_str_period").text(pdescribe);
+        }
+      }
+
+      !this.showLanguageSelect && (0, _jquery.default)("#chart_language_setting_div").hide();
+      !this.showDrawTool && (0, _jquery.default)(".chart_str_tools_cap").hide();
+      (0, _jquery.default)(this.element).css({
+        visibility: "visible"
+      });
+    }
+  }, {
+    key: "resize",
+    value: function resize(width, height) {
+      this.width = width;
+      this.height = height;
+
+      _control.Control.onSize(this.width, this.height);
+    }
+  }, {
+    key: "setSymbol",
+    value: function setSymbol(symbol, symbolName) {
+      this.symbol = symbol;
+      this.symbolName = symbolName;
+
+      _control.Control.switchSymbol(symbol);
+
+      this.onSymbolChange(symbol, symbolName);
+    }
+  }, {
+    key: "setTheme",
+    value: function setTheme(style) {
+      this.theme = style;
+
+      _control.Control.switchTheme(style);
+    }
+  }, {
+    key: "setLanguage",
+    value: function setLanguage(lang) {
+      this.language = lang;
+
+      _control.Control.chartSwitchLanguage(lang);
+    }
+  }, {
+    key: "setShowTrade",
+    value: function setShowTrade(isShow) {
+      this.showTrade = isShow;
+
+      if (isShow) {
+        (0, _jquery.default)(".trade_container").show();
+      } else {
+        (0, _jquery.default)(".trade_container").hide();
+      }
+
+      _control.Control.onSize(this.width, this.height);
+    }
+  }, {
+    key: "toggleTrade",
+    value: function toggleTrade() {
+      if (!this.showTrade) {
+        this.showTrade = true;
+        (0, _jquery.default)(".trade_container").show();
+      } else {
+        this.showTrade = false;
+        (0, _jquery.default)(".trade_container").hide();
+      }
+
+      _control.Control.onSize(this.width, this.height);
+    }
+  }, {
+    key: "setIntervalTime",
+    value: function setIntervalTime(intervalTime) {
+      this.intervalTime = intervalTime;
+
+      if (this.debug) {
+        console.log('DEBUG: interval time changed to ' + intervalTime);
+      }
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      if (this.debug) {
+        console.log('DEBUG: kline paused');
+      }
+
+      this.paused = true;
+    }
+  }, {
+    key: "resend",
+    value: function resend() {
+      if (this.debug) {
+        console.log('DEBUG: kline continue');
+      }
+
+      this.paused = false;
+
+      _control.Control.requestData(true);
+    }
+  }, {
+    key: "connect",
+    value: function connect() {
+      if (this.type !== 'stomp') {
+        if (this.debug) {
+          console.log('DEBUG: this is for stomp type');
+        }
+
+        return;
+      }
+
+      _control.Control.socketConnect();
+    }
+  }, {
+    key: "disconnect",
+    value: function disconnect() {
+      if (this.type !== 'stomp') {
+        if (this.debug) {
+          console.log('DEBUG: this is for stomp type');
+        }
+
+        return;
+      }
+
+      if (this.stompClient) {
+        this.stompClient.disconnect();
+        this.socketConnected = false;
+      }
+
+      if (this.debug) {
+        console.log('DEBUG: socket disconnected');
+      }
+    }
+    /*********************************************
+     * Events
+     *********************************************/
+
+  }, {
+    key: "onResize",
+    value: function onResize(width, height) {
+      if (this.debug) {
+        console.log("DEBUG: chart resized to width: " + width + " height: " + height);
+      }
+    }
+  }, {
+    key: "onLangChange",
+    value: function onLangChange(lang) {
+      if (this.debug) {
+        console.log("DEBUG: language changed to " + lang);
+      }
+    }
+  }, {
+    key: "onSymbolChange",
+    value: function onSymbolChange(symbol, symbolName) {
+      if (this.debug) {
+        console.log("DEBUG: symbol changed to " + symbol + " " + symbolName);
+      }
+    }
+  }, {
+    key: "onThemeChange",
+    value: function onThemeChange(theme) {
+      if (this.debug) {
+        console.log("DEBUG: themes changed to : " + theme);
+      }
+    }
+  }, {
+    key: "onRangeChange",
+    value: function onRangeChange(range) {
+      if (this.debug) {
+        console.log("DEBUG: range changed to " + range);
+      }
+    }
+  }, {
+    key: "convertCanvasToImage",
+    value: function convertCanvasToImage(canvas) {
+      var image = new Image();
+      image.src = canvas.toDataURL("image/png");
+      return image;
+    }
+  }, {
+    key: "registerMouseEvent",
+    value: function registerMouseEvent() {
+      (0, _jquery.default)(document).ready(function () {
+        function __resize() {
+          if (navigator.userAgent.indexOf('Firefox') >= 0) {
+            setTimeout(function () {
+              _control.Control.onSize(this.width, this.height);
+            }, 200);
+          } else {
+            _control.Control.onSize(this.width, this.height);
+          }
+        }
+
+        (0, _jquery.default)('#chart_overlayCanvas').bind("contextmenu", function (e) {
+          e.cancelBubble = true;
+          e.returnValue = false;
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        });
+        (0, _jquery.default)(".chart_container .chart_dropdown .chart_dropdown_t").mouseover(function () {
+          var container = (0, _jquery.default)(".chart_container");
+          var title = (0, _jquery.default)(this);
+          var dropdown = title.next();
+          var containerLeft = container.offset().left;
+          var titleLeft = title.offset().left;
+          var containerWidth = container.width();
+          var titleWidth = title.width();
+          var dropdownWidth = dropdown.width();
+          var d = (dropdownWidth - titleWidth) / 2 << 0;
+
+          if (titleLeft - d < containerLeft + 4) {
+            d = titleLeft - containerLeft - 4;
+          } else if (titleLeft + titleWidth + d > containerLeft + containerWidth - 4) {
+            d += titleLeft + titleWidth + d - (containerLeft + containerWidth - 4) + 19;
+          } else {
+            d += 4;
+          }
+
+          dropdown.css({
+            "margin-left": -d
+          });
+          title.addClass("chart_dropdown-hover");
+          dropdown.addClass("chart_dropdown-hover");
+        }).mouseout(function () {
+          (0, _jquery.default)(this).next().removeClass("chart_dropdown-hover");
+          (0, _jquery.default)(this).removeClass("chart_dropdown-hover");
+        });
+        (0, _jquery.default)(".chart_dropdown_data").mouseover(function () {
+          (0, _jquery.default)(this).addClass("chart_dropdown-hover");
+          (0, _jquery.default)(this).prev().addClass("chart_dropdown-hover");
+        }).mouseout(function () {
+          (0, _jquery.default)(this).prev().removeClass("chart_dropdown-hover");
+          (0, _jquery.default)(this).removeClass("chart_dropdown-hover");
+        });
+        /*  
+        $("#chart_btn_parameter_settings").click(function () {
+          $('#chart_parameter_settings').addClass("clicked");
+          $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
+          $("#chart_parameter_settings").find("th").each(function () {
+              let name = $(this).html();
+              let index = 0;
+              let tmp = ChartSettings.get();
+              let value = tmp.indics[name];
+              $(this.nextElementSibling).find("input").each(function () {
+                  if (value !== null && index < value.length) {
+                      $(this).val(value[index]);
+                  }
+                  index++;
+              });
+          });
+        });
+               $("#close_settings").click(function () {
+          $('#chart_parameter_settings').removeClass("clicked");
+        });
+        */
+
+        (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").click(function () {
+          _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
+
+          (0, _jquery.default)(".chart_str_period").removeClass('selected');
+
+          if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
+            (0, _jquery.default)(".chart_str_period").text(Kline.instance.periodTitle);
+          }
+        });
+        (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
+          _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
+
+          var pdescribe = (0, _jquery.default)(this).text();
+
+          if (pdescribe != undefined && typeof pdescribe === "string") {
+            (0, _jquery.default)(".chart_str_period").text(pdescribe);
+            (0, _jquery.default)(".chart_str_period").addClass('selected');
+          }
+        });
+        (0, _jquery.default)(".market_chooser ul a").click(function () {
+          _control.Control.switchSymbol((0, _jquery.default)(this).attr('name'));
+        }); // $('#chart_show_tools')
+        //     .click(function () {
+        //         if ($(this).hasClass('selected')) {
+        //             Control.switchTools('off');
+        //         } else {
+        //             Control.switchTools('on');
+        //         }
+        //     });
+        // $("#chart_toolpanel .chart_toolpanel_button")
+        //     .click(function () {
+        //         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
+        //         $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+        //         $(this).addClass("selected");
+        //         let name = $(this).children().attr('name');
+        //         Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
+        //     });
+
+        (0, _jquery.default)('#chart_show_indicator').click(function () {
+          if ((0, _jquery.default)(this).hasClass('selected')) {
+            _control.Control.switchIndic('off');
+          } else {
+            _control.Control.switchIndic('on');
+          }
+        });
+        (0, _jquery.default)("#chart_tabbar li a").click(function () {
+          (0, _jquery.default)("#chart_tabbar li a").removeClass('selected');
+          (0, _jquery.default)(this).addClass('selected');
+          var name = (0, _jquery.default)(this).attr('name');
+
+          var tmp = _chart_settings.ChartSettings.get();
+
+          tmp.charts.indics[1] = name;
+
+          _chart_settings.ChartSettings.save();
+
+          if (_templates.Template.displayVolume === false) _chart_manager.ChartManager.instance.getChart().setIndicator(1, name);else _chart_manager.ChartManager.instance.getChart().setIndicator(2, name);
+        });
+        (0, _jquery.default)("#chart_select_chart_style a").click(function () {
+          (0, _jquery.default)("#chart_select_chart_style a").removeClass('selected');
+          (0, _jquery.default)(this).addClass("selected");
+
+          var tmp = _chart_settings.ChartSettings.get();
+
+          tmp.charts.chartStyle = (0, _jquery.default)(this)[0].innerHTML;
+
+          _chart_settings.ChartSettings.save();
+
+          var mgr = _chart_manager.ChartManager.instance;
+          mgr.setChartStyle("frame0.k0", (0, _jquery.default)(this).html());
+          mgr.redraw();
+        });
+        (0, _jquery.default)('#chart_dropdown_themes li').click(function () {
+          (0, _jquery.default)('#chart_dropdown_themes li a').removeClass('selected');
+          var name = (0, _jquery.default)(this).attr('name');
+
+          if (name === 'chart_themes_dark') {
+            _control.Control.switchTheme('dark');
+          } else if (name === 'chart_themes_light') {
+            _control.Control.switchTheme('light');
+          }
+        });
+        (0, _jquery.default)("#chart_select_main_indicator a").click(function () {
+          (0, _jquery.default)("#chart_select_main_indicator a").removeClass('selected');
+          (0, _jquery.default)(this).addClass("selected");
+          var name = (0, _jquery.default)(this).attr('name');
+
+          var tmp = _chart_settings.ChartSettings.get();
+
+          tmp.charts.mIndic = name;
+
+          _chart_settings.ChartSettings.save();
+
+          var mgr = _chart_manager.ChartManager.instance;
+          if (!mgr.setMainIndicator("frame0.k0", name)) mgr.removeMainIndicator("frame0.k0");
+          mgr.redraw();
+        });
+        (0, _jquery.default)("#chart_main_indicator li").click(function () {
+          (0, _jquery.default)("#chart_main_indicator a").removeClass('selected');
+          (0, _jquery.default)(this).find('a').addClass("selected");
+          var name = (0, _jquery.default)(this).find('a').attr('name');
+
+          var tmp = _chart_settings.ChartSettings.get();
+
+          tmp.charts.mIndic = name;
+
+          _chart_settings.ChartSettings.save();
+
+          var mgr = _chart_manager.ChartManager.instance;
+          if (!mgr.setMainIndicator("frame0.k0", name)) mgr.removeMainIndicator("frame0.k0");
+          mgr.redraw();
+          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_data").removeClass("chart_dropdown-hover");
+          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_t").removeClass("chart_dropdown-hover");
+        }); // $('#chart_toolbar_theme a').click(function () {
+        //     $('#chart_toolbar_theme a').removeClass('selected');
+        //     if ($(this).attr('name') === 'dark') {
+        //         Control.switchTheme('dark');
+        //     } else if ($(this).attr('name') === 'light') {
+        //         Control.switchTheme('light');
+        //     }
+        // });
+        // $('#chart_select_theme li a').click(function () {
+        //     $('#chart_select_theme a').removeClass('selected');
+        //     if ($(this).attr('name') === 'dark') {
+        //         Control.switchTheme('dark');
+        //     } else if ($(this).attr('name') === 'light') {
+        //         Control.switchTheme('light');
+        //     }
+        // });
+        // $('#chart_enable_tools li a').click(function () {
+        //     $('#chart_enable_tools a').removeClass('selected');
+        //     if ($(this).attr('name') === 'on') {
+        //         Control.switchTools('on');
+        //     } else if ($(this).attr('name') === 'off') {
+        //         Control.switchTools('off');
+        //     }
+        // });
+        // $('#chart_enable_indicator li a').click(function () {
+        //     $('#chart_enable_indicator a').removeClass('selected');
+        //     if ($(this).attr('name') === 'on') {
+        //         Control.switchIndic('on');
+        //     } else if ($(this).attr('name') === 'off') {
+        //         Control.switchIndic('off');
+        //     }
+        // });
+
+        /*
+        $('#chart_language_setting_div li a').click(function () {
+             $('#chart_language_setting_div a').removeClass('selected');
+            if ($(this).attr('name') === 'zh-cn') {
+                Control.chartSwitchLanguage('zh-cn');
+            } else if ($(this).attr('name') === 'en-us') {
+                 Control.chartSwitchLanguage('en-us');
+            } else if ($(this).attr('name') === 'zh-tw') {
+                Control.chartSwitchLanguage('zh-tw');
+            }
+        });*/
+
+        (0, _jquery.default)(document).keyup(function (e) {
+          if (e.keyCode === 46) {
+            _chart_manager.ChartManager.instance.deleteToolObject();
+
+            _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
+          }
+        });
+        (0, _jquery.default)("#clearCanvas").click(function () {
+          var pDPTool = _chart_manager.ChartManager.instance.getDataSource("frame0.k0");
+
+          var len = pDPTool.getToolObjectCount();
+
+          for (var i = 0; i < len; i++) {
+            pDPTool.delToolObject();
+          }
+
+          _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
+        }); // 支持移动mobile触摸屏
+
+        var chart_overlayCanvas = document.getElementById('chart_overlayCanvas');
+
+        chart_overlayCanvas.ontouchstart = function (e) {
+          Kline.instance.buttonDown = true;
+          var r = e.target.getBoundingClientRect();
+          var x = e.touches[0].clientX - r.left;
+          var y = e.touches[0].clientY - r.top;
+
+          _chart_manager.ChartManager.instance.onMouseDown("frame0", x, y);
+        };
+
+        chart_overlayCanvas.ontouchmove = function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.changedTouches[0].clientX - r.left;
+          var y = e.changedTouches[0].clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+
+          if (Kline.instance.buttonDown === true) {
+            mgr.onMouseMove("frame0", x, y, true);
+            mgr.redraw("All", false);
+          } else {
+            mgr.onMouseMove("frame0", x, y, false);
+            mgr.redraw("OverlayCanvas");
+          }
+        };
+
+        chart_overlayCanvas.ontouchend = function (e) {
+          Kline.instance.buttonDown = false;
+          var r = e.target.getBoundingClientRect();
+          var x = e.changedTouches[0].clientX - r.left;
+          var y = e.changedTouches[0].clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          mgr.onMouseUp("frame0", x, y);
+          mgr.redraw("All");
+        };
+
+        chart_overlayCanvas.ontouchcancel = function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          mgr.onMouseLeave("frame0", x, y, false);
+          mgr.redraw("OverlayCanvas");
+        };
+
+        (0, _jquery.default)("#chart_overlayCanvas").mousemove(function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          var ratio = Kline.instance.deviceRatio;
+
+          if (Kline.instance.buttonDown === true) {
+            mgr.onMouseMove("frame0", x * ratio, y * ratio, true);
+            mgr.redraw("All", false);
+          } else {
+            mgr.onMouseMove("frame0", x * ratio, y * ratio, false);
+            mgr.redraw("OverlayCanvas");
+          }
+        }).mouseleave(function (e) {
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          var ratio = Kline.instance.deviceRatio;
+          mgr.onMouseLeave("frame0", x * ratio, y * ratio, false);
+          mgr.redraw("OverlayCanvas");
+        }).mouseup(function (e) {
+          if (e.which !== 1) {
+            return;
+          }
+
+          Kline.instance.buttonDown = false;
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var mgr = _chart_manager.ChartManager.instance;
+          var ratio = Kline.instance.deviceRatio;
+          mgr.onMouseUp("frame0", x * ratio, y * ratio);
+          mgr.redraw("All");
+        }).mousedown(function (e) {
+          if (e.which !== 1) {
+            _chart_manager.ChartManager.instance.deleteToolObject();
+
+            _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
+
+            return;
+          }
+
+          Kline.instance.buttonDown = true;
+          var r = e.target.getBoundingClientRect();
+          var x = e.clientX - r.left;
+          var y = e.clientY - r.top;
+          var ratio = Kline.instance.deviceRatio;
+
+          _chart_manager.ChartManager.instance.onMouseDown("frame0", x * ratio, y * ratio);
+        });
+        (0, _jquery.default)("#chart_parameter_settings :input").change(function () {
+          var name = (0, _jquery.default)(this).attr("name");
+          var index = 0;
+          var valueArray = [];
+          var mgr = _chart_manager.ChartManager.instance;
+          (0, _jquery.default)("#chart_parameter_settings :input").each(function () {
+            if ((0, _jquery.default)(this).attr("name") === name) {
+              if ((0, _jquery.default)(this).val() !== "" && (0, _jquery.default)(this).val() !== null && (0, _jquery.default)(this).val() !== undefined) {
+                var i = parseInt((0, _jquery.default)(this).val());
+                valueArray.push(i);
+              }
+
+              index++;
+            }
+          });
+
+          if (valueArray.length !== 0) {
+            mgr.setIndicatorParameters(name, valueArray);
+            var value = mgr.getIndicatorParameters(name);
+            var cookieArray = [];
+            index = 0;
+            (0, _jquery.default)("#chart_parameter_settings :input").each(function () {
+              if ((0, _jquery.default)(this).attr("name") === name) {
+                if ((0, _jquery.default)(this).val() !== "" && (0, _jquery.default)(this).val() !== null && (0, _jquery.default)(this).val() !== undefined) {
+                  (0, _jquery.default)(this).val(value[index].getValue());
+                  cookieArray.push(value[index].getValue());
+                }
+
+                index++;
+              }
+            });
+
+            var tmp = _chart_settings.ChartSettings.get();
+
+            tmp.indics[name] = cookieArray;
+
+            _chart_settings.ChartSettings.save();
+
+            mgr.redraw('All', false);
+          }
+        });
+        (0, _jquery.default)("#chart_parameter_settings button").click(function () {
+          var name = (0, _jquery.default)(this).parents("tr").children("th").html();
+          var index = 0;
+
+          var value = _chart_manager.ChartManager.instance.getIndicatorParameters(name);
+
+          var valueArray = [];
+          (0, _jquery.default)(this).parent().prev().children('input').each(function () {
+            if (value !== null && index < value.length) {
+              (0, _jquery.default)(this).val(value[index].getDefaultValue());
+              valueArray.push(value[index].getDefaultValue());
+            }
+
+            index++;
+          });
+
+          _chart_manager.ChartManager.instance.setIndicatorParameters(name, valueArray);
+
+          var tmp = _chart_settings.ChartSettings.get();
+
+          tmp.indics[name] = valueArray;
+
+          _chart_settings.ChartSettings.save();
+
+          _chart_manager.ChartManager.instance.redraw('All', false);
+        });
+        (0, _jquery.default)('#kline_container').on('click', '#sizeIcon', function () {
+          if (Kline.instance.debug) {
+            console.log("onMaximizeWindow");
+          }
+
+          Kline.instance.isSized = !Kline.instance.isSized;
+
+          if (Kline.instance.isSized) {
+            debugger;
+
+            var _chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
+
+            (0, _jquery.default)('.chart_container').appendTo(_chart_container_fullscreen);
+            (0, _jquery.default)('#chart_container_fullscreen').css('display', "inline-block");
+            (0, _jquery.default)('.trade_container').css('display', "none"); // 修改画布
+          } else {
+            var _chart_container_fullscreen2 = (0, _jquery.default)('#chart_container_fullscreen');
+
+            var chart_trade_quotation = (0, _jquery.default)('#chart_trade_quotation');
+            chart_trade_quotation.after((0, _jquery.default)('.chart_container'));
+            (0, _jquery.default)('#chart_container_fullscreen').css('display', "none");
+            (0, _jquery.default)('.trade_container').css('display', "block");
+          }
+
+          var chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
+          debugger;
+          (0, _jquery.default)('.chart_container').appendTo(chart_container_fullscreen);
+          (0, _jquery.default)('#chart_container_fullscreen').css('display', "inline-block");
+          return;
+          Kline.instance.isSized = !Kline.instance.isSized;
+
+          if (Kline.instance.isSized) {
+            (0, _jquery.default)(Kline.instance.element).css({
+              position: 'fixed',
+              left: '0',
+              right: '0',
+              top: '0',
+              bottom: '0',
+              width: '100%',
+              height: '100%',
+              zIndex: '10000'
+            });
+
+            _control.Control.onSize();
+
+            (0, _jquery.default)('html,body').css({
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden'
+            });
+          } else {
+            (0, _jquery.default)(Kline.instance.element).attr('style', '');
+            (0, _jquery.default)('html,body').attr('style', '');
+
+            _control.Control.onSize(Kline.instance.width, Kline.instance.height);
+
+            (0, _jquery.default)(Kline.instance.element).css({
+              visibility: 'visible',
+              height: Kline.instance.height + 'px'
+            });
+          }
+        });
+        (0, _jquery.default)('body').on('click', '#tabList li', function (element) {
+          var currentTarget = (0, _jquery.default)(element.currentTarget),
+              showTabContent = currentTarget.data().show;
+          (0, _jquery.default)("#" + showTabContent).show();
+          (0, _jquery.default)("#" + showTabContent).siblings("div").hide();
+          currentTarget.addClass("current");
+          currentTarget.siblings().removeClass("current");
+        });
+      });
+    }
+  }]);
+
+  return Kline;
+}();
+
+exports.default = Kline;
+
+/***/ }),
+
+/***/ 20:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ChartSettings = void 0;
+
+var _chart_manager = __webpack_require__(4);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ChartSettings =
+/*#__PURE__*/
+function () {
+  function ChartSettings() {
+    _classCallCheck(this, ChartSettings);
+  }
+
+  _createClass(ChartSettings, null, [{
+    key: "checkVersion",
+    value: function checkVersion() {
+      if (ChartSettings._data.ver < 2) {
+        ChartSettings._data.ver = 2;
+        var charts = ChartSettings._data.charts;
+        charts.period_weight = {};
+        charts.period_weight['line'] = 8;
+        charts.period_weight['1min'] = 7;
+        charts.period_weight['5min'] = 6;
+        charts.period_weight['15min'] = 5;
+        charts.period_weight['30min'] = 4;
+        charts.period_weight['1hour'] = 3;
+        charts.period_weight['1day'] = 2;
+        charts.period_weight['1week'] = 1;
+        charts.period_weight['3min'] = 0;
+        charts.period_weight['2hour'] = 0;
+        charts.period_weight['4hour'] = 0;
+        charts.period_weight['6hour'] = 0;
+        charts.period_weight['12hour'] = 0;
+        charts.period_weight['3day'] = 0;
+      }
+
+      if (ChartSettings._data.ver < 3) {
+        ChartSettings._data.ver = 3;
+        var _charts = ChartSettings._data.charts;
+        _charts.areaHeight = [];
+      }
+    }
+  }, {
+    key: "get",
+    value: function get() {
+      if (ChartSettings._data === undefined) {
+        ChartSettings.init();
+        ChartSettings.load();
+        ChartSettings.checkVersion();
+      }
+
+      return ChartSettings._data;
+    }
+  }, {
+    key: "init",
+    value: function init() {
+      var _indic_param = {};
+      var _name = ['MA', 'EMA', 'VOLUME', 'MACD', 'KDJ', 'StochRSI', 'RSI', 'DMI', 'OBV', 'BOLL', 'DMA', 'TRIX', 'BRAR', 'VR', 'EMV', 'WR', 'ROC', 'MTM', 'PSY'];
+
+      for (var i = 0; i < _name.length; i++) {
+        var _value = _chart_manager.ChartManager.instance.createIndicatorAndRange('', _name[i], true);
+
+        if (_value === null) continue;
+        _indic_param[_name[i]] = [];
+
+        var param = _value.indic.getParameters();
+
+        for (var j = 0; j < param.length; j++) {
+          _indic_param[_name[i]].push(param[j]);
+        }
+      }
+
+      var _chart_style = 'CandleStick';
+      var _m_indic = 'MA';
+      var _indic = ['VOLUME', 'MACD'];
+      var _range = '15m';
+      var _frame = {};
+      _frame.chartStyle = _chart_style;
+      _frame.mIndic = _m_indic;
+      _frame.indics = _indic;
+      _frame.indicsStatus = 'open';
+      _frame.period = _range;
+      ChartSettings._data = {
+        ver: 1,
+        charts: _frame,
+        indics: _indic_param,
+        theme: "Dark"
+      };
+      ChartSettings.checkVersion();
+    }
+  }, {
+    key: "load",
+    value: function load() {
+      if (document.cookie.length <= 0) return;
+      var start = document.cookie.indexOf("chartSettings=");
+      if (start < 0) return;
+      start += "chartSettings=".length;
+      var end = document.cookie.indexOf(";", start);
+      if (end < 0) end = document.cookie.length;
+      var json = unescape(document.cookie.substring(start, end));
+      ChartSettings._data = JSON.parse(json);
+    }
+  }, {
+    key: "save",
+    value: function save() {
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + 2);
+      document.cookie = "chartSettings=" + escape(JSON.stringify(ChartSettings._data)) + ";expires=" + exdate.toGMTString();
+    }
+  }]);
+
+  return ChartSettings;
+}();
+
+exports.ChartSettings = ChartSettings;
+
+/***/ }),
+
+/***/ 21:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Util = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Util =
+/*#__PURE__*/
+function () {
+  function Util() {
+    _classCallCheck(this, Util);
+  }
+
+  _createClass(Util, null, [{
+    key: "fromFloat",
+    value: function fromFloat(v, fractionDigits) {
+      var text = v.toFixed(fractionDigits);
+
+      for (var i = text.length - 1; i >= 0; i--) {
+        if (text[i] === '.') return text.substring(0, i);
+        if (text[i] !== '0') return text.substring(0, i + 1);
+      }
+    }
+  }, {
+    key: "formatTime",
+    value: function formatTime(v) {
+      return v < 10 ? "0" + v.toString() : v.toString();
+    }
+  }, {
+    key: "isInstance",
+    value: function isInstance(obj, clazz) {
+      if (obj === null || obj === undefined) {
+        return false;
+      }
+
+      return obj instanceof clazz;
+    }
+  }]);
+
+  return Util;
+}();
+
+exports.Util = Util;
+
+/***/ }),
+
+/***/ 213:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+
+// Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+exports.deprecate = function(fn, msg) {
+  // Allow for deprecating things in the process of starting up.
+  if (isUndefined(global.process)) {
+    return function() {
+      return exports.deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  if (process.noDeprecation === true) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (process.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+};
+
+
+var debugs = {};
+var debugEnviron;
+exports.debuglog = function(set) {
+  if (isUndefined(debugEnviron))
+    debugEnviron = process.env.NODE_DEBUG || '';
+  set = set.toUpperCase();
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = process.pid;
+      debugs[set] = function() {
+        var msg = exports.format.apply(exports, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function() {};
+    }
+  }
+  return debugs[set];
+};
+
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  array.forEach(function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  }
+
+  // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  if (isError(value)
+      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) &&
+      (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = __webpack_require__(214);
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = __webpack_require__(215);
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28), __webpack_require__(63)))
+
+/***/ }),
+
+/***/ 214:
+/***/ (function(module, exports) {
+
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
+}
+
+/***/ }),
+
+/***/ 215:
+/***/ (function(module, exports) {
+
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+
+/***/ }),
+
+/***/ 22:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LightTheme = exports.DarkTheme = exports.Theme = void 0;
+
+var _kline = _interopRequireDefault(__webpack_require__(17));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Theme =
+/*#__PURE__*/
+function () {
+  function Theme() {
+    _classCallCheck(this, Theme);
+
+    this.getFont = function (which) {
+      return this._fonts[which];
+    };
+  }
+
+  _createClass(Theme, [{
+    key: "getColor",
+    value: function getColor(which) {
+      return this._colors[which];
+    }
+  }]);
+
+  return Theme;
+}();
+
+exports.Theme = Theme;
+Theme.theme_color_id = 0;
+Theme.theme_font_id = 0;
+Theme.Color = {
+  Positive: Theme.theme_color_id++,
+  Negative: Theme.theme_color_id++,
+  PositiveDark: Theme.theme_color_id++,
+  NegativeDark: Theme.theme_color_id++,
+  Unchanged: Theme.theme_color_id++,
+  Background: Theme.theme_color_id++,
+  Cursor: Theme.theme_color_id++,
+  RangeMark: Theme.theme_color_id++,
+  Indicator0: Theme.theme_color_id++,
+  Indicator1: Theme.theme_color_id++,
+  Indicator2: Theme.theme_color_id++,
+  Indicator3: Theme.theme_color_id++,
+  Indicator4: Theme.theme_color_id++,
+  Indicator5: Theme.theme_color_id++,
+  Grid0: Theme.theme_color_id++,
+  Grid1: Theme.theme_color_id++,
+  Grid2: Theme.theme_color_id++,
+  Grid3: Theme.theme_color_id++,
+  Grid4: Theme.theme_color_id++,
+  TextPositive: Theme.theme_color_id++,
+  TextNegative: Theme.theme_color_id++,
+  Text0: Theme.theme_color_id++,
+  Text1: Theme.theme_color_id++,
+  Text2: Theme.theme_color_id++,
+  Text3: Theme.theme_color_id++,
+  Text4: Theme.theme_color_id++,
+  LineColorNormal: Theme.theme_color_id++,
+  LineColorSelected: Theme.theme_color_id++,
+  CircleColorFill: Theme.theme_color_id++,
+  CircleColorStroke: Theme.theme_color_id++
+};
+Theme.Font = {
+  Default: Theme.theme_font_id++
+};
+
+var DarkTheme =
+/*#__PURE__*/
+function (_Theme) {
+  _inherits(DarkTheme, _Theme);
+
+  function DarkTheme() {
+    var _this;
+
+    _classCallCheck(this, DarkTheme);
+
+    _this = _possibleConstructorReturn(this, (DarkTheme.__proto__ || Object.getPrototypeOf(DarkTheme)).call(this));
+    _this._colors = [];
+
+    if (_kline.default.instance.reverseColor) {
+      _this._colors[Theme.Color.Positive] = "#990e0e";
+      _this._colors[Theme.Color.Negative] = "#19b34c";
+      _this._colors[Theme.Color.PositiveDark] = "#3b0e08";
+      _this._colors[Theme.Color.NegativeDark] = "#004718";
+    } else {
+      _this._colors[Theme.Color.Positive] = "#19b34c";
+      _this._colors[Theme.Color.Negative] = "#990e0e";
+      _this._colors[Theme.Color.PositiveDark] = "#004718";
+      _this._colors[Theme.Color.NegativeDark] = "#3b0e08";
+    }
+
+    _this._colors[Theme.Color.Unchanged] = "#fff";
+    _this._colors[Theme.Color.Background] = "#0a0a0a";
+    _this._colors[Theme.Color.Cursor] = "#aaa";
+    _this._colors[Theme.Color.RangeMark] = "#f9ee30";
+    _this._colors[Theme.Color.Indicator0] = "#ddd";
+    _this._colors[Theme.Color.Indicator1] = "#f9ee30";
+    _this._colors[Theme.Color.Indicator2] = "#f600ff";
+    _this._colors[Theme.Color.Indicator3] = "#6bf";
+    _this._colors[Theme.Color.Indicator4] = "#a5cf81";
+    _this._colors[Theme.Color.Indicator5] = "#e18b89";
+    _this._colors[Theme.Color.Grid0] = "#333";
+    _this._colors[Theme.Color.Grid1] = "#444";
+    _this._colors[Theme.Color.Grid2] = "#666";
+    _this._colors[Theme.Color.Grid3] = "#888";
+    _this._colors[Theme.Color.Grid4] = "#aaa";
+    _this._colors[Theme.Color.TextPositive] = "#1bd357";
+    _this._colors[Theme.Color.TextNegative] = "#ff6f5e";
+    _this._colors[Theme.Color.Text0] = "#444";
+    _this._colors[Theme.Color.Text1] = "#666";
+    _this._colors[Theme.Color.Text2] = "#888";
+    _this._colors[Theme.Color.Text3] = "#aaa";
+    _this._colors[Theme.Color.Text4] = "#ccc";
+    _this._colors[Theme.Color.LineColorNormal] = "#a6a6a6";
+    _this._colors[Theme.Color.LineColorSelected] = "#ffffff";
+    _this._colors[Theme.Color.CircleColorFill] = "#000000";
+    _this._colors[Theme.Color.CircleColorStroke] = "#ffffff";
+    _this._fonts = [];
+    var size = 10 * devicePixelRatio;
+    _this._fonts[Theme.Font.Default] = size + "px Tahoma";
+    return _this;
+  }
+
+  return DarkTheme;
+}(Theme);
+
+exports.DarkTheme = DarkTheme;
+
+var LightTheme =
+/*#__PURE__*/
+function (_Theme2) {
+  _inherits(LightTheme, _Theme2);
+
+  function LightTheme() {
+    var _this2;
+
+    _classCallCheck(this, LightTheme);
+
+    _this2 = _possibleConstructorReturn(this, (LightTheme.__proto__ || Object.getPrototypeOf(LightTheme)).call(this));
+    _this2._colors = [];
+
+    if (_kline.default.instance.reverseColor) {
+      _this2._colors[Theme.Color.Positive] = "#db5542";
+      _this2._colors[Theme.Color.Negative] = "#53b37b";
+      _this2._colors[Theme.Color.PositiveDark] = "#ffadaa";
+      _this2._colors[Theme.Color.NegativeDark] = "#66d293";
+    } else {
+      _this2._colors[Theme.Color.Positive] = "#53b37b";
+      _this2._colors[Theme.Color.Negative] = "#db5542";
+      _this2._colors[Theme.Color.PositiveDark] = "#66d293";
+      _this2._colors[Theme.Color.NegativeDark] = "#ffadaa";
+    }
+
+    _this2._colors[Theme.Color.Unchanged] = "#fff";
+    _this2._colors[Theme.Color.Background] = "#fff";
+    _this2._colors[Theme.Color.Cursor] = "#aaa";
+    _this2._colors[Theme.Color.RangeMark] = "#f27935";
+    _this2._colors[Theme.Color.Indicator0] = "#2fd2b2";
+    _this2._colors[Theme.Color.Indicator1] = "#ffb400";
+    _this2._colors[Theme.Color.Indicator2] = "#e849b9";
+    _this2._colors[Theme.Color.Indicator3] = "#1478c8";
+    _this2._colors[Theme.Color.Grid0] = "#eee";
+    _this2._colors[Theme.Color.Grid1] = "#afb1b3";
+    _this2._colors[Theme.Color.Grid2] = "#ccc";
+    _this2._colors[Theme.Color.Grid3] = "#bbb";
+    _this2._colors[Theme.Color.Grid4] = "#aaa";
+    _this2._colors[Theme.Color.TextPositive] = "#53b37b";
+    _this2._colors[Theme.Color.TextNegative] = "#db5542";
+    _this2._colors[Theme.Color.Text0] = "#ccc";
+    _this2._colors[Theme.Color.Text1] = "#aaa";
+    _this2._colors[Theme.Color.Text2] = "#888";
+    _this2._colors[Theme.Color.Text3] = "#666";
+    _this2._colors[Theme.Color.Text4] = "#444";
+    _this2._colors[Theme.Color.LineColorNormal] = "#8c8c8c";
+    _this2._colors[Theme.Color.LineColorSelected] = "#393c40";
+    _this2._colors[Theme.Color.CircleColorFill] = "#ffffff";
+    _this2._colors[Theme.Color.CircleColorStroke] = "#393c40";
+    _this2._fonts = [];
+    var devicePixelRatio = window.devicePixelRatio;
+    var size = 10 * devicePixelRatio;
+    _this2._fonts[Theme.Font.Default] = size + "px Tahoma";
+    return _this2;
+  }
+
+  return LightTheme;
+}(Theme);
+
+exports.LightTheme = LightTheme;
+
+/***/ }),
+
+/***/ 27:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TemplateMeasuringHandler = exports.DefaultTemplate = exports.Template = void 0;
+
+var _chart_manager = __webpack_require__(4);
+
+var _chart_settings = __webpack_require__(20);
+
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
+
+var data_providers = _interopRequireWildcard(__webpack_require__(42));
+
+var areas = _interopRequireWildcard(__webpack_require__(43));
+
+var plotters = _interopRequireWildcard(__webpack_require__(41));
+
+var _timeline = __webpack_require__(107);
+
+var _cname = __webpack_require__(58);
+
+var layouts = _interopRequireWildcard(__webpack_require__(108));
+
+var themes = _interopRequireWildcard(__webpack_require__(22));
+
+var ranges = _interopRequireWildcard(__webpack_require__(61));
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Template =
+/*#__PURE__*/
+function () {
+  function Template() {
+    _classCallCheck(this, Template);
+  }
+
+  _createClass(Template, null, [{
+    key: "createCandlestickDataSource",
+    value: function createCandlestickDataSource(dsAlias) {
+      return new data_sources.MainDataSource(dsAlias);
+    }
+  }, {
+    key: "createDataSource",
+    value: function createDataSource(dsName, dsAlias, createFunc) {
+      var mgr = _chart_manager.ChartManager.instance;
+      if (mgr.getCachedDataSource(dsAlias) === null) mgr.setCachedDataSource(dsAlias, createFunc(dsAlias));
+      mgr.setCurrentDataSource(dsName, dsAlias);
+      mgr.updateData(dsName, null);
+    }
+  }, {
+    key: "createTableComps",
+    value: function createTableComps(dsName) {
+      this.createMainChartComps(dsName);
+
+      if (this.displayVolume) {
+        this.createIndicatorChartComps(dsName, "VOLUME");
+      }
+
+      this.createTimelineComps(dsName);
+    }
+  }, {
+    key: "createMainChartComps",
+    value: function createMainChartComps(dsName) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var tableLayout = mgr.getArea(dsName + ".charts");
+      var areaName = dsName + ".main";
+      var rangeAreaName = areaName + "Range";
+      var area = new areas.MainArea(areaName);
+      mgr.setArea(areaName, area);
+      tableLayout.addArea(area);
+      var rangeArea = new areas.MainRangeArea(rangeAreaName);
+      mgr.setArea(rangeAreaName, rangeArea);
+      tableLayout.addArea(rangeArea);
+      var dp = new data_providers.MainDataProvider(areaName + ".main");
+      mgr.setDataProvider(dp.getName(), dp);
+      mgr.setMainIndicator(dsName, "MA");
+      var range = new ranges.MainRange(areaName);
+      mgr.setRange(range.getName(), range);
+      range.setPaddingTop(28);
+      range.setPaddingBottom(12);
+      var plotter = new plotters.MainAreaBackgroundPlotter(areaName + ".background");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CGridPlotter(areaName + ".grid");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CandlestickPlotter(areaName + ".main");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.MinMaxPlotter(areaName + ".decoration");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.MainInfoPlotter(areaName + ".info");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.SelectionPlotter(areaName + ".selection");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CDynamicLinePlotter(areaName + ".tool");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
+      mgr.setPlotter(plotter.getName(), plotter); // plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
+      // mgr.setPlotter(plotter.getName(), plotter);
+
+      plotter = new plotters.RangePlotter(areaName + "Range.main");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.LastClosePlotter(areaName + "Range.decoration");
+      mgr.setPlotter(plotter.getName(), plotter);
+    }
+  }, {
+    key: "createIndicatorChartComps",
+    value: function createIndicatorChartComps(dsName, indicName) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var tableLayout = mgr.getArea(dsName + ".charts");
+      var areaName = dsName + ".indic" + tableLayout.getNextRowId();
+      var rangeAreaName = areaName + "Range";
+      var area = new areas.IndicatorArea(areaName);
+      mgr.setArea(areaName, area);
+      tableLayout.addArea(area);
+      var rowIndex = tableLayout.getAreaCount() >> 1;
+
+      var heights = _chart_settings.ChartSettings.get().charts.areaHeight;
+
+      if (heights.length > rowIndex) {
+        var a, i;
+
+        for (i = 0; i < rowIndex; i++) {
+          a = tableLayout.getAreaAt(i << 1);
+          a.setTop(0);
+          a.setBottom(heights[i]);
+        }
+
+        area.setTop(0);
+        area.setBottom(heights[rowIndex]);
+      }
+
+      var rangeArea = new areas.IndicatorRangeArea(rangeAreaName);
+      mgr.setArea(rangeAreaName, rangeArea);
+      tableLayout.addArea(rangeArea);
+      var dp = new data_providers.IndicatorDataProvider(areaName + ".secondary");
+      mgr.setDataProvider(dp.getName(), dp);
+
+      if (mgr.setIndicator(areaName, indicName) === false) {
+        mgr.removeIndicator(areaName);
+        return;
+      }
+
+      var plotter = new plotters.MainAreaBackgroundPlotter(areaName + ".background");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CGridPlotter(areaName + ".grid");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.IndicatorPlotter(areaName + ".secondary");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.IndicatorInfoPlotter(areaName + ".info");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.SelectionPlotter(areaName + ".selection");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.RangePlotter(areaName + "Range.main");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");
+      mgr.setPlotter(plotter.getName(), plotter);
+    }
+  }, {
+    key: "createTimelineComps",
+    value: function createTimelineComps(dsName) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var plotter;
+      var timeline = new _timeline.Timeline(dsName);
+      mgr.setTimeline(timeline.getName(), timeline);
+      plotter = new plotters.TimelineAreaBackgroundPlotter(dsName + ".timeline.background");
+      mgr.setPlotter(plotter.getName(), plotter); // plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
+      // mgr.setPlotter(plotter.getName(), plotter);
+
+      plotter = new plotters.TimelineSelectionPlotter(dsName + ".timeline.selection");
+      mgr.setPlotter(plotter.getName(), plotter);
+    }
+  }, {
+    key: "createLiveOrderComps",
+    value: function createLiveOrderComps(dsName) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var plotter;
+      plotter = new plotters.BackgroundPlotter(dsName + ".main.background");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CLiveOrderPlotter(dsName + ".main.main");
+      mgr.setPlotter(plotter.getName(), plotter);
+    }
+  }, {
+    key: "createLiveTradeComps",
+    value: function createLiveTradeComps(dsName) {
+      var mgr = _chart_manager.ChartManager.instance;
+      var plotter;
+      plotter = new plotters.BackgroundPlotter(dsName + ".main.background");
+      mgr.setPlotter(plotter.getName(), plotter);
+      plotter = new plotters.CLiveTradePlotter(dsName + ".main.main");
+      mgr.setPlotter(plotter.getName(), plotter);
+    }
+  }]);
+
+  return Template;
+}();
+
+exports.Template = Template;
+Template.displayVolume = false;
+
+var DefaultTemplate =
+/*#__PURE__*/
+function (_Template) {
+  _inherits(DefaultTemplate, _Template);
+
+  function DefaultTemplate() {
+    _classCallCheck(this, DefaultTemplate);
+
+    return _possibleConstructorReturn(this, (DefaultTemplate.__proto__ || Object.getPrototypeOf(DefaultTemplate)).apply(this, arguments));
+  }
+
+  _createClass(DefaultTemplate, null, [{
+    key: "loadTemplate",
+    value: function loadTemplate(dsName, dsAlias) {
+      var mgr = _chart_manager.ChartManager.instance;
+
+      var settings = _chart_settings.ChartSettings.get();
+
+      var frameName = new _cname.CName(dsName).getCompAt(0);
+      mgr.unloadTemplate(frameName);
+      this.createDataSource(dsName, dsAlias, this.createCandlestickDataSource);
+      var frame = new layouts.DockableLayout(frameName);
+      mgr.setFrame(frame.getName(), frame);
+      mgr.setArea(frame.getName(), frame);
+      frame.setGridColor(themes.Theme.Color.Grid1);
+      var area = new areas.TimelineArea(dsName + ".timeline");
+      mgr.setArea(area.getName(), area);
+      frame.addArea(area);
+      area.setDockStyle(areas.ChartArea.DockStyle.Bottom);
+      area.Measuring.addHandler(area, TemplateMeasuringHandler.onMeasuring);
+      var tableLayout = new layouts.TableLayout(dsName + ".charts");
+      mgr.setArea(tableLayout.getName(), tableLayout);
+      tableLayout.setDockStyle(areas.ChartArea.DockStyle.Fill);
+      frame.addArea(tableLayout);
+      this.createTableComps(dsName);
+      mgr.setThemeName(frameName, settings.theme);
+      return mgr;
+    }
+  }]);
+
+  return DefaultTemplate;
+}(Template);
+
+exports.DefaultTemplate = DefaultTemplate;
+
+var TemplateMeasuringHandler =
+/*#__PURE__*/
+function () {
+  function TemplateMeasuringHandler() {
+    _classCallCheck(this, TemplateMeasuringHandler);
+  }
+
+  _createClass(TemplateMeasuringHandler, null, [{
+    key: "onMeasuring",
+    value: function onMeasuring(sender, args) {
+      var width = args.Width;
+      var height = args.Height;
+      var areaName = sender.getNameObject().getCompAt(2);
+
+      if (areaName === "timeline") {
+        sender.setMeasuredDimension(width, 22);
+      }
+    }
+  }]);
+
+  return TemplateMeasuringHandler;
+}();
+
+exports.TemplateMeasuringHandler = TemplateMeasuringHandler;
+
+/***/ }),
+
+/***/ 28:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 38:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Control = void 0;
+
+var _kline = _interopRequireDefault(__webpack_require__(17));
+
+var _kline_trade = __webpack_require__(57);
+
+var _chart_manager = __webpack_require__(4);
+
+var _chart_settings = __webpack_require__(20);
+
+var _templates = __webpack_require__(27);
+
+var _mevent = __webpack_require__(60);
+
+var _jquery = _interopRequireDefault(__webpack_require__(62));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Control =
+/*#__PURE__*/
+function () {
+  function Control() {
+    _classCallCheck(this, Control);
+  }
+
+  _createClass(Control, null, [{
+    key: "klineAbortRequest",
+    value: function klineAbortRequest() {
+      //  debugger
+      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
+        if (_kline.default.instance.G_KLINE_HTTP_REQUEST && _kline.default.instance.G_KLINE_HTTP_REQUEST.readyState !== 4) {
+          _kline.default.instance.G_KLINE_HTTP_REQUEST.abort();
+        }
+      }
+    }
+  }, {
+    key: "tradesAbortRequest",
+    value: function tradesAbortRequest() {
+      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
+        if (_kline.default.instance.G_TRADES_HTTP_REQUEST && _kline.default.instance.G_TRADES_HTTP_REQUEST.readyState !== 4) {
+          _kline.default.instance.G_TRADES_HTTP_REQUEST.abort();
+        }
+      }
+    }
+  }, {
+    key: "depthAbortRequest",
+    value: function depthAbortRequest() {
+      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
+        if (_kline.default.instance.G_DEPTH_HTTP_REQUEST && _kline.default.instance.G_DEPTH_HTTP_REQUEST.readyState !== 4) {
+          _kline.default.instance.G_DEPTH_HTTP_REQUEST.abort();
+        }
+      }
+    }
+  }, {
+    key: "tradesRequestData",
+    value: function tradesRequestData() {
+      Control.tradesAbortRequest();
+      window.clearTimeout(_kline.default.instance.tradesTimer);
+
+      if (_kline.default.instance.paused) {
+        return;
+      }
+
+      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
+        Control.tradesRequestOverStomp();
+      } else {
+        Control.tradesRequestOverHttp();
+      }
+    }
+  }, {
+    key: "klineRequestData",
+    value: function klineRequestData(showLoading) {
+      debugger;
+      Control.klineAbortRequest();
+      window.clearTimeout(_kline.default.instance.klineTimer);
+
+      if (_kline.default.instance.paused) {
+        return;
+      }
+
+      if (showLoading === true) {
+        (0, _jquery.default)("#chart_loading").addClass("activated");
+      }
+
+      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
+        Control.klineRequestOverStomp();
+      } else {
+        Control.klineRequestOverHttp();
+      }
+    }
+  }, {
+    key: "depthRequestData",
+    value: function depthRequestData(showLoading) {
+      Control.depthAbortRequest();
+      window.clearTimeout(_kline.default.instance.depthTimer);
+
+      if (_kline.default.instance.paused) {
+        return;
+      }
+
+      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
+        Control.depthRequestOverStomp();
+      } else {
+        Control.depthRequestOverHttp();
+      }
+    }
+  }, {
+    key: "klineRequestOverStomp",
+    value: function klineRequestOverStomp() {}
+  }, {
+    key: "klineRequestOverHttp",
+    value: function klineRequestOverHttp() {
+      var settings = _chart_settings.ChartSettings.get();
+
+      var per = _kline.default.instance.tagMapPeriod[settings.charts.period];
+
+      if (!per || !_kline.default.instance.symbol) {
+        return;
+      }
+
+      var reqParams = {};
+
+      if (_kline.default.instance.klineMarketName && _kline.default.instance.symbol) {
+        reqParams[_kline.default.instance.klineMarketName] = _kline.default.instance.symbol;
+      }
+
+      if (_kline.default.instance.klineTypeName && Control.requestDuration[per]) {
+        reqParams[_kline.default.instance.klineTypeName] = Control.requestDuration[per];
+      }
+
+      if (_kline.default.instance.klineSizeName && _kline.default.instance.klineSizeValue) {
+        reqParams[_kline.default.instance.klineSizeName] = _kline.default.instance.klineSizeValue;
+      }
+
+      if (_kline.default.instance.klineSinceName && _kline.default.instance.klineSinceValue) {
+        reqParams[_kline.default.instance.klineSinceName] = _kline.default.instance.klineSinceValue;
+      }
+
+      (0, _jquery.default)(document).ready(_kline.default.instance.G_KLINE_HTTP_REQUEST = _jquery.default.ajax({
+        type: "GET",
+        url: _kline.default.instance.klineBaseUrl,
+        dataType: 'json',
+        data: reqParams,
+        timeout: 30000,
+        created: Date.now(),
+        beforeSend: function beforeSend() {
+          this.range = _kline.default.instance.range;
+          this.symbol = _kline.default.instance.symbol;
+        },
+        success: function success(res) {
+          if (_kline.default.instance.G_KLINE_HTTP_REQUEST) {
+            Control.klineRequestSuccessHandler(res);
+          }
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          if (_kline.default.instance.debug) {
+            console.log(xhr);
+          }
+
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            return;
+          }
+
+          _kline.default.instance.klineTimer = setTimeout(function () {
+            Control.klineRequestData(true);
+          }, _kline.default.instance.klineIntervalTime);
+        },
+        complete: function complete() {
+          _kline.default.instance.G_KLINE_HTTP_REQUEST = null;
+        }
+      }));
+    }
+  }, {
+    key: "klineRequestSuccessHandler",
+    value: function klineRequestSuccessHandler(res) {
+      debugger;
+
+      if (!res || !res.data || !Array.isArray(res.data)) {
+        if (_kline.default.instance.type === 'poll') {
+          _kline.default.instance.klineTimer = setTimeout(function () {
+            Control.klineRequestData(true);
+          }, _kline.default.instance.klineIntervalTime);
+        }
+
+        return;
+      }
+
+      var chart = _chart_manager.ChartManager.instance.getChart();
+
+      chart.setTitle();
+      _kline.default.instance.klineData = eval(res.data);
+
+      var updateDataRes = _kline.default.instance.chartMgr.updateData("frame0.k0", _kline.default.instance.klineData);
+
+      _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
+      var intervalTime = _kline.default.instance.klineIntervalTime < _kline.default.instance.range ? _kline.default.instance.klineIntervalTime : _kline.default.instance.range;
+      (0, _jquery.default)("#chart_loading").removeClass("activated");
+
+      if (!updateDataRes) {
+        if (_kline.default.instance.type === 'poll') {
+          _kline.default.instance.klineTimer = setTimeout(function () {
+            Control.klineRequestData(true);
+          }, intervalTime);
+        }
+
+        return;
+      }
+
+      if (_kline.default.instance.type === 'poll') {
+        _kline.default.instance.klineTimer = setTimeout(Control.klineReqOnTwoSecondThread, intervalTime);
+      }
+
+      _chart_manager.ChartManager.instance.redraw('MainCanvas', false);
+    }
+  }, {
+    key: "klineReqOnTwoSecondThread",
+    value: function klineReqOnTwoSecondThread() {
+      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
+
+      if (f === -1) {
+        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
+      } else {
+        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
+      }
+
+      Control.klineRequestData();
+    }
+  }, {
+    key: "depthRequestOverStomp",
+    value: function depthRequestOverStomp() {}
+  }, {
+    key: "depthRequestOverHttp",
+    value: function depthRequestOverHttp() {
+      var depthRequestParams = {};
+
+      if (_kline.default.instance.depthMarketName && _kline.default.instance.symbol) {
+        depthRequestParams[_kline.default.instance.depthMarketName] = _kline.default.instance.symbol;
+      }
+
+      (0, _jquery.default)(document).ready(_kline.default.instance.G_DEPTH_HTTP_REQUEST = _jquery.default.ajax({
+        type: "GET",
+        url: _kline.default.instance.depthBaseUrl,
+        dataType: 'json',
+        data: depthRequestParams,
+        timeout: 30000,
+        created: Date.now(),
+        beforeSend: function beforeSend() {
+          this.range = _kline.default.instance.range;
+          this.symbol = _kline.default.instance.symbol;
+        },
+        success: function success(res) {
+          if (_kline.default.instance.G_DEPTH_HTTP_REQUEST) {
+            Control.depthRequestSuccessHandler(res);
+          }
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          if (_kline.default.instance.debug) {
+            console.log(xhr);
+          }
+
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            return;
+          }
+
+          _kline.default.instance.depthTimer = setTimeout(function () {
+            Control.depthRequestData(false);
+          }, _kline.default.instance.depthIntervalTime);
+        },
+        complete: function complete() {
+          _kline.default.instance.G_DEPTH_HTTP_REQUEST = null;
+        }
+      }));
+    }
+  }, {
+    key: "depthRequestSuccessHandler",
+    value: function depthRequestSuccessHandler(res) {
+      if (!res || !res.asks || !Array.isArray(res.asks) || !res.bids || !Array.isArray(res.bids)) {
+        if (_kline.default.instance.type === 'poll') {
+          _kline.default.instance.depthTimer = setTimeout(function () {
+            Control.depthRequestData(true);
+          }, _kline.default.instance.depthIntervalTime);
+        }
+
+        return;
+      }
+
+      _kline.default.instance.depthData = eval(res);
+      var intervalTime = _kline.default.instance.depthIntervalTime;
+
+      if (_kline.default.instance.depthData) {
+        _kline_trade.KlineTrade.instance.updateDepth(_kline.default.instance.depthData);
+      }
+
+      if (_kline.default.instance.type === 'poll') {
+        _kline.default.instance.depthTimer = setTimeout(Control.depthRequestData, intervalTime);
+      }
+    }
+  }, {
+    key: "depthTwoSecondThread",
+    value: function depthTwoSecondThread() {
+      Control.depthRequestData();
+    }
+  }, {
+    key: "tradesRequestOverStomp",
+    value: function tradesRequestOverStomp() {}
+  }, {
+    key: "tradesRequestOverHttp",
+    value: function tradesRequestOverHttp() {
+      var reqParams = {};
+
+      if (_kline.default.instance.tradesMarketName && _kline.default.instance.symbol) {
+        reqParams[_kline.default.instance.tradesMarketName] = _kline.default.instance.symbol;
+      }
+
+      (0, _jquery.default)(document).ready(_kline.default.instance.G_TRADES_HTTP_REQUEST = _jquery.default.ajax({
+        type: "GET",
+        url: _kline.default.instance.tradesBaseUrl,
+        dataType: 'json',
+        data: reqParams,
+        timeout: 30000,
+        created: Date.now(),
+        beforeSend: function beforeSend() {
+          this.range = _kline.default.instance.range;
+          this.symbol = _kline.default.instance.symbol;
+        },
+        success: function success(res) {
+          if (_kline.default.instance.G_TRADES_HTTP_REQUEST) {
+            Control.tradesRequestSuccessHandler(res);
+          }
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          if (_kline.default.instance.debug) {
+            console.log(xhr);
+          }
+
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            return;
+          }
+
+          _kline.default.instance.tradesTimer = setTimeout(function () {
+            Control.tradesRequestData(false);
+          }, _kline.default.instance.tradesIntervalTime);
+        },
+        complete: function complete() {
+          _kline.default.instance.G_TRADES_HTTP_REQUEST = null;
+        }
+      }));
+    }
+  }, {
+    key: "tradesRequestSuccessHandler",
+    value: function tradesRequestSuccessHandler(res) {
+      if (!res || !Array.isArray(res)) {
+        if (_kline.default.instance.type === 'poll') {
+          _kline.default.instance.tradesTimer = setTimeout(function () {
+            Control.tradesRequestData(false);
+          }, _kline.default.instance.tradesIntervalTime);
+        }
+
+        return;
+      }
+
+      var intervalTime = _kline.default.instance.tradesIntervalTime;
+
+      if (res && res.length > 0) {
+        _kline_trade.KlineTrade.instance.pushTrades(res);
+
+        _kline_trade.KlineTrade.instance.klineTradeInit = true;
+      }
+
+      if (_kline.default.instance.type === 'poll') {
+        _kline.default.instance.tradesTimer = setTimeout(Control.tradesRequestData, intervalTime);
+      }
+    }
+  }, {
+    key: "parseRequestParam",
+    value: function parseRequestParam(str) {
+      return JSON.parse('{"' + decodeURI(str.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}');
+    }
+  }, {
+    key: "requestOverStomp",
+    value: function requestOverStomp() {
+      if (!_kline.default.instance.socketConnected) {
+        if (_kline.default.instance.debug) {
+          console.log("DEBUG: socket is not coonnected");
+        }
+
+        return;
+      }
+
+      if (_kline.default.instance.stompClient && _kline.default.instance.stompClient.ws.readyState === 1) {
+        _kline.default.instance.stompClient.send(_kline.default.instance.sendPath, {}, JSON.stringify(Control.parseRequestParam(_kline.default.instance.requestParam)));
+
+        return;
+      }
+
+      if (_kline.default.instance.debug) {
+        console.log("DEBUG: stomp client is not ready yet ...");
+      }
+
+      _kline.default.instance.timer = setTimeout(function () {
+        Control.requestData(true);
+      }, 1000);
+    }
+  }, {
+    key: "requestOverHttp",
+    value: function requestOverHttp() {
+      if (_kline.default.instance.debug) {
+        console.log("DEBUG: " + _kline.default.instance.requestParam);
+      }
+
+      (0, _jquery.default)(document).ready(_kline.default.instance.G_HTTP_REQUEST = _jquery.default.ajax({
+        type: "GET",
+        url: _kline.default.instance.url,
+        dataType: 'json',
+        data: _kline.default.instance.requestParam,
+        timeout: 30000,
+        created: Date.now(),
+        beforeSend: function beforeSend() {
+          this.range = _kline.default.instance.range;
+          this.symbol = _kline.default.instance.symbol;
+        },
+        success: function success(res) {
+          if (_kline.default.instance.G_HTTP_REQUEST) {
+            Control.requestSuccessHandler(res);
+          }
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          if (_kline.default.instance.debug) {
+            console.log(xhr);
+          }
+
+          if (xhr.status === 200 && xhr.readyState === 4) {
+            return;
+          }
+
+          _kline.default.instance.timer = setTimeout(function () {
+            Control.requestData(true);
+          }, _kline.default.instance.intervalTime);
+        },
+        complete: function complete() {
+          _kline.default.instance.G_HTTP_REQUEST = null;
+        }
+      }));
+    }
+  }, {
+    key: "TwoSecondThread",
+    value: function TwoSecondThread() {
+      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
+
+      if (f === -1) {
+        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
+      } else {
+        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
+      }
+
+      Control.requestData();
+    }
+  }, {
+    key: "readCookie",
+    value: function readCookie() {
+      _chart_settings.ChartSettings.get();
+
+      _chart_settings.ChartSettings.save();
+
+      var tmp = _chart_settings.ChartSettings.get();
+
+      _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', tmp.charts.chartStyle);
+
+      var symbol = tmp.charts.symbol;
+
+      if (!_kline.default.instance.init) {
+        symbol = _kline.default.instance.symbol;
+        _kline.default.instance.init = true;
+      }
+
+      _kline.default.instance.symbol = symbol;
+      Control.switchSymbolSelected(symbol);
+      var period = tmp.charts.period;
+      _kline.default.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
+      Control.switchPeriod(period);
+      (0, _jquery.default)('#chart_period_' + period + '_v a').addClass('selected');
+      (0, _jquery.default)('#chart_period_' + period + '_h a').addClass('selected');
+
+      if (tmp.charts.indicsStatus === 'close') {
+        Control.switchIndic('off');
+      } else if (tmp.charts.indicsStatus === 'open') {
+        Control.switchIndic('on');
+      }
+
+      var mainIndic = (0, _jquery.default)('#chart_select_main_indicator');
+      mainIndic.find('a').each(function () {
+        if ((0, _jquery.default)(this).attr('name') === tmp.charts.mIndic) {
+          (0, _jquery.default)(this).addClass('selected');
+        }
+      });
+      var chart_style = (0, _jquery.default)('#chart_select_chart_style');
+      chart_style.find('a').each(function () {
+        if ((0, _jquery.default)(this)[0].innerHTML === tmp.charts.chartStyle) {
+          (0, _jquery.default)(this).addClass('selected');
+        }
+      });
+
+      _chart_manager.ChartManager.instance.getChart().setMainIndicator(tmp.charts.mIndic);
+
+      _chart_manager.ChartManager.instance.setThemeName('frame0', tmp.theme);
+
+      Control.switchTools('off');
+
+      if (tmp.theme === 'Dark') {
+        Control.switchTheme('dark');
+      } else if (tmp.theme === 'Light') {
+        Control.switchTheme('light');
+      }
+
+      Control.chartSwitchLanguage(tmp.language || "zh-cn");
+    }
+  }, {
+    key: "setHttpRequestParam",
+    value: function setHttpRequestParam(symbol, range, limit, since) {
+      var str = "symbol=" + symbol + "&range=" + range;
+      if (limit !== null) str += "&limit=" + limit;else str += "&since=" + since;
+
+      if (_kline_trade.KlineTrade.instance.tradeDate.getTime() !== 0) {
+        str += "&prevTradeTime=" + _kline_trade.KlineTrade.instance.tradeDate.getTime();
+      }
+
+      return str;
+    }
+  }, {
+    key: "refreshTemplate",
+    value: function refreshTemplate() {
+      _kline.default.instance.chartMgr = _templates.DefaultTemplate.loadTemplate("frame0.k0", "");
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+    }
+  }, {
+    key: "chartSwitchLanguage",
+    value: function chartSwitchLanguage(lang) {
+      var langTmp = lang.replace(/-/, '_');
+      (0, _jquery.default)('#chart_language_switch_tmp').find('span').each(function () {
+        var name = (0, _jquery.default)(this).attr('name');
+        var attr = (0, _jquery.default)(this).attr(langTmp);
+        name = '.' + name;
+        var obj = (0, _jquery.default)(name)[0];
+        if (!obj) return;
+        (0, _jquery.default)(name).each(function () {
+          (0, _jquery.default)(this)[0].innerHTML = attr;
+        });
+      }); // $("#chart_language_setting_div li a[name='" + lang + "']").addClass("selected");
+
+      _chart_manager.ChartManager.instance.setLanguage(lang);
+
+      _chart_manager.ChartManager.instance.getChart().setTitle();
+
+      var tmp = _chart_settings.ChartSettings.get();
+
+      tmp.language = lang;
+
+      _chart_settings.ChartSettings.save();
+
+      _kline.default.instance.onLangChange(lang);
+    }
+  }, {
+    key: "onSize",
+    value: function onSize(w, h) {
+      var width = w || window.innerWidth;
+      var chartWidth = width;
+      var height = h || window.innerHeight;
+      var remainHeight = height;
+      debugger;
+
+      if (_kline.default.instance.showTrade && !isNaN(_kline.default.instance.tradeHeight)) {
+        remainHeight -= _kline.default.instance.tradeHeight;
+      }
+
+      var container = (0, _jquery.default)(_kline.default.instance.element);
+      container.css({
+        width: width + 'px',
+        height: remainHeight + 'px'
+      });
+      var toolBar = (0, _jquery.default)('#chart_toolbar'); // let toolPanel = $('#chart_toolpanel');
+
+      var canvasGroup = (0, _jquery.default)('#chart_canvasGroup');
+      var chart_container_clone = (0, _jquery.default)('#chart_container_clone');
+      var chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
+      var tabBar = (0, _jquery.default)('#chart_tabbar'); //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
+
+      var tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
+      var toolBarRect = {};
+      toolBarRect.x = 0;
+      toolBarRect.y = 0;
+      toolBarRect.w = chartWidth;
+      toolBarRect.h = 29;
+      var toolPanelRect = {};
+      toolPanelRect.x = 0;
+      toolPanelRect.y = toolBarRect.h + 1;
+      toolPanelRect.w = 0;
+      toolPanelRect.h = height - toolPanelRect.y;
+      var tabBarRect = {};
+      tabBarRect.w = chartWidth;
+      tabBarRect.h = tabBarShown ? 22 : -1;
+      tabBarRect.x = chartWidth - tabBarRect.w;
+      tabBarRect.y = remainHeight - (tabBarRect.h + 1);
+      var canvasGroupRect = {};
+      canvasGroupRect.x = tabBarRect.x;
+      canvasGroupRect.y = toolPanelRect.y;
+      canvasGroupRect.w = tabBarRect.w;
+      canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+      toolBar.css({
+        left: toolBarRect.x + 'px',
+        top: toolBarRect.y + 'px',
+        width: toolBarRect.w + 'px',
+        height: toolBarRect.h + 'px'
+      }); // if (toolPanelShown) {
+      //     toolPanel.css({
+      //         left: toolPanelRect.x + 'px',
+      //         top: toolPanelRect.y + 'px',
+      //         width: toolPanelRect.w + 'px',
+      //         height: toolPanelRect.h + 'px'
+      //     });
+      // }
+
+      canvasGroup.css({
+        left: canvasGroupRect.x + 'px',
+        top: toolBarRect.y + toolBarRect.h + 'px',
+        width: '100%',
+        height: canvasGroupRect.h + 'px'
+      });
+      chart_container_clone.css({
+        left: canvasGroupRect.x + 'px',
+        top: toolBarRect.y + toolBarRect.h + 'px',
+        width: '100%',
+        height: canvasGroupRect.h + 'px'
+      });
+      chart_container_fullscreen.css({
+        left: canvasGroupRect.x + 'px',
+        top: 0 + 'px',
+        width: width + 'px',
+        height: height + 'px'
+      });
+      debugger;
+      var chart_container_clone_image = (0, _jquery.default)('#chart_container_image');
+      chart_container_clone_image.css({
+        left: canvasGroupRect.x + 'px',
+        top: toolBarRect.y + toolBarRect.h + 'px',
+        width: '100%',
+        height: canvasGroupRect.h + 'px'
+      });
+      var mainCanvas = (0, _jquery.default)('#chart_mainCanvas')[0];
+      var overlayCanvas = (0, _jquery.default)('#chart_overlayCanvas')[0];
+      var devicePixelRatio = window.devicePixelRatio;
+      var context = mainCanvas.getContext("2d");
+      var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+      var ratio = devicePixelRatio / backingStoreRatio;
+      _kline.default.instance.deviceRatio = ratio;
+      mainCanvas.width = canvasGroupRect.w * ratio;
+      mainCanvas.height = canvasGroupRect.h * ratio;
+      mainCanvas.style.width = '100%';
+      mainCanvas.style.height = canvasGroupRect.h + "px";
+      overlayCanvas.width = canvasGroupRect.w * ratio;
+      overlayCanvas.height = canvasGroupRect.h * ratio;
+      overlayCanvas.style.width = '100%';
+      overlayCanvas.style.height = canvasGroupRect.h + "px";
+
+      if (tabBarShown) {
+        tabBar.css({
+          left: tabBarRect.x + 'px',
+          top: tabBarRect.y + 'px',
+          width: tabBarRect.w + 'px',
+          height: tabBarRect.h + 'px'
+        });
+      }
+      /*
+      let dlgSettings = $("#chart_parameter_settings");
+      dlgSettings.css({
+          left: (chartWidth - dlgSettings.width()) >> 1,
+          top: (height - dlgSettings.height()) >> 1,
+          width: canvasGroupRect.w,
+          height: canvasGroupRect.h
+      });
+      */
+
+
+      var dlgLoading = (0, _jquery.default)("#chart_loading");
+      dlgLoading.css({
+        left: chartWidth - dlgLoading.width() >> 1,
+        top: height - dlgLoading.height() >> 2
+      });
+      var domElemCache = (0, _jquery.default)('#chart_dom_elem_cache'); // let rowTheme = $('#chart_select_theme')[0];
+      // let rowTools = $('#chart_enable_tools')[0];
+      //  let rowIndic = $('#chart_enable_indicator')[0];
+
+      var periodsVert = (0, _jquery.default)('#chart_toolbar_periods_vert'); //周期
+
+      var periodsHorz = (0, _jquery.default)('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
+
+      var showIndic = (0, _jquery.default)('#chart_show_indicator')[0]; //   let showTools = $('#chart_show_tools')[0];
+
+      debugger; //  let selectTheme = $('#chart_toolbar_theme')[0];
+
+      var dropDownSettings = (0, _jquery.default)('#chart_dropdown_settings');
+      var mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
+
+      (0, _jquery.default)(showIndic).hide();
+      (0, _jquery.default)(dropDownSettings).hide();
+      var chatPeriodToolRanages = []; // 根据时间计算显示个数
+
+      var ranges = _kline.default.instance.ranges;
+      var periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
+      var totalCount = ranges.length,
+          showCount = totalCount,
+          totalWidth = 0;
+
+      for (var i = 0; i < totalCount; i++) {
+        var dom = (0, _jquery.default)('#chart_period_' + ranges[i] + '_h');
+        dom.show();
+        totalWidth += dom.width();
+
+        if (totalWidth > periodShowWidth - periodsVert.width()) {
+          dom.hide();
+          showCount--;
+        } else {
+          chatPeriodToolRanages.push(ranges[i]);
+        }
+      }
+
+      if (showCount < ranges.length) {
+        periodsVert.show();
+
+        _kline.default.instance.periodsVertDisplayNone(chatPeriodToolRanages);
+      } else {
+        periodsVert.hide();
+      }
+
+      var periodsVertNW = periodsVert[0].offsetWidth;
+      var periodsHorzNW = periodsVertNW + periodsHorz.offsetWidth;
+      var showIndicNW = periodsHorzNW + showIndic.offsetWidth + 4;
+      var showToolsNW = showIndicNW + 4;
+      var selectThemeNW = showToolsNW;
+      var dropDownSettingsW = dropDownSettings.find(".chart_dropdown_t")[0].offsetWidth + 150;
+      periodsVertNW += dropDownSettingsW;
+      periodsHorzNW += dropDownSettingsW;
+      showIndicNW += dropDownSettingsW;
+      showToolsNW += dropDownSettingsW;
+      selectThemeNW += dropDownSettingsW; // if (chartWidth < periodsHorzNW) {
+      //     domElemCache.append(periodsHorz);
+      // } else {
+      //     periodsVert.after(periodsHorz);
+      // }
+      // if (chartWidth < showIndicNW) {
+      //     domElemCache.append(showIndic);
+      //     rowIndic.style.display = "";
+      // } else {
+      //     dropDownSettings.before(showIndic);
+      //     rowIndic.style.display = "none";
+      // }
+      // if (chartWidth < showToolsNW) {
+      //     domElemCache.append(showTools);
+      //     rowTools.style.display = "";
+      // } else {
+      //     dropDownSettings.before(showTools);
+      //     rowTools.style.display = "none";
+      // }
+      // if (chartWidth < selectThemeNW) {
+      //     domElemCache.append(selectTheme);
+      //     rowTheme.style.display = "";
+      // } else {
+      //     dropDownSettings.before(selectTheme);
+      //     rowTheme.style.display = "none";
+      // }
+
+      if (_kline.default.instance.showTrade) {
+        (0, _jquery.default)(".trade_container").show();
+      } else {
+        (0, _jquery.default)(".trade_container").hide();
+      }
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
+
+      _kline.default.instance.onResize(width, height);
+    }
+  }, {
+    key: "mouseWheel",
+    value: function mouseWheel(e, delta) {
+      _chart_manager.ChartManager.instance.scale(delta > 0 ? 1 : -1);
+
+      _chart_manager.ChartManager.instance.redraw("All", true);
+
+      return false;
+    }
+  }, {
+    key: "switchTheme",
+    value: function switchTheme(name) {
+      // $('#chart_toolbar_theme a').removeClass('selected');
+      //  $('#chart_select_theme a').removeClass('selected');
+      // $('#chart_toolbar_theme').find('a').each(function () {
+      //     if ($(this).attr('name') === name) {
+      //         $(this).addClass('selected');
+      //     }
+      // });
+      // $('#chart_select_theme a').each(function () {
+      //     if ($(this).attr('name') === name) {
+      //         $(this).addClass('selected');
+      //     }
+      // });
+      (0, _jquery.default)(".chart_container").attr('class', "chart_container " + name);
+      (0, _jquery.default)(".marketName_ a").attr('class', name);
+
+      if (name === 'dark') {
+        (0, _jquery.default)(".trade_container").addClass("dark").removeClass("light");
+
+        _chart_manager.ChartManager.instance.setThemeName('frame0', 'Dark');
+
+        var tmp = _chart_settings.ChartSettings.get();
+
+        tmp.theme = 'Dark';
+
+        _chart_settings.ChartSettings.save();
+      } else if (name === 'light') {
+        (0, _jquery.default)(".trade_container").addClass("light").removeClass("dark");
+
+        _chart_manager.ChartManager.instance.setThemeName('frame0', 'Light');
+
+        var _tmp = _chart_settings.ChartSettings.get();
+
+        _tmp.theme = 'Light';
+
+        _chart_settings.ChartSettings.save();
+      }
+
+      var a = {};
+      a.command = "set current themes";
+      a.content = name;
+      (0, _jquery.default)('#chart_output_interface_text').val(JSON.stringify(a));
+      (0, _jquery.default)('#chart_output_interface_submit').submit();
+      new _mevent.MEvent().raise(name);
+
+      _chart_manager.ChartManager.instance.redraw();
+
+      _kline.default.instance.onThemeChange(name);
+    }
+  }, {
+    key: "switchTools",
+    value: function switchTools(name) {
+      (0, _jquery.default)(".chart_dropdown_data").removeClass("chart_dropdown-hover"); // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+      //  $('#chart_enable_tools a').removeClass('selected');
+
+      if (name === 'on') {
+        // $('#chart_show_tools').addClass('selected');
+        // $('#chart_enable_tools a').each(function () {
+        //     if ($(this).attr('name') === 'on') {
+        //         $(this).addClass('selected');
+        //     }
+        // });
+        // $('#chart_toolpanel')[0].style.display = 'inline';
+        if (_chart_manager.ChartManager.instance._drawingTool === _chart_manager.ChartManager.DrawingTool.Cursor) {
+          (0, _jquery.default)('#chart_Cursor').parent().addClass('selected');
+        } else if (_chart_manager.ChartManager.instance._drawingTool === _chart_manager.ChartManager.DrawingTool.CrossCursor) {
+          (0, _jquery.default)('#chart_CrossCursor').parent().addClass('selected');
+        }
+      } else if (name === 'off') {
+        //  $('#chart_show_tools').removeClass('selected');
+        // $('#chart_enable_tools a').each(function () {
+        //     if ($(this).attr('name') === 'off') {
+        //         $(this).addClass('selected');
+        //     }
+        // });
+        // $('#chart_toolpanel')[0].style.display = 'none';
+        _chart_manager.ChartManager.instance.setRunningMode(_chart_manager.ChartManager.instance._beforeDrawingTool);
+
+        _chart_manager.ChartManager.instance.redraw("All", true);
+      }
+
+      if (_kline.default.instance.isSized) {
+        Control.onSize();
+      } else {
+        Control.onSize(_kline.default.instance.width, _kline.default.instance.height);
+      }
+    }
+  }, {
+    key: "switchIndic",
+    value: function switchIndic(name) {
+      // $('#chart_enable_indicator a').removeClass('selected');
+      // $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
+      if (name === 'on') {
+        (0, _jquery.default)('#chart_show_indicator').addClass('selected');
+
+        var tmp = _chart_settings.ChartSettings.get();
+
+        tmp.charts.indicsStatus = 'open';
+
+        _chart_settings.ChartSettings.save();
+
+        var value = tmp.charts.indics[1];
+        if (_templates.Template.displayVolume === false) _chart_manager.ChartManager.instance.getChart().setIndicator(2, value);else _chart_manager.ChartManager.instance.getChart().setIndicator(2, value);
+        (0, _jquery.default)("#chart_tabbar").find('a').each(function () {
+          if ((0, _jquery.default)(this).attr('name') === value) (0, _jquery.default)(this).addClass('selected');
+        });
+        (0, _jquery.default)('#chart_tabbar')[0].style.display = 'block';
+      } else if (name === 'off') {
+        (0, _jquery.default)('#chart_show_indicator').removeClass('selected');
+
+        _chart_manager.ChartManager.instance.getChart().setIndicator(2, 'NONE');
+
+        var _tmp2 = _chart_settings.ChartSettings.get();
+
+        _tmp2.charts.indicsStatus = 'close';
+
+        _chart_settings.ChartSettings.save();
+
+        (0, _jquery.default)('#chart_tabbar')[0].style.display = 'none';
+        (0, _jquery.default)("#chart_tabbar a").removeClass("selected");
+      }
+
+      if (_kline.default.instance.isSized) {
+        Control.onSize();
+      } else {
+        Control.onSize(_kline.default.instance.width, _kline.default.instance.height);
+      }
+    }
+  }, {
+    key: "switchPeriod",
+    value: function switchPeriod(name) {
+      (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").removeClass("selected");
+      (0, _jquery.default)("#chart_toolbar_periods_vert ul a").removeClass("selected");
+      (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").each(function () {
+        if ((0, _jquery.default)(this).parent().attr('name') === name) {
+          (0, _jquery.default)(this).addClass('selected');
+        }
+      });
+      (0, _jquery.default)("#chart_toolbar_periods_vert ul a").each(function () {
+        if ((0, _jquery.default)(this).parent().attr('name') === name) {
+          (0, _jquery.default)(this).addClass('selected');
+        }
+      });
+      (0, _jquery.default)("#chart_toolbar_periods_vert .chart_dropdown_t").removeClass("chart_dropdown-hover");
+
+      _chart_manager.ChartManager.instance.showCursor();
+
+      Control.calcPeriodWeight(name);
+
+      if (name === 'line') {
+        _chart_manager.ChartManager.instance.getChart().strIsLine = true;
+
+        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', 'Line');
+
+        _chart_manager.ChartManager.instance.getChart().setCurrentPeriod('line');
+
+        var _settings = _chart_settings.ChartSettings.get();
+
+        _settings.charts.period = name;
+
+        _chart_settings.ChartSettings.save();
+
+        return;
+      }
+
+      _chart_manager.ChartManager.instance.getChart().strIsLine = false;
+      var p = _kline.default.instance.tagMapPeriod[name];
+
+      _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', _chart_settings.ChartSettings.get().charts.chartStyle);
+
+      _chart_manager.ChartManager.instance.getChart().setCurrentPeriod(p);
+
+      var settings = _chart_settings.ChartSettings.get();
+
+      settings.charts.period = name;
+
+      _chart_settings.ChartSettings.save();
+    }
+  }, {
+    key: "reset",
+    value: function reset(symbol) {
+      _kline.default.instance.symbol = symbol;
+
+      if (_kline.default.instance.showTrade) {
+        _kline_trade.KlineTrade.instance.reset(symbol);
+      }
+    }
+  }, {
+    key: "switchSymbolSelected",
+    value: function switchSymbolSelected(symbol) {
+      Control.reset(symbol);
+      (0, _jquery.default)(".market_chooser ul a").removeClass("selected");
+      (0, _jquery.default)(".market_chooser ul a[name='" + symbol + "']").addClass("selected");
+      _chart_manager.ChartManager.instance.getChart()._symbol = symbol;
+
+      var settings = _chart_settings.ChartSettings.get();
+
+      settings.charts.symbol = symbol;
+
+      _chart_settings.ChartSettings.save();
+    }
+  }, {
+    key: "switchSymbol",
+    value: function switchSymbol(symbol) {
+      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient.ws.readyState === 1) {
+        _kline.default.instance.subscribed.unsubscribe();
+
+        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + symbol + '/' + _kline.default.instance.range, Control.subscribeCallback);
+      }
+
+      Control.switchSymbolSelected(symbol);
+
+      var settings = _chart_settings.ChartSettings.get();
+
+      if (settings.charts.period === "line") {
+        _chart_manager.ChartManager.instance.getChart().strIsLine = true;
+
+        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', 'Line');
+      } else {
+        _chart_manager.ChartManager.instance.getChart().strIsLine = false;
+
+        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', _chart_settings.ChartSettings.get().charts.chartStyle);
+      }
+
+      _chart_manager.ChartManager.instance.getChart().setSymbol(symbol);
+    }
+  }, {
+    key: "calcPeriodWeight",
+    value: function calcPeriodWeight(period) {
+      //  debugger
+      var index = period;
+      if (period !== 'line') index = _kline.default.instance.periodMap[_kline.default.instance.tagMapPeriod[period]];
+
+      var periodWeight = _chart_settings.ChartSettings.get().charts.period_weight;
+
+      for (var i in periodWeight) {
+        if (periodWeight[i] > periodWeight[index]) {
+          periodWeight[i] -= 1;
+        }
+      }
+
+      periodWeight[index] = 8;
+
+      _chart_settings.ChartSettings.save();
+    }
+  }, {
+    key: "subscribeCallback",
+    value: function subscribeCallback(res) {
+      Control.requestSuccessHandler(JSON.parse(res.body));
+    }
+  }, {
+    key: "socketConnect",
+    value: function socketConnect() {
+      if (!_kline.default.instance.stompClient || !_kline.default.instance.socketConnected) {
+        if (_kline.default.instance.enableSockjs) {
+          var socket = new SockJS(_kline.default.instance.url);
+          _kline.default.instance.stompClient = Stomp.over(socket);
+        } else {
+          _kline.default.instance.stompClient = Stomp.client(_kline.default.instance.url);
+        }
+
+        _kline.default.instance.socketConnected = true;
+      }
+
+      if (_kline.default.instance.stompClient.ws.readyState === 1) {
+        console.log('DEBUG: already connected');
+        return;
+      }
+
+      if (!_kline.default.instance.debug) {
+        _kline.default.instance.stompClient.debug = null;
+      }
+
+      _kline.default.instance.stompClient.connect({}, function () {
+        _kline.default.instance.stompClient.subscribe('/user' + _kline.default.instance.subscribePath, Control.subscribeCallback);
+
+        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + _kline.default.instance.symbol + '/' + _kline.default.instance.range, Control.subscribeCallback);
+        Control.requestData(true);
+      }, function () {
+        _kline.default.instance.stompClient.disconnect();
+
+        console.log("DEBUG: reconnect in 5 seconds ...");
+        setTimeout(function () {
+          Control.socketConnect();
+        }, 5000);
+      });
+    }
+  }]);
+
+  return Control;
+}();
+
+exports.Control = Control;
+Control.refreshCounter = 0;
+Control.refreshHandler = null;
+Control.requestDuration = {
+  "01d": "1day",
+  "01w": "1week",
+  "03d": "3day",
+  "12h": "12hour",
+  "06h": "6hour",
+  "04h": "4hour",
+  "02h": "2hour",
+  "01h": "1hour",
+  "30m": "30min",
+  "15m": "15min",
+  "05m": "5min",
+  "03m": "3min",
+  "01m": "1min",
+  "line": "line"
+};
+
+/***/ }),
+
+/***/ 39:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CPoint = void 0;
+
+var _chart_manager = __webpack_require__(4);
+
+var _named_object = __webpack_require__(9);
+
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
+
+var _util = __webpack_require__(21);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CPoint =
+/*#__PURE__*/
+function (_NamedObject) {
+  _inherits(CPoint, _NamedObject);
+
+  function CPoint(name) {
+    var _this;
+
+    _classCallCheck(this, CPoint);
+
+    _this = _possibleConstructorReturn(this, (CPoint.__proto__ || Object.getPrototypeOf(CPoint)).call(this, name));
+    _this.pos = {
+      index: -1,
+      value: -1
+    };
+    _this.state = CPoint.state.Hide;
+    return _this;
+  }
+
+  _createClass(CPoint, [{
+    key: "getChartObjects",
+    value: function getChartObjects() {
+      var ppMgr = _chart_manager.ChartManager.instance;
+      var ppCDS = ppMgr.getDataSource("frame0.k0");
+      if (ppCDS === null || !_util.Util.isInstance(ppCDS, data_sources.MainDataSource)) return null;
+      var ppTimeline = ppMgr.getTimeline("frame0.k0");
+      if (ppTimeline === null) return null;
+      var ppRange = ppMgr.getRange("frame0.k0.main");
+      if (ppRange === null) return null;
+      return {
+        pMgr: ppMgr,
+        pCDS: ppCDS,
+        pTimeline: ppTimeline,
+        pRange: ppRange
+      };
+    }
+  }, {
+    key: "setPosXY",
+    value: function setPosXY(x, y) {
+      var pObj = this.getChartObjects();
+      var i = pObj.pTimeline.toIndex(x);
+      var v = pObj.pRange.toValue(y);
+      var result = this.snapValue(i, v);
+      if (result !== null) v = result;
+      this.setPosIV(i, v);
+    }
+  }, {
+    key: "setPosXYNoSnap",
+    value: function setPosXYNoSnap(x, y) {
+      var pObj = this.getChartObjects();
+      var i = pObj.pTimeline.toIndex(x);
+      var v = pObj.pRange.toValue(y);
+      this.setPosIV(i, v);
+    }
+  }, {
+    key: "setPosIV",
+    value: function setPosIV(i, v) {
+      this.pos = {
+        index: i,
+        value: v
+      };
+    }
+  }, {
+    key: "getPosXY",
+    value: function getPosXY() {
+      var pObj = this.getChartObjects();
+
+      var _x = pObj.pTimeline.toItemCenter(this.pos.index);
+
+      var _y = pObj.pRange.toY(this.pos.value);
+
+      return {
+        x: _x,
+        y: _y
+      };
+    }
+  }, {
+    key: "getPosIV",
+    value: function getPosIV() {
+      return {
+        i: this.pos.index,
+        v: this.pos.value
+      };
+    }
+  }, {
+    key: "setState",
+    value: function setState(s) {
+      this.state = s;
+    }
+  }, {
+    key: "getState",
+    value: function getState() {
+      return this.state;
+    }
+  }, {
+    key: "isSelected",
+    value: function isSelected(x, y) {
+      var xy = this.getPosXY();
+      if (x < xy.x - 4 || x > xy.x + 4 || y < xy.y - 4 || y > xy.y + 4) return false;
+      this.setState(CPoint.state.Highlight);
+      return true;
+    }
+  }, {
+    key: "snapValue",
+    value: function snapValue(i, v) {
+      var pObj = this.getChartObjects();
+      var result = null;
+      var first = Math.floor(pObj.pTimeline.getFirstIndex());
+      var last = Math.floor(pObj.pTimeline.getLastIndex());
+      if (i < first || i > last) return result;
+      var y = pObj.pRange.toY(v);
+      var pData = pObj.pCDS.getDataAt(i);
+      if (pData === null || pData === undefined) return result;
+      var pDataPre = null;
+      if (i > 0) pDataPre = pObj.pCDS.getDataAt(i - 1);else pDataPre = pObj.pCDS.getDataAt(i);
+      var candleStickStyle = pObj.pMgr.getChartStyle(pObj.pCDS.getFrameName());
+      var open = pObj.pRange.toY(pData.open);
+      var high = pObj.pRange.toY(pData.high);
+      var low = pObj.pRange.toY(pData.low);
+      var close = pObj.pRange.toY(pData.close);
+
+      if (candleStickStyle === "CandleStickHLC") {
+        open = pObj.pRange.toY(pDataPre.close);
+      }
+
+      var dif_open = Math.abs(open - y);
+      var dif_high = Math.abs(high - y);
+      var dif_low = Math.abs(low - y);
+      var dif_close = Math.abs(close - y);
+
+      if (dif_open <= dif_high && dif_open <= dif_low && dif_open <= dif_close) {
+        if (dif_open < 6) result = pData.open;
+      }
+
+      if (dif_high <= dif_open && dif_high <= dif_low && dif_high <= dif_close) {
+        if (dif_high < 6) result = pData.high;
+      }
+
+      if (dif_low <= dif_open && dif_low <= dif_high && dif_low <= dif_close) {
+        if (dif_low < 6) result = pData.low;
+      }
+
+      if (dif_close <= dif_open && dif_close <= dif_high && dif_close <= dif_low) {
+        if (dif_close < 6) result = pData.close;
+      }
+
+      return result;
+    }
+  }]);
+
+  return CPoint;
+}(_named_object.NamedObject);
+
+exports.CPoint = CPoint;
+CPoint.state = {
+  Hide: 0,
+  Show: 1,
+  Highlight: 2
+};
+
+/***/ }),
+
+/***/ 4:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85,31 +7245,31 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ChartManager = void 0;
 
-var _control = __webpack_require__(8);
+var _control = __webpack_require__(38);
 
-var _chart = __webpack_require__(21);
+var _chart = __webpack_require__(105);
 
-var indicators = _interopRequireWildcard(__webpack_require__(25));
+var indicators = _interopRequireWildcard(__webpack_require__(109));
 
-var ranges = _interopRequireWildcard(__webpack_require__(18));
+var ranges = _interopRequireWildcard(__webpack_require__(61));
 
-var templates = _interopRequireWildcard(__webpack_require__(7));
+var templates = _interopRequireWildcard(__webpack_require__(27));
 
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
-var _chart_settings = __webpack_require__(4);
+var _chart_settings = __webpack_require__(20);
 
-var data_providers = _interopRequireWildcard(__webpack_require__(12));
+var data_providers = _interopRequireWildcard(__webpack_require__(42));
 
-var themes = _interopRequireWildcard(__webpack_require__(6));
+var themes = _interopRequireWildcard(__webpack_require__(22));
 
-var plotters = _interopRequireWildcard(__webpack_require__(11));
+var plotters = _interopRequireWildcard(__webpack_require__(41));
 
-var ctools = _interopRequireWildcard(__webpack_require__(10));
+var ctools = _interopRequireWildcard(__webpack_require__(40));
 
-var areas = _interopRequireWildcard(__webpack_require__(13));
+var areas = _interopRequireWildcard(__webpack_require__(43));
 
-var _util = __webpack_require__(5);
+var _util = __webpack_require__(21);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -1473,3312 +8633,8 @@ ChartManager.created = false;
 ChartManager.instance = null;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.NamedObject = void 0;
-
-var _cname = __webpack_require__(15);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var NamedObject =
-/*#__PURE__*/
-function () {
-  function NamedObject(name) {
-    _classCallCheck(this, NamedObject);
-
-    this._name = name;
-    this._nameObj = new _cname.CName(name);
-  }
-
-  _createClass(NamedObject, [{
-    key: "getFrameName",
-    value: function getFrameName() {
-      return this._nameObj.getName(0);
-    }
-  }, {
-    key: "getDataSourceName",
-    value: function getDataSourceName() {
-      return this._nameObj.getName(1);
-    }
-  }, {
-    key: "getAreaName",
-    value: function getAreaName() {
-      return this._nameObj.getName(2);
-    }
-  }, {
-    key: "getName",
-    value: function getName() {
-      return this._nameObj.getName(-1);
-    }
-  }, {
-    key: "getNameObject",
-    value: function getNameObject() {
-      return this._nameObj;
-    }
-  }, {
-    key: "getRectCrossPt",
-    value: function getRectCrossPt(rect, startPt, endPt) {
-      var crossPt;
-      var firstPt = {
-        x: -1,
-        y: -1
-      };
-      var secondPt = {
-        x: -1,
-        y: -1
-      };
-      var xdiff = endPt.x - startPt.x;
-      var ydiff = endPt.y - startPt.y;
-
-      if (Math.abs(xdiff) < 2) {
-        firstPt = {
-          x: startPt.x,
-          y: rect.top
-        };
-        secondPt = {
-          x: endPt.x,
-          y: rect.bottom
-        };
-        crossPt = [firstPt, secondPt];
-        return crossPt;
-      }
-
-      var k = ydiff / xdiff;
-      secondPt.x = rect.right;
-      secondPt.y = startPt.y + (rect.right - startPt.x) * k;
-      firstPt.x = rect.left;
-      firstPt.y = startPt.y + (rect.left - startPt.x) * k;
-      crossPt = [firstPt, secondPt];
-      return crossPt;
-    }
-  }]);
-
-  return NamedObject;
-}();
-
-exports.NamedObject = NamedObject;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.MainDataSource = exports.DataSource = void 0;
-
-var _named_object = __webpack_require__(1);
-
-var _ctool_manager = __webpack_require__(22);
-
-var _kline = _interopRequireDefault(__webpack_require__(3));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var DataSource =
-/*#__PURE__*/
-function (_NamedObject) {
-  _inherits(DataSource, _NamedObject);
-
-  function DataSource(name) {
-    _classCallCheck(this, DataSource);
-
-    return _possibleConstructorReturn(this, (DataSource.__proto__ || Object.getPrototypeOf(DataSource)).call(this, name));
-  }
-
-  _createClass(DataSource, [{
-    key: "getUpdateMode",
-    value: function getUpdateMode() {
-      return this._updateMode;
-    }
-  }, {
-    key: "setUpdateMode",
-    value: function setUpdateMode(mode) {
-      this._updateMode = mode;
-    }
-  }, {
-    key: "getCacheSize",
-    value: function getCacheSize() {
-      return 0;
-    }
-  }, {
-    key: "getDataCount",
-    value: function getDataCount() {
-      return 0;
-    }
-  }, {
-    key: "getDataAt",
-    value: function getDataAt(index) {
-      return this._dataItems[index];
-    }
-  }]);
-
-  return DataSource;
-}(_named_object.NamedObject);
-
-exports.DataSource = DataSource;
-DataSource.UpdateMode = {
-  DoNothing: 0,
-  Refresh: 1,
-  Update: 2,
-  Append: 3
-};
-
-var MainDataSource =
-/*#__PURE__*/
-function (_DataSource) {
-  _inherits(MainDataSource, _DataSource);
-
-  function MainDataSource(name) {
-    var _this;
-
-    _classCallCheck(this, MainDataSource);
-
-    _this = _possibleConstructorReturn(this, (MainDataSource.__proto__ || Object.getPrototypeOf(MainDataSource)).call(this, name));
-    _this._erasedCount = 0;
-    _this._dataItems = [];
-    _this._decimalDigits = 0;
-    _this.toolManager = new _ctool_manager.CToolManager(name);
-    return _this;
-  }
-
-  _createClass(MainDataSource, [{
-    key: "getCacheSize",
-    value: function getCacheSize() {
-      return this._dataItems.length;
-    }
-  }, {
-    key: "getDataCount",
-    value: function getDataCount() {
-      return this._dataItems.length;
-    }
-  }, {
-    key: "getUpdatedCount",
-    value: function getUpdatedCount() {
-      return this._updatedCount;
-    }
-  }, {
-    key: "getAppendedCount",
-    value: function getAppendedCount() {
-      return this._appendedCount;
-    }
-  }, {
-    key: "getErasedCount",
-    value: function getErasedCount() {
-      return this._erasedCount;
-    }
-  }, {
-    key: "getDecimalDigits",
-    value: function getDecimalDigits() {
-      return this._decimalDigits;
-    }
-  }, {
-    key: "calcDecimalDigits",
-    value: function calcDecimalDigits(v) {
-      var str = "" + v;
-      var i = str.indexOf('.');
-
-      if (i < 0) {
-        return 0;
-      }
-
-      return str.length - 1 - i;
-    }
-  }, {
-    key: "getLastDate",
-    value: function getLastDate() {
-      var count = this.getDataCount();
-
-      if (count < 1) {
-        return -1;
-      }
-
-      return this.getDataAt(count - 1).date;
-    }
-  }, {
-    key: "getDataAt",
-    value: function getDataAt(index) {
-      return this._dataItems[index];
-    }
-  }, {
-    key: "update",
-    value: function update(data) {
-      this._updatedCount = 0;
-      this._appendedCount = 0;
-      this._erasedCount = 0;
-      var len = this._dataItems.length;
-
-      if (len > 0) {
-        var lastIndex = len - 1;
-        var lastItem = this._dataItems[lastIndex];
-
-        var _e,
-            _i,
-            _cnt = data.length;
-
-        for (_i = 0; _i < _cnt; _i++) {
-          _e = data[_i];
-
-          if (_e[0] === lastItem.date) {
-            if (lastItem.open === _e[1] && lastItem.high === _e[2] && lastItem.low === _e[3] && lastItem.close === _e[4] && lastItem.volume === _e[5]) {
-              this.setUpdateMode(DataSource.UpdateMode.DoNothing);
-            } else {
-              this.setUpdateMode(DataSource.UpdateMode.Update);
-              this._dataItems[lastIndex] = {
-                date: _e[0],
-                open: _e[1],
-                high: _e[2],
-                low: _e[3],
-                close: _e[4],
-                volume: _e[5]
-              };
-              this._updatedCount++;
-            }
-
-            _i++;
-
-            if (_i < _cnt) {
-              //  this.setUpdateMode(DataSource.UpdateMode.Append);
-              this.setUpdateMode(DataSource.UpdateMode.Refresh);
-
-              for (; _i < _cnt; _i++, this._appendedCount++) {
-                _e = data[_i];
-
-                this._dataItems.push({
-                  date: _e[0],
-                  open: _e[1],
-                  high: _e[2],
-                  low: _e[3],
-                  close: _e[4],
-                  volume: _e[5]
-                });
-              }
-            }
-
-            return true;
-          }
-        }
-
-        if (_cnt < _kline.default.instance.limit) {
-          this.setUpdateMode(DataSource.UpdateMode.DoNothing);
-          return false;
-        }
-      }
-
-      this.setUpdateMode(DataSource.UpdateMode.Refresh);
-      this._dataItems = [];
-      var d,
-          n,
-          e,
-          i,
-          cnt = data.length;
-
-      for (i = 0; i < cnt; i++) {
-        e = data[i];
-
-        for (n = 1; n <= 4; n++) {
-          d = this.calcDecimalDigits(e[n]);
-          if (this._decimalDigits < d) this._decimalDigits = d;
-        }
-
-        this._dataItems.push({
-          date: e[0],
-          open: e[1],
-          high: e[2],
-          low: e[3],
-          close: e[4],
-          volume: e[5]
-        });
-      }
-
-      return true;
-    }
-  }, {
-    key: "select",
-    value: function select(id) {
-      this.toolManager.selecedObject = id;
-    }
-  }, {
-    key: "unselect",
-    value: function unselect() {
-      this.toolManager.selecedObject = -1;
-    }
-  }, {
-    key: "addToolObject",
-    value: function addToolObject(toolObject) {
-      this.toolManager.addToolObject(toolObject);
-    }
-  }, {
-    key: "delToolObject",
-    value: function delToolObject() {
-      this.toolManager.delCurrentObject();
-    }
-  }, {
-    key: "getToolObject",
-    value: function getToolObject(index) {
-      return this.toolManager.getToolObject(index);
-    }
-  }, {
-    key: "getToolObjectCount",
-    value: function getToolObjectCount() {
-      return this.toolManager.toolObjects.length;
-    }
-  }, {
-    key: "getCurrentToolObject",
-    value: function getCurrentToolObject() {
-      return this.toolManager.getCurrentObject();
-    }
-  }, {
-    key: "getSelectToolObjcet",
-    value: function getSelectToolObjcet() {
-      return this.toolManager.getSelectedObject();
-    }
-  }, {
-    key: "delSelectToolObject",
-    value: function delSelectToolObject() {
-      this.toolManager.delSelectedObject();
-    }
-  }]);
-
-  return MainDataSource;
-}(DataSource);
-
-exports.MainDataSource = MainDataSource;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _control = __webpack_require__(8);
-
-var _kline_trade = __webpack_require__(14);
-
-var _chart_manager = __webpack_require__(0);
-
-var _chart_settings = __webpack_require__(4);
-
-var _templates = __webpack_require__(7);
-
-__webpack_require__(26);
-
-var _tpl = _interopRequireDefault(__webpack_require__(42));
-
-var _jquery = _interopRequireDefault(__webpack_require__(19));
-
-var _util = __webpack_require__(43);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Kline =
-/*#__PURE__*/
-function () {
-  function Kline(option) {
-    _classCallCheck(this, Kline);
-
-    this.element = "#kline_container";
-    this.chartMgr = null;
-    this.buttonDown = false;
-    this.init = false;
-    this.requestParam = "";
-    this.data = {};
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-    this.symbol = "";
-    this.symbolName = "";
-    this.range = null;
-    this.limit = 1000;
-    this.type = "poll";
-    this.subscribePath = "";
-    this.sendPath = "";
-    this.stompClient = null;
-    this.intervalTime = 5000;
-    this.debug = true;
-    this.language = "zh-cn";
-    this.showLanguageSelect = false;
-    this.showDrawTool = false;
-    this.theme = "dark";
-    this.ranges = ["line", "1m", "1d", "5m", "15m", "30m", "1h", "4h", "12h", "1w"];
-    this.showTrade = true;
-    this.tradeHeight = 44;
-    this.tradeWidth = 250;
-    this.onMaximizeWindow = null;
-    this.socketConnected = false;
-    this.enableSockjs = true;
-    this.reverseColor = false;
-    this.isSized = false;
-    this.paused = false;
-    this.subscribed = null; // this.disableFirebase = true;
-
-    /*api文档  https://www.zb.com/i/developer/restApi#config */
-
-    /*k线数据 参考文档type  since  size */
-
-    this.klineBaseUrl = 'http://api.bitkk.com/data/v1/kline';
-    this.klineMarketName = 'market';
-    this.klineTypeName = 'type';
-    this.klineSizeName = 'size';
-    this.klineSinceName = 'since';
-    this.klineSizeValue = '1000';
-    this.klineSinceValue = null;
-    this.G_KLINE_HTTP_REQUEST = null;
-    this.klineData = {};
-    this.klineTimer = null;
-    this.klineIntervalTime = 3000; //行情数据
-
-    this.tradesBaseUrl = 'http://api.bitkk.com/data/v1/trades';
-    this.tradesMarketName = 'market';
-    this.G_TRADES_HTTP_REQUEST = null;
-    this.tradesData = {};
-    this.tradesTimer = null;
-    this.tradesIntervalTime = 8000; //市场深度数据
-
-    this.depthBaseUrl = 'http://api.bitkk.com/data/v1/depth';
-    this.depthMarketName = 'market';
-    this.G_DEPTH_HTTP_REQUEST = null;
-    this.depthData = {};
-    this.depthTimer = null;
-    this.depthIntervalTime = 8000;
-    this.chatPeriodToolRanages = [];
-    this.periodMap = {
-      "01w": 7 * 86400 * 1000,
-      "03d": 3 * 86400 * 1000,
-      "01d": 86400 * 1000,
-      "12h": 12 * 3600 * 1000,
-      "06h": 6 * 3600 * 1000,
-      "04h": 4 * 3600 * 1000,
-      "02h": 2 * 3600 * 1000,
-      "01h": 3600 * 1000,
-      "30m": 30 * 60 * 1000,
-      "15m": 15 * 60 * 1000,
-      "05m": 5 * 60 * 1000,
-      "03m": 3 * 60 * 1000,
-      "01m": 60 * 1000,
-      "line": 60 * 1000
-    };
-    this.tagMapPeriod = {
-      "1w": "01w",
-      "3d": "03d",
-      "1d": "01d",
-      "12h": "12h",
-      "6h": "06h",
-      "4h": "04h",
-      "2h": "02h",
-      "1h": "01h",
-      "30m": "30m",
-      "15m": "15m",
-      "5m": "05m",
-      "3m": "03m",
-      "1m": "01m",
-      "line": "01m"
-    };
-    this.periodTitle = null;
-    this.periodAreaRanages = null;
-    this.deviceRatio = 2;
-    Object.assign(this, option);
-
-    if (!Kline.created) {
-      Kline.instance = this;
-      Kline.created = true;
-    }
-
-    return Kline.instance;
-  }
-
-  _createClass(Kline, [{
-    key: "periodsVertDisplayNone",
-    value: function periodsVertDisplayNone(array) {
-      if (!(array && array instanceof Array && array.length > 0)) return;
-      this.periodAreaRanages = array;
-
-      for (var k in this.ranges) {
-        var curPeriod = this.ranges[k];
-
-        if (curPeriod && typeof curPeriod === "string" && array.indexOf(curPeriod) >= 0) {
-          var nodeName = '#chart_period_' + curPeriod + '_v';
-          (0, _jquery.default)(nodeName).attr('style', "display:none");
-        }
-      }
-    }
-    /*********************************************
-     * Methods
-     *********************************************/
-
-  }, {
-    key: "draw",
-    value: function draw() {
-      Kline.trade = new _kline_trade.KlineTrade();
-      Kline.chartMgr = new _chart_manager.ChartManager();
-
-      var view = _jquery.default.parseHTML(_tpl.default);
-
-      for (var k in this.ranges) {
-        var res = (0, _jquery.default)(view).find('[name="' + this.ranges[k] + '"]');
-        res.each(function (i, e) {
-          (0, _jquery.default)(e).attr("style", "display:inline-block");
-        });
-      }
-
-      (0, _jquery.default)(this.element).html(view);
-      setInterval(_control.Control.refreshFunction, this.intervalTime);
-
-      if (this.type === "stomp") {
-        _control.Control.socketConnect();
-      } // if (!this.disableFirebase) {
-      //     fire();
-      // }
-
-
-      this.registerMouseEvent();
-
-      _chart_manager.ChartManager.instance.bindCanvas("main", document.getElementById("chart_mainCanvas"));
-
-      _chart_manager.ChartManager.instance.bindCanvas("overlay", document.getElementById("chart_overlayCanvas"));
-
-      _control.Control.refreshTemplate();
-
-      _control.Control.onSize(this.width, this.height);
-
-      _control.Control.readCookie();
-
-      this.setTheme(this.theme);
-      this.setLanguage(this.language);
-
-      var tmp = _chart_settings.ChartSettings.get();
-
-      var period = tmp.charts.period;
-
-      if (this.periodAreaRanages instanceof Array && this.periodAreaRanages.length > 0 && this.periodAreaRanages.indexOf(period) === -1) {
-        var pdescribe = (0, _jquery.default)('#chart_period_' + period + '_v a').text();
-
-        if (pdescribe != undefined && typeof pdescribe === "string" && pdescribe !== "") {
-          (0, _jquery.default)(".chart_str_period").addClass('selected');
-          (0, _jquery.default)(".chart_str_period").text(pdescribe);
-        }
-      }
-
-      !this.showLanguageSelect && (0, _jquery.default)("#chart_language_setting_div").hide();
-      !this.showDrawTool && (0, _jquery.default)(".chart_str_tools_cap").hide();
-      (0, _jquery.default)(this.element).css({
-        visibility: "visible"
-      });
-    }
-  }, {
-    key: "resize",
-    value: function resize(width, height) {
-      this.width = width;
-      this.height = height;
-
-      _control.Control.onSize(this.width, this.height);
-    }
-  }, {
-    key: "setSymbol",
-    value: function setSymbol(symbol, symbolName) {
-      this.symbol = symbol;
-      this.symbolName = symbolName;
-
-      _control.Control.switchSymbol(symbol);
-
-      this.onSymbolChange(symbol, symbolName);
-    }
-  }, {
-    key: "setTheme",
-    value: function setTheme(style) {
-      this.theme = style;
-
-      _control.Control.switchTheme(style);
-    }
-  }, {
-    key: "setLanguage",
-    value: function setLanguage(lang) {
-      this.language = lang;
-
-      _control.Control.chartSwitchLanguage(lang);
-    }
-  }, {
-    key: "setShowTrade",
-    value: function setShowTrade(isShow) {
-      this.showTrade = isShow;
-
-      if (isShow) {
-        (0, _jquery.default)(".trade_container").show();
-      } else {
-        (0, _jquery.default)(".trade_container").hide();
-      }
-
-      _control.Control.onSize(this.width, this.height);
-    }
-  }, {
-    key: "toggleTrade",
-    value: function toggleTrade() {
-      if (!this.showTrade) {
-        this.showTrade = true;
-        (0, _jquery.default)(".trade_container").show();
-      } else {
-        this.showTrade = false;
-        (0, _jquery.default)(".trade_container").hide();
-      }
-
-      _control.Control.onSize(this.width, this.height);
-    }
-  }, {
-    key: "setIntervalTime",
-    value: function setIntervalTime(intervalTime) {
-      this.intervalTime = intervalTime;
-
-      if (this.debug) {
-        console.log('DEBUG: interval time changed to ' + intervalTime);
-      }
-    }
-  }, {
-    key: "pause",
-    value: function pause() {
-      if (this.debug) {
-        console.log('DEBUG: kline paused');
-      }
-
-      this.paused = true;
-    }
-  }, {
-    key: "resend",
-    value: function resend() {
-      if (this.debug) {
-        console.log('DEBUG: kline continue');
-      }
-
-      this.paused = false;
-
-      _control.Control.requestData(true);
-    }
-  }, {
-    key: "connect",
-    value: function connect() {
-      if (this.type !== 'stomp') {
-        if (this.debug) {
-          console.log('DEBUG: this is for stomp type');
-        }
-
-        return;
-      }
-
-      _control.Control.socketConnect();
-    }
-  }, {
-    key: "disconnect",
-    value: function disconnect() {
-      if (this.type !== 'stomp') {
-        if (this.debug) {
-          console.log('DEBUG: this is for stomp type');
-        }
-
-        return;
-      }
-
-      if (this.stompClient) {
-        this.stompClient.disconnect();
-        this.socketConnected = false;
-      }
-
-      if (this.debug) {
-        console.log('DEBUG: socket disconnected');
-      }
-    }
-    /*********************************************
-     * Events
-     *********************************************/
-
-  }, {
-    key: "onResize",
-    value: function onResize(width, height) {
-      if (this.debug) {
-        console.log("DEBUG: chart resized to width: " + width + " height: " + height);
-      }
-    }
-  }, {
-    key: "onLangChange",
-    value: function onLangChange(lang) {
-      if (this.debug) {
-        console.log("DEBUG: language changed to " + lang);
-      }
-    }
-  }, {
-    key: "onSymbolChange",
-    value: function onSymbolChange(symbol, symbolName) {
-      if (this.debug) {
-        console.log("DEBUG: symbol changed to " + symbol + " " + symbolName);
-      }
-    }
-  }, {
-    key: "onThemeChange",
-    value: function onThemeChange(theme) {
-      if (this.debug) {
-        console.log("DEBUG: themes changed to : " + theme);
-      }
-    }
-  }, {
-    key: "onRangeChange",
-    value: function onRangeChange(range) {
-      if (this.debug) {
-        console.log("DEBUG: range changed to " + range);
-      }
-    }
-  }, {
-    key: "convertCanvasToImage",
-    value: function convertCanvasToImage(canvas) {
-      var image = new Image();
-      image.src = canvas.toDataURL("image/png");
-      return image;
-    }
-  }, {
-    key: "registerMouseEvent",
-    value: function registerMouseEvent() {
-      (0, _jquery.default)(document).ready(function () {
-        function __resize() {
-          if (navigator.userAgent.indexOf('Firefox') >= 0) {
-            setTimeout(function () {
-              _control.Control.onSize(this.width, this.height);
-            }, 200);
-          } else {
-            _control.Control.onSize(this.width, this.height);
-          }
-        }
-
-        (0, _jquery.default)('#chart_overlayCanvas').bind("contextmenu", function (e) {
-          e.cancelBubble = true;
-          e.returnValue = false;
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        });
-        (0, _jquery.default)(".chart_container .chart_dropdown .chart_dropdown_t").mouseover(function () {
-          var container = (0, _jquery.default)(".chart_container");
-          var title = (0, _jquery.default)(this);
-          var dropdown = title.next();
-          var containerLeft = container.offset().left;
-          var titleLeft = title.offset().left;
-          var containerWidth = container.width();
-          var titleWidth = title.width();
-          var dropdownWidth = dropdown.width();
-          var d = (dropdownWidth - titleWidth) / 2 << 0;
-
-          if (titleLeft - d < containerLeft + 4) {
-            d = titleLeft - containerLeft - 4;
-          } else if (titleLeft + titleWidth + d > containerLeft + containerWidth - 4) {
-            d += titleLeft + titleWidth + d - (containerLeft + containerWidth - 4) + 19;
-          } else {
-            d += 4;
-          }
-
-          dropdown.css({
-            "margin-left": -d
-          });
-          title.addClass("chart_dropdown-hover");
-          dropdown.addClass("chart_dropdown-hover");
-        }).mouseout(function () {
-          (0, _jquery.default)(this).next().removeClass("chart_dropdown-hover");
-          (0, _jquery.default)(this).removeClass("chart_dropdown-hover");
-        });
-        (0, _jquery.default)(".chart_dropdown_data").mouseover(function () {
-          (0, _jquery.default)(this).addClass("chart_dropdown-hover");
-          (0, _jquery.default)(this).prev().addClass("chart_dropdown-hover");
-        }).mouseout(function () {
-          (0, _jquery.default)(this).prev().removeClass("chart_dropdown-hover");
-          (0, _jquery.default)(this).removeClass("chart_dropdown-hover");
-        });
-        /*  
-        $("#chart_btn_parameter_settings").click(function () {
-          $('#chart_parameter_settings').addClass("clicked");
-          $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-          $("#chart_parameter_settings").find("th").each(function () {
-              let name = $(this).html();
-              let index = 0;
-              let tmp = ChartSettings.get();
-              let value = tmp.indics[name];
-              $(this.nextElementSibling).find("input").each(function () {
-                  if (value !== null && index < value.length) {
-                      $(this).val(value[index]);
-                  }
-                  index++;
-              });
-          });
-        });
-               $("#close_settings").click(function () {
-          $('#chart_parameter_settings').removeClass("clicked");
-        });
-        */
-
-        (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").click(function () {
-          _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
-
-          (0, _jquery.default)(".chart_str_period").removeClass('selected');
-
-          if (Kline.instance.periodTitle && Kline.instance.periodTitle.length > 0) {
-            (0, _jquery.default)(".chart_str_period").text(Kline.instance.periodTitle);
-          }
-        });
-        (0, _jquery.default)("#chart_toolbar_periods_vert ul a").click(function () {
-          _control.Control.switchPeriod((0, _jquery.default)(this).parent().attr('name'));
-
-          var pdescribe = (0, _jquery.default)(this).text();
-
-          if (pdescribe != undefined && typeof pdescribe === "string") {
-            (0, _jquery.default)(".chart_str_period").text(pdescribe);
-            (0, _jquery.default)(".chart_str_period").addClass('selected');
-          }
-        });
-        (0, _jquery.default)(".market_chooser ul a").click(function () {
-          _control.Control.switchSymbol((0, _jquery.default)(this).attr('name'));
-        }); // $('#chart_show_tools')
-        //     .click(function () {
-        //         if ($(this).hasClass('selected')) {
-        //             Control.switchTools('off');
-        //         } else {
-        //             Control.switchTools('on');
-        //         }
-        //     });
-        // $("#chart_toolpanel .chart_toolpanel_button")
-        //     .click(function () {
-        //         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-        //         $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-        //         $(this).addClass("selected");
-        //         let name = $(this).children().attr('name');
-        //         Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
-        //     });
-
-        (0, _jquery.default)('#chart_show_indicator').click(function () {
-          if ((0, _jquery.default)(this).hasClass('selected')) {
-            _control.Control.switchIndic('off');
-          } else {
-            _control.Control.switchIndic('on');
-          }
-        });
-        (0, _jquery.default)("#chart_tabbar li a").click(function () {
-          (0, _jquery.default)("#chart_tabbar li a").removeClass('selected');
-          (0, _jquery.default)(this).addClass('selected');
-          var name = (0, _jquery.default)(this).attr('name');
-
-          var tmp = _chart_settings.ChartSettings.get();
-
-          tmp.charts.indics[1] = name;
-
-          _chart_settings.ChartSettings.save();
-
-          if (_templates.Template.displayVolume === false) _chart_manager.ChartManager.instance.getChart().setIndicator(1, name);else _chart_manager.ChartManager.instance.getChart().setIndicator(2, name);
-        });
-        (0, _jquery.default)("#chart_select_chart_style a").click(function () {
-          (0, _jquery.default)("#chart_select_chart_style a").removeClass('selected');
-          (0, _jquery.default)(this).addClass("selected");
-
-          var tmp = _chart_settings.ChartSettings.get();
-
-          tmp.charts.chartStyle = (0, _jquery.default)(this)[0].innerHTML;
-
-          _chart_settings.ChartSettings.save();
-
-          var mgr = _chart_manager.ChartManager.instance;
-          mgr.setChartStyle("frame0.k0", (0, _jquery.default)(this).html());
-          mgr.redraw();
-        });
-        (0, _jquery.default)('#chart_dropdown_themes li').click(function () {
-          (0, _jquery.default)('#chart_dropdown_themes li a').removeClass('selected');
-          var name = (0, _jquery.default)(this).attr('name');
-
-          if (name === 'chart_themes_dark') {
-            _control.Control.switchTheme('dark');
-          } else if (name === 'chart_themes_light') {
-            _control.Control.switchTheme('light');
-          }
-        });
-        (0, _jquery.default)("#chart_select_main_indicator a").click(function () {
-          (0, _jquery.default)("#chart_select_main_indicator a").removeClass('selected');
-          (0, _jquery.default)(this).addClass("selected");
-          var name = (0, _jquery.default)(this).attr('name');
-
-          var tmp = _chart_settings.ChartSettings.get();
-
-          tmp.charts.mIndic = name;
-
-          _chart_settings.ChartSettings.save();
-
-          var mgr = _chart_manager.ChartManager.instance;
-          if (!mgr.setMainIndicator("frame0.k0", name)) mgr.removeMainIndicator("frame0.k0");
-          mgr.redraw();
-        });
-        (0, _jquery.default)("#chart_main_indicator li").click(function () {
-          (0, _jquery.default)("#chart_main_indicator a").removeClass('selected');
-          (0, _jquery.default)(this).find('a').addClass("selected");
-          var name = (0, _jquery.default)(this).find('a').attr('name');
-
-          var tmp = _chart_settings.ChartSettings.get();
-
-          tmp.charts.mIndic = name;
-
-          _chart_settings.ChartSettings.save();
-
-          var mgr = _chart_manager.ChartManager.instance;
-          if (!mgr.setMainIndicator("frame0.k0", name)) mgr.removeMainIndicator("frame0.k0");
-          mgr.redraw();
-          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_data").removeClass("chart_dropdown-hover");
-          (0, _jquery.default)("#chart_main_indicator .chart_dropdown_t").removeClass("chart_dropdown-hover");
-        }); // $('#chart_toolbar_theme a').click(function () {
-        //     $('#chart_toolbar_theme a').removeClass('selected');
-        //     if ($(this).attr('name') === 'dark') {
-        //         Control.switchTheme('dark');
-        //     } else if ($(this).attr('name') === 'light') {
-        //         Control.switchTheme('light');
-        //     }
-        // });
-        // $('#chart_select_theme li a').click(function () {
-        //     $('#chart_select_theme a').removeClass('selected');
-        //     if ($(this).attr('name') === 'dark') {
-        //         Control.switchTheme('dark');
-        //     } else if ($(this).attr('name') === 'light') {
-        //         Control.switchTheme('light');
-        //     }
-        // });
-        // $('#chart_enable_tools li a').click(function () {
-        //     $('#chart_enable_tools a').removeClass('selected');
-        //     if ($(this).attr('name') === 'on') {
-        //         Control.switchTools('on');
-        //     } else if ($(this).attr('name') === 'off') {
-        //         Control.switchTools('off');
-        //     }
-        // });
-        // $('#chart_enable_indicator li a').click(function () {
-        //     $('#chart_enable_indicator a').removeClass('selected');
-        //     if ($(this).attr('name') === 'on') {
-        //         Control.switchIndic('on');
-        //     } else if ($(this).attr('name') === 'off') {
-        //         Control.switchIndic('off');
-        //     }
-        // });
-
-        /*
-        $('#chart_language_setting_div li a').click(function () {
-             $('#chart_language_setting_div a').removeClass('selected');
-            if ($(this).attr('name') === 'zh-cn') {
-                Control.chartSwitchLanguage('zh-cn');
-            } else if ($(this).attr('name') === 'en-us') {
-                 Control.chartSwitchLanguage('en-us');
-            } else if ($(this).attr('name') === 'zh-tw') {
-                Control.chartSwitchLanguage('zh-tw');
-            }
-        });*/
-
-        (0, _jquery.default)(document).keyup(function (e) {
-          if (e.keyCode === 46) {
-            _chart_manager.ChartManager.instance.deleteToolObject();
-
-            _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
-          }
-        });
-        (0, _jquery.default)("#clearCanvas").click(function () {
-          var pDPTool = _chart_manager.ChartManager.instance.getDataSource("frame0.k0");
-
-          var len = pDPTool.getToolObjectCount();
-
-          for (var i = 0; i < len; i++) {
-            pDPTool.delToolObject();
-          }
-
-          _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
-        }); // 支持移动mobile触摸屏
-
-        var chart_overlayCanvas = document.getElementById('chart_overlayCanvas');
-
-        chart_overlayCanvas.ontouchstart = function (e) {
-          Kline.instance.buttonDown = true;
-          var r = e.target.getBoundingClientRect();
-          var x = e.touches[0].clientX - r.left;
-          var y = e.touches[0].clientY - r.top;
-
-          _chart_manager.ChartManager.instance.onMouseDown("frame0", x, y);
-        };
-
-        chart_overlayCanvas.ontouchmove = function (e) {
-          var r = e.target.getBoundingClientRect();
-          var x = e.changedTouches[0].clientX - r.left;
-          var y = e.changedTouches[0].clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-
-          if (Kline.instance.buttonDown === true) {
-            mgr.onMouseMove("frame0", x, y, true);
-            mgr.redraw("All", false);
-          } else {
-            mgr.onMouseMove("frame0", x, y, false);
-            mgr.redraw("OverlayCanvas");
-          }
-        };
-
-        chart_overlayCanvas.ontouchend = function (e) {
-          Kline.instance.buttonDown = false;
-          var r = e.target.getBoundingClientRect();
-          var x = e.changedTouches[0].clientX - r.left;
-          var y = e.changedTouches[0].clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-          mgr.onMouseUp("frame0", x, y);
-          mgr.redraw("All");
-        };
-
-        chart_overlayCanvas.ontouchcancel = function (e) {
-          var r = e.target.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          var y = e.clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-          mgr.onMouseLeave("frame0", x, y, false);
-          mgr.redraw("OverlayCanvas");
-        };
-
-        (0, _jquery.default)("#chart_overlayCanvas").mousemove(function (e) {
-          var r = e.target.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          var y = e.clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-          var ratio = Kline.instance.deviceRatio;
-
-          if (Kline.instance.buttonDown === true) {
-            mgr.onMouseMove("frame0", x * ratio, y * ratio, true);
-            mgr.redraw("All", false);
-          } else {
-            mgr.onMouseMove("frame0", x * ratio, y * ratio, false);
-            mgr.redraw("OverlayCanvas");
-          }
-        }).mouseleave(function (e) {
-          var r = e.target.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          var y = e.clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-          var ratio = Kline.instance.deviceRatio;
-          mgr.onMouseLeave("frame0", x * ratio, y * ratio, false);
-          mgr.redraw("OverlayCanvas");
-        }).mouseup(function (e) {
-          if (e.which !== 1) {
-            return;
-          }
-
-          Kline.instance.buttonDown = false;
-          var r = e.target.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          var y = e.clientY - r.top;
-          var mgr = _chart_manager.ChartManager.instance;
-          var ratio = Kline.instance.deviceRatio;
-          mgr.onMouseUp("frame0", x * ratio, y * ratio);
-          mgr.redraw("All");
-        }).mousedown(function (e) {
-          if (e.which !== 1) {
-            _chart_manager.ChartManager.instance.deleteToolObject();
-
-            _chart_manager.ChartManager.instance.redraw('OverlayCanvas', false);
-
-            return;
-          }
-
-          Kline.instance.buttonDown = true;
-          var r = e.target.getBoundingClientRect();
-          var x = e.clientX - r.left;
-          var y = e.clientY - r.top;
-          var ratio = Kline.instance.deviceRatio;
-
-          _chart_manager.ChartManager.instance.onMouseDown("frame0", x * ratio, y * ratio);
-        });
-        (0, _jquery.default)("#chart_parameter_settings :input").change(function () {
-          var name = (0, _jquery.default)(this).attr("name");
-          var index = 0;
-          var valueArray = [];
-          var mgr = _chart_manager.ChartManager.instance;
-          (0, _jquery.default)("#chart_parameter_settings :input").each(function () {
-            if ((0, _jquery.default)(this).attr("name") === name) {
-              if ((0, _jquery.default)(this).val() !== "" && (0, _jquery.default)(this).val() !== null && (0, _jquery.default)(this).val() !== undefined) {
-                var i = parseInt((0, _jquery.default)(this).val());
-                valueArray.push(i);
-              }
-
-              index++;
-            }
-          });
-
-          if (valueArray.length !== 0) {
-            mgr.setIndicatorParameters(name, valueArray);
-            var value = mgr.getIndicatorParameters(name);
-            var cookieArray = [];
-            index = 0;
-            (0, _jquery.default)("#chart_parameter_settings :input").each(function () {
-              if ((0, _jquery.default)(this).attr("name") === name) {
-                if ((0, _jquery.default)(this).val() !== "" && (0, _jquery.default)(this).val() !== null && (0, _jquery.default)(this).val() !== undefined) {
-                  (0, _jquery.default)(this).val(value[index].getValue());
-                  cookieArray.push(value[index].getValue());
-                }
-
-                index++;
-              }
-            });
-
-            var tmp = _chart_settings.ChartSettings.get();
-
-            tmp.indics[name] = cookieArray;
-
-            _chart_settings.ChartSettings.save();
-
-            mgr.redraw('All', false);
-          }
-        });
-        (0, _jquery.default)("#chart_parameter_settings button").click(function () {
-          var name = (0, _jquery.default)(this).parents("tr").children("th").html();
-          var index = 0;
-
-          var value = _chart_manager.ChartManager.instance.getIndicatorParameters(name);
-
-          var valueArray = [];
-          (0, _jquery.default)(this).parent().prev().children('input').each(function () {
-            if (value !== null && index < value.length) {
-              (0, _jquery.default)(this).val(value[index].getDefaultValue());
-              valueArray.push(value[index].getDefaultValue());
-            }
-
-            index++;
-          });
-
-          _chart_manager.ChartManager.instance.setIndicatorParameters(name, valueArray);
-
-          var tmp = _chart_settings.ChartSettings.get();
-
-          tmp.indics[name] = valueArray;
-
-          _chart_settings.ChartSettings.save();
-
-          _chart_manager.ChartManager.instance.redraw('All', false);
-        });
-        (0, _jquery.default)('#kline_container').on('click', '#sizeIcon', function () {
-          if (Kline.instance.debug) {
-            console.log("onMaximizeWindow");
-          }
-
-          Kline.instance.isSized = !Kline.instance.isSized;
-
-          if (Kline.instance.isSized) {
-            debugger;
-
-            var _chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
-
-            (0, _jquery.default)('.chart_container').appendTo(_chart_container_fullscreen);
-            (0, _jquery.default)('#chart_container_fullscreen').css('display', "inline-block");
-            (0, _jquery.default)('.trade_container').css('display', "none"); // 修改画布
-          } else {
-            var _chart_container_fullscreen2 = (0, _jquery.default)('#chart_container_fullscreen');
-
-            var chart_trade_quotation = (0, _jquery.default)('#chart_trade_quotation');
-            chart_trade_quotation.after((0, _jquery.default)('.chart_container'));
-            (0, _jquery.default)('#chart_container_fullscreen').css('display', "none");
-            (0, _jquery.default)('.trade_container').css('display', "block");
-          }
-
-          var chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
-          debugger;
-          (0, _jquery.default)('.chart_container').appendTo(chart_container_fullscreen);
-          (0, _jquery.default)('#chart_container_fullscreen').css('display', "inline-block");
-          return;
-          Kline.instance.isSized = !Kline.instance.isSized;
-
-          if (Kline.instance.isSized) {
-            (0, _jquery.default)(Kline.instance.element).css({
-              position: 'fixed',
-              left: '0',
-              right: '0',
-              top: '0',
-              bottom: '0',
-              width: '100%',
-              height: '100%',
-              zIndex: '10000'
-            });
-
-            _control.Control.onSize();
-
-            (0, _jquery.default)('html,body').css({
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden'
-            });
-          } else {
-            (0, _jquery.default)(Kline.instance.element).attr('style', '');
-            (0, _jquery.default)('html,body').attr('style', '');
-
-            _control.Control.onSize(Kline.instance.width, Kline.instance.height);
-
-            (0, _jquery.default)(Kline.instance.element).css({
-              visibility: 'visible',
-              height: Kline.instance.height + 'px'
-            });
-          }
-        });
-        (0, _jquery.default)('body').on('click', '#tabList li', function (element) {
-          var currentTarget = (0, _jquery.default)(element.currentTarget),
-              showTabContent = currentTarget.data().show;
-          (0, _jquery.default)("#" + showTabContent).show();
-          (0, _jquery.default)("#" + showTabContent).siblings("div").hide();
-          currentTarget.addClass("current");
-          currentTarget.siblings().removeClass("current");
-        });
-      });
-    }
-  }]);
-
-  return Kline;
-}();
-
-exports.default = Kline;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ChartSettings = void 0;
-
-var _chart_manager = __webpack_require__(0);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var ChartSettings =
-/*#__PURE__*/
-function () {
-  function ChartSettings() {
-    _classCallCheck(this, ChartSettings);
-  }
-
-  _createClass(ChartSettings, null, [{
-    key: "checkVersion",
-    value: function checkVersion() {
-      if (ChartSettings._data.ver < 2) {
-        ChartSettings._data.ver = 2;
-        var charts = ChartSettings._data.charts;
-        charts.period_weight = {};
-        charts.period_weight['line'] = 8;
-        charts.period_weight['1min'] = 7;
-        charts.period_weight['5min'] = 6;
-        charts.period_weight['15min'] = 5;
-        charts.period_weight['30min'] = 4;
-        charts.period_weight['1hour'] = 3;
-        charts.period_weight['1day'] = 2;
-        charts.period_weight['1week'] = 1;
-        charts.period_weight['3min'] = 0;
-        charts.period_weight['2hour'] = 0;
-        charts.period_weight['4hour'] = 0;
-        charts.period_weight['6hour'] = 0;
-        charts.period_weight['12hour'] = 0;
-        charts.period_weight['3day'] = 0;
-      }
-
-      if (ChartSettings._data.ver < 3) {
-        ChartSettings._data.ver = 3;
-        var _charts = ChartSettings._data.charts;
-        _charts.areaHeight = [];
-      }
-    }
-  }, {
-    key: "get",
-    value: function get() {
-      if (ChartSettings._data === undefined) {
-        ChartSettings.init();
-        ChartSettings.load();
-        ChartSettings.checkVersion();
-      }
-
-      return ChartSettings._data;
-    }
-  }, {
-    key: "init",
-    value: function init() {
-      var _indic_param = {};
-      var _name = ['MA', 'EMA', 'VOLUME', 'MACD', 'KDJ', 'StochRSI', 'RSI', 'DMI', 'OBV', 'BOLL', 'DMA', 'TRIX', 'BRAR', 'VR', 'EMV', 'WR', 'ROC', 'MTM', 'PSY'];
-
-      for (var i = 0; i < _name.length; i++) {
-        var _value = _chart_manager.ChartManager.instance.createIndicatorAndRange('', _name[i], true);
-
-        if (_value === null) continue;
-        _indic_param[_name[i]] = [];
-
-        var param = _value.indic.getParameters();
-
-        for (var j = 0; j < param.length; j++) {
-          _indic_param[_name[i]].push(param[j]);
-        }
-      }
-
-      var _chart_style = 'CandleStick';
-      var _m_indic = 'MA';
-      var _indic = ['VOLUME', 'MACD'];
-      var _range = '15m';
-      var _frame = {};
-      _frame.chartStyle = _chart_style;
-      _frame.mIndic = _m_indic;
-      _frame.indics = _indic;
-      _frame.indicsStatus = 'open';
-      _frame.period = _range;
-      ChartSettings._data = {
-        ver: 1,
-        charts: _frame,
-        indics: _indic_param,
-        theme: "Dark"
-      };
-      ChartSettings.checkVersion();
-    }
-  }, {
-    key: "load",
-    value: function load() {
-      if (document.cookie.length <= 0) return;
-      var start = document.cookie.indexOf("chartSettings=");
-      if (start < 0) return;
-      start += "chartSettings=".length;
-      var end = document.cookie.indexOf(";", start);
-      if (end < 0) end = document.cookie.length;
-      var json = unescape(document.cookie.substring(start, end));
-      ChartSettings._data = JSON.parse(json);
-    }
-  }, {
-    key: "save",
-    value: function save() {
-      var exdate = new Date();
-      exdate.setDate(exdate.getDate() + 2);
-      document.cookie = "chartSettings=" + escape(JSON.stringify(ChartSettings._data)) + ";expires=" + exdate.toGMTString();
-    }
-  }]);
-
-  return ChartSettings;
-}();
-
-exports.ChartSettings = ChartSettings;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Util = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Util =
-/*#__PURE__*/
-function () {
-  function Util() {
-    _classCallCheck(this, Util);
-  }
-
-  _createClass(Util, null, [{
-    key: "fromFloat",
-    value: function fromFloat(v, fractionDigits) {
-      var text = v.toFixed(fractionDigits);
-
-      for (var i = text.length - 1; i >= 0; i--) {
-        if (text[i] === '.') return text.substring(0, i);
-        if (text[i] !== '0') return text.substring(0, i + 1);
-      }
-    }
-  }, {
-    key: "formatTime",
-    value: function formatTime(v) {
-      return v < 10 ? "0" + v.toString() : v.toString();
-    }
-  }, {
-    key: "isInstance",
-    value: function isInstance(obj, clazz) {
-      if (obj === null || obj === undefined) {
-        return false;
-      }
-
-      return obj instanceof clazz;
-    }
-  }]);
-
-  return Util;
-}();
-
-exports.Util = Util;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.LightTheme = exports.DarkTheme = exports.Theme = void 0;
-
-var _kline = _interopRequireDefault(__webpack_require__(3));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Theme =
-/*#__PURE__*/
-function () {
-  function Theme() {
-    _classCallCheck(this, Theme);
-
-    this.getFont = function (which) {
-      return this._fonts[which];
-    };
-  }
-
-  _createClass(Theme, [{
-    key: "getColor",
-    value: function getColor(which) {
-      return this._colors[which];
-    }
-  }]);
-
-  return Theme;
-}();
-
-exports.Theme = Theme;
-Theme.theme_color_id = 0;
-Theme.theme_font_id = 0;
-Theme.Color = {
-  Positive: Theme.theme_color_id++,
-  Negative: Theme.theme_color_id++,
-  PositiveDark: Theme.theme_color_id++,
-  NegativeDark: Theme.theme_color_id++,
-  Unchanged: Theme.theme_color_id++,
-  Background: Theme.theme_color_id++,
-  Cursor: Theme.theme_color_id++,
-  RangeMark: Theme.theme_color_id++,
-  Indicator0: Theme.theme_color_id++,
-  Indicator1: Theme.theme_color_id++,
-  Indicator2: Theme.theme_color_id++,
-  Indicator3: Theme.theme_color_id++,
-  Indicator4: Theme.theme_color_id++,
-  Indicator5: Theme.theme_color_id++,
-  Grid0: Theme.theme_color_id++,
-  Grid1: Theme.theme_color_id++,
-  Grid2: Theme.theme_color_id++,
-  Grid3: Theme.theme_color_id++,
-  Grid4: Theme.theme_color_id++,
-  TextPositive: Theme.theme_color_id++,
-  TextNegative: Theme.theme_color_id++,
-  Text0: Theme.theme_color_id++,
-  Text1: Theme.theme_color_id++,
-  Text2: Theme.theme_color_id++,
-  Text3: Theme.theme_color_id++,
-  Text4: Theme.theme_color_id++,
-  LineColorNormal: Theme.theme_color_id++,
-  LineColorSelected: Theme.theme_color_id++,
-  CircleColorFill: Theme.theme_color_id++,
-  CircleColorStroke: Theme.theme_color_id++
-};
-Theme.Font = {
-  Default: Theme.theme_font_id++
-};
-
-var DarkTheme =
-/*#__PURE__*/
-function (_Theme) {
-  _inherits(DarkTheme, _Theme);
-
-  function DarkTheme() {
-    var _this;
-
-    _classCallCheck(this, DarkTheme);
-
-    _this = _possibleConstructorReturn(this, (DarkTheme.__proto__ || Object.getPrototypeOf(DarkTheme)).call(this));
-    _this._colors = [];
-
-    if (_kline.default.instance.reverseColor) {
-      _this._colors[Theme.Color.Positive] = "#990e0e";
-      _this._colors[Theme.Color.Negative] = "#19b34c";
-      _this._colors[Theme.Color.PositiveDark] = "#3b0e08";
-      _this._colors[Theme.Color.NegativeDark] = "#004718";
-    } else {
-      _this._colors[Theme.Color.Positive] = "#19b34c";
-      _this._colors[Theme.Color.Negative] = "#990e0e";
-      _this._colors[Theme.Color.PositiveDark] = "#004718";
-      _this._colors[Theme.Color.NegativeDark] = "#3b0e08";
-    }
-
-    _this._colors[Theme.Color.Unchanged] = "#fff";
-    _this._colors[Theme.Color.Background] = "#0a0a0a";
-    _this._colors[Theme.Color.Cursor] = "#aaa";
-    _this._colors[Theme.Color.RangeMark] = "#f9ee30";
-    _this._colors[Theme.Color.Indicator0] = "#ddd";
-    _this._colors[Theme.Color.Indicator1] = "#f9ee30";
-    _this._colors[Theme.Color.Indicator2] = "#f600ff";
-    _this._colors[Theme.Color.Indicator3] = "#6bf";
-    _this._colors[Theme.Color.Indicator4] = "#a5cf81";
-    _this._colors[Theme.Color.Indicator5] = "#e18b89";
-    _this._colors[Theme.Color.Grid0] = "#333";
-    _this._colors[Theme.Color.Grid1] = "#444";
-    _this._colors[Theme.Color.Grid2] = "#666";
-    _this._colors[Theme.Color.Grid3] = "#888";
-    _this._colors[Theme.Color.Grid4] = "#aaa";
-    _this._colors[Theme.Color.TextPositive] = "#1bd357";
-    _this._colors[Theme.Color.TextNegative] = "#ff6f5e";
-    _this._colors[Theme.Color.Text0] = "#444";
-    _this._colors[Theme.Color.Text1] = "#666";
-    _this._colors[Theme.Color.Text2] = "#888";
-    _this._colors[Theme.Color.Text3] = "#aaa";
-    _this._colors[Theme.Color.Text4] = "#ccc";
-    _this._colors[Theme.Color.LineColorNormal] = "#a6a6a6";
-    _this._colors[Theme.Color.LineColorSelected] = "#ffffff";
-    _this._colors[Theme.Color.CircleColorFill] = "#000000";
-    _this._colors[Theme.Color.CircleColorStroke] = "#ffffff";
-    _this._fonts = [];
-    var size = 10 * devicePixelRatio;
-    _this._fonts[Theme.Font.Default] = size + "px Tahoma";
-    return _this;
-  }
-
-  return DarkTheme;
-}(Theme);
-
-exports.DarkTheme = DarkTheme;
-
-var LightTheme =
-/*#__PURE__*/
-function (_Theme2) {
-  _inherits(LightTheme, _Theme2);
-
-  function LightTheme() {
-    var _this2;
-
-    _classCallCheck(this, LightTheme);
-
-    _this2 = _possibleConstructorReturn(this, (LightTheme.__proto__ || Object.getPrototypeOf(LightTheme)).call(this));
-    _this2._colors = [];
-
-    if (_kline.default.instance.reverseColor) {
-      _this2._colors[Theme.Color.Positive] = "#db5542";
-      _this2._colors[Theme.Color.Negative] = "#53b37b";
-      _this2._colors[Theme.Color.PositiveDark] = "#ffadaa";
-      _this2._colors[Theme.Color.NegativeDark] = "#66d293";
-    } else {
-      _this2._colors[Theme.Color.Positive] = "#53b37b";
-      _this2._colors[Theme.Color.Negative] = "#db5542";
-      _this2._colors[Theme.Color.PositiveDark] = "#66d293";
-      _this2._colors[Theme.Color.NegativeDark] = "#ffadaa";
-    }
-
-    _this2._colors[Theme.Color.Unchanged] = "#fff";
-    _this2._colors[Theme.Color.Background] = "#fff";
-    _this2._colors[Theme.Color.Cursor] = "#aaa";
-    _this2._colors[Theme.Color.RangeMark] = "#f27935";
-    _this2._colors[Theme.Color.Indicator0] = "#2fd2b2";
-    _this2._colors[Theme.Color.Indicator1] = "#ffb400";
-    _this2._colors[Theme.Color.Indicator2] = "#e849b9";
-    _this2._colors[Theme.Color.Indicator3] = "#1478c8";
-    _this2._colors[Theme.Color.Grid0] = "#eee";
-    _this2._colors[Theme.Color.Grid1] = "#afb1b3";
-    _this2._colors[Theme.Color.Grid2] = "#ccc";
-    _this2._colors[Theme.Color.Grid3] = "#bbb";
-    _this2._colors[Theme.Color.Grid4] = "#aaa";
-    _this2._colors[Theme.Color.TextPositive] = "#53b37b";
-    _this2._colors[Theme.Color.TextNegative] = "#db5542";
-    _this2._colors[Theme.Color.Text0] = "#ccc";
-    _this2._colors[Theme.Color.Text1] = "#aaa";
-    _this2._colors[Theme.Color.Text2] = "#888";
-    _this2._colors[Theme.Color.Text3] = "#666";
-    _this2._colors[Theme.Color.Text4] = "#444";
-    _this2._colors[Theme.Color.LineColorNormal] = "#8c8c8c";
-    _this2._colors[Theme.Color.LineColorSelected] = "#393c40";
-    _this2._colors[Theme.Color.CircleColorFill] = "#ffffff";
-    _this2._colors[Theme.Color.CircleColorStroke] = "#393c40";
-    _this2._fonts = [];
-    var devicePixelRatio = window.devicePixelRatio;
-    var size = 10 * devicePixelRatio;
-    _this2._fonts[Theme.Font.Default] = size + "px Tahoma";
-    return _this2;
-  }
-
-  return LightTheme;
-}(Theme);
-
-exports.LightTheme = LightTheme;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.TemplateMeasuringHandler = exports.DefaultTemplate = exports.Template = void 0;
-
-var _chart_manager = __webpack_require__(0);
-
-var _chart_settings = __webpack_require__(4);
-
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
-
-var data_providers = _interopRequireWildcard(__webpack_require__(12));
-
-var areas = _interopRequireWildcard(__webpack_require__(13));
-
-var plotters = _interopRequireWildcard(__webpack_require__(11));
-
-var _timeline = __webpack_require__(23);
-
-var _cname = __webpack_require__(15);
-
-var layouts = _interopRequireWildcard(__webpack_require__(24));
-
-var themes = _interopRequireWildcard(__webpack_require__(6));
-
-var ranges = _interopRequireWildcard(__webpack_require__(18));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Template =
-/*#__PURE__*/
-function () {
-  function Template() {
-    _classCallCheck(this, Template);
-  }
-
-  _createClass(Template, null, [{
-    key: "createCandlestickDataSource",
-    value: function createCandlestickDataSource(dsAlias) {
-      return new data_sources.MainDataSource(dsAlias);
-    }
-  }, {
-    key: "createDataSource",
-    value: function createDataSource(dsName, dsAlias, createFunc) {
-      var mgr = _chart_manager.ChartManager.instance;
-      if (mgr.getCachedDataSource(dsAlias) === null) mgr.setCachedDataSource(dsAlias, createFunc(dsAlias));
-      mgr.setCurrentDataSource(dsName, dsAlias);
-      mgr.updateData(dsName, null);
-    }
-  }, {
-    key: "createTableComps",
-    value: function createTableComps(dsName) {
-      this.createMainChartComps(dsName);
-
-      if (this.displayVolume) {
-        this.createIndicatorChartComps(dsName, "VOLUME");
-      }
-
-      this.createTimelineComps(dsName);
-    }
-  }, {
-    key: "createMainChartComps",
-    value: function createMainChartComps(dsName) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var tableLayout = mgr.getArea(dsName + ".charts");
-      var areaName = dsName + ".main";
-      var rangeAreaName = areaName + "Range";
-      var area = new areas.MainArea(areaName);
-      mgr.setArea(areaName, area);
-      tableLayout.addArea(area);
-      var rangeArea = new areas.MainRangeArea(rangeAreaName);
-      mgr.setArea(rangeAreaName, rangeArea);
-      tableLayout.addArea(rangeArea);
-      var dp = new data_providers.MainDataProvider(areaName + ".main");
-      mgr.setDataProvider(dp.getName(), dp);
-      mgr.setMainIndicator(dsName, "MA");
-      var range = new ranges.MainRange(areaName);
-      mgr.setRange(range.getName(), range);
-      range.setPaddingTop(28);
-      range.setPaddingBottom(12);
-      var plotter = new plotters.MainAreaBackgroundPlotter(areaName + ".background");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CGridPlotter(areaName + ".grid");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CandlestickPlotter(areaName + ".main");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.MinMaxPlotter(areaName + ".decoration");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.MainInfoPlotter(areaName + ".info");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.SelectionPlotter(areaName + ".selection");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CDynamicLinePlotter(areaName + ".tool");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
-      mgr.setPlotter(plotter.getName(), plotter); // plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
-      // mgr.setPlotter(plotter.getName(), plotter);
-
-      plotter = new plotters.RangePlotter(areaName + "Range.main");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.LastClosePlotter(areaName + "Range.decoration");
-      mgr.setPlotter(plotter.getName(), plotter);
-    }
-  }, {
-    key: "createIndicatorChartComps",
-    value: function createIndicatorChartComps(dsName, indicName) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var tableLayout = mgr.getArea(dsName + ".charts");
-      var areaName = dsName + ".indic" + tableLayout.getNextRowId();
-      var rangeAreaName = areaName + "Range";
-      var area = new areas.IndicatorArea(areaName);
-      mgr.setArea(areaName, area);
-      tableLayout.addArea(area);
-      var rowIndex = tableLayout.getAreaCount() >> 1;
-
-      var heights = _chart_settings.ChartSettings.get().charts.areaHeight;
-
-      if (heights.length > rowIndex) {
-        var a, i;
-
-        for (i = 0; i < rowIndex; i++) {
-          a = tableLayout.getAreaAt(i << 1);
-          a.setTop(0);
-          a.setBottom(heights[i]);
-        }
-
-        area.setTop(0);
-        area.setBottom(heights[rowIndex]);
-      }
-
-      var rangeArea = new areas.IndicatorRangeArea(rangeAreaName);
-      mgr.setArea(rangeAreaName, rangeArea);
-      tableLayout.addArea(rangeArea);
-      var dp = new data_providers.IndicatorDataProvider(areaName + ".secondary");
-      mgr.setDataProvider(dp.getName(), dp);
-
-      if (mgr.setIndicator(areaName, indicName) === false) {
-        mgr.removeIndicator(areaName);
-        return;
-      }
-
-      var plotter = new plotters.MainAreaBackgroundPlotter(areaName + ".background");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CGridPlotter(areaName + ".grid");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.IndicatorPlotter(areaName + ".secondary");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.IndicatorInfoPlotter(areaName + ".info");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.SelectionPlotter(areaName + ".selection");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.RangePlotter(areaName + "Range.main");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");
-      mgr.setPlotter(plotter.getName(), plotter);
-    }
-  }, {
-    key: "createTimelineComps",
-    value: function createTimelineComps(dsName) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var plotter;
-      var timeline = new _timeline.Timeline(dsName);
-      mgr.setTimeline(timeline.getName(), timeline);
-      plotter = new plotters.TimelineAreaBackgroundPlotter(dsName + ".timeline.background");
-      mgr.setPlotter(plotter.getName(), plotter); // plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
-      // mgr.setPlotter(plotter.getName(), plotter);
-
-      plotter = new plotters.TimelineSelectionPlotter(dsName + ".timeline.selection");
-      mgr.setPlotter(plotter.getName(), plotter);
-    }
-  }, {
-    key: "createLiveOrderComps",
-    value: function createLiveOrderComps(dsName) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var plotter;
-      plotter = new plotters.BackgroundPlotter(dsName + ".main.background");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CLiveOrderPlotter(dsName + ".main.main");
-      mgr.setPlotter(plotter.getName(), plotter);
-    }
-  }, {
-    key: "createLiveTradeComps",
-    value: function createLiveTradeComps(dsName) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var plotter;
-      plotter = new plotters.BackgroundPlotter(dsName + ".main.background");
-      mgr.setPlotter(plotter.getName(), plotter);
-      plotter = new plotters.CLiveTradePlotter(dsName + ".main.main");
-      mgr.setPlotter(plotter.getName(), plotter);
-    }
-  }]);
-
-  return Template;
-}();
-
-exports.Template = Template;
-Template.displayVolume = false;
-
-var DefaultTemplate =
-/*#__PURE__*/
-function (_Template) {
-  _inherits(DefaultTemplate, _Template);
-
-  function DefaultTemplate() {
-    _classCallCheck(this, DefaultTemplate);
-
-    return _possibleConstructorReturn(this, (DefaultTemplate.__proto__ || Object.getPrototypeOf(DefaultTemplate)).apply(this, arguments));
-  }
-
-  _createClass(DefaultTemplate, null, [{
-    key: "loadTemplate",
-    value: function loadTemplate(dsName, dsAlias) {
-      var mgr = _chart_manager.ChartManager.instance;
-
-      var settings = _chart_settings.ChartSettings.get();
-
-      var frameName = new _cname.CName(dsName).getCompAt(0);
-      mgr.unloadTemplate(frameName);
-      this.createDataSource(dsName, dsAlias, this.createCandlestickDataSource);
-      var frame = new layouts.DockableLayout(frameName);
-      mgr.setFrame(frame.getName(), frame);
-      mgr.setArea(frame.getName(), frame);
-      frame.setGridColor(themes.Theme.Color.Grid1);
-      var area = new areas.TimelineArea(dsName + ".timeline");
-      mgr.setArea(area.getName(), area);
-      frame.addArea(area);
-      area.setDockStyle(areas.ChartArea.DockStyle.Bottom);
-      area.Measuring.addHandler(area, TemplateMeasuringHandler.onMeasuring);
-      var tableLayout = new layouts.TableLayout(dsName + ".charts");
-      mgr.setArea(tableLayout.getName(), tableLayout);
-      tableLayout.setDockStyle(areas.ChartArea.DockStyle.Fill);
-      frame.addArea(tableLayout);
-      this.createTableComps(dsName);
-      mgr.setThemeName(frameName, settings.theme);
-      return mgr;
-    }
-  }]);
-
-  return DefaultTemplate;
-}(Template);
-
-exports.DefaultTemplate = DefaultTemplate;
-
-var TemplateMeasuringHandler =
-/*#__PURE__*/
-function () {
-  function TemplateMeasuringHandler() {
-    _classCallCheck(this, TemplateMeasuringHandler);
-  }
-
-  _createClass(TemplateMeasuringHandler, null, [{
-    key: "onMeasuring",
-    value: function onMeasuring(sender, args) {
-      var width = args.Width;
-      var height = args.Height;
-      var areaName = sender.getNameObject().getCompAt(2);
-
-      if (areaName === "timeline") {
-        sender.setMeasuredDimension(width, 22);
-      }
-    }
-  }]);
-
-  return TemplateMeasuringHandler;
-}();
-
-exports.TemplateMeasuringHandler = TemplateMeasuringHandler;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Control = void 0;
-
-var _kline = _interopRequireDefault(__webpack_require__(3));
-
-var _kline_trade = __webpack_require__(14);
-
-var _chart_manager = __webpack_require__(0);
-
-var _chart_settings = __webpack_require__(4);
-
-var _templates = __webpack_require__(7);
-
-var _mevent = __webpack_require__(17);
-
-var _jquery = _interopRequireDefault(__webpack_require__(19));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Control =
-/*#__PURE__*/
-function () {
-  function Control() {
-    _classCallCheck(this, Control);
-  }
-
-  _createClass(Control, null, [{
-    key: "klineAbortRequest",
-    value: function klineAbortRequest() {
-      //  debugger
-      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
-        if (_kline.default.instance.G_KLINE_HTTP_REQUEST && _kline.default.instance.G_KLINE_HTTP_REQUEST.readyState !== 4) {
-          _kline.default.instance.G_KLINE_HTTP_REQUEST.abort();
-        }
-      }
-    }
-  }, {
-    key: "tradesAbortRequest",
-    value: function tradesAbortRequest() {
-      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
-        if (_kline.default.instance.G_TRADES_HTTP_REQUEST && _kline.default.instance.G_TRADES_HTTP_REQUEST.readyState !== 4) {
-          _kline.default.instance.G_TRADES_HTTP_REQUEST.abort();
-        }
-      }
-    }
-  }, {
-    key: "depthAbortRequest",
-    value: function depthAbortRequest() {
-      if (_kline.default.instance.type !== "stomp" || !_kline.default.instance.stompClient) {
-        if (_kline.default.instance.G_DEPTH_HTTP_REQUEST && _kline.default.instance.G_DEPTH_HTTP_REQUEST.readyState !== 4) {
-          _kline.default.instance.G_DEPTH_HTTP_REQUEST.abort();
-        }
-      }
-    }
-  }, {
-    key: "tradesRequestData",
-    value: function tradesRequestData() {
-      Control.tradesAbortRequest();
-      window.clearTimeout(_kline.default.instance.tradesTimer);
-
-      if (_kline.default.instance.paused) {
-        return;
-      }
-
-      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
-        Control.tradesRequestOverStomp();
-      } else {
-        Control.tradesRequestOverHttp();
-      }
-    }
-  }, {
-    key: "klineRequestData",
-    value: function klineRequestData(showLoading) {
-      debugger;
-      Control.klineAbortRequest();
-      window.clearTimeout(_kline.default.instance.klineTimer);
-
-      if (_kline.default.instance.paused) {
-        return;
-      }
-
-      if (showLoading === true) {
-        (0, _jquery.default)("#chart_loading").addClass("activated");
-      }
-
-      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
-        Control.klineRequestOverStomp();
-      } else {
-        Control.klineRequestOverHttp();
-      }
-    }
-  }, {
-    key: "depthRequestData",
-    value: function depthRequestData(showLoading) {
-      Control.depthAbortRequest();
-      window.clearTimeout(_kline.default.instance.depthTimer);
-
-      if (_kline.default.instance.paused) {
-        return;
-      }
-
-      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient) {
-        Control.depthRequestOverStomp();
-      } else {
-        Control.depthRequestOverHttp();
-      }
-    }
-  }, {
-    key: "klineRequestOverStomp",
-    value: function klineRequestOverStomp() {}
-  }, {
-    key: "klineRequestOverHttp",
-    value: function klineRequestOverHttp() {
-      var settings = _chart_settings.ChartSettings.get();
-
-      var per = _kline.default.instance.tagMapPeriod[settings.charts.period];
-
-      if (!per || !_kline.default.instance.symbol) {
-        return;
-      }
-
-      var reqParams = {};
-
-      if (_kline.default.instance.klineMarketName && _kline.default.instance.symbol) {
-        reqParams[_kline.default.instance.klineMarketName] = _kline.default.instance.symbol;
-      }
-
-      if (_kline.default.instance.klineTypeName && Control.requestDuration[per]) {
-        reqParams[_kline.default.instance.klineTypeName] = Control.requestDuration[per];
-      }
-
-      if (_kline.default.instance.klineSizeName && _kline.default.instance.klineSizeValue) {
-        reqParams[_kline.default.instance.klineSizeName] = _kline.default.instance.klineSizeValue;
-      }
-
-      if (_kline.default.instance.klineSinceName && _kline.default.instance.klineSinceValue) {
-        reqParams[_kline.default.instance.klineSinceName] = _kline.default.instance.klineSinceValue;
-      }
-
-      (0, _jquery.default)(document).ready(_kline.default.instance.G_KLINE_HTTP_REQUEST = _jquery.default.ajax({
-        type: "GET",
-        url: _kline.default.instance.klineBaseUrl,
-        dataType: 'json',
-        data: reqParams,
-        timeout: 30000,
-        created: Date.now(),
-        beforeSend: function beforeSend() {
-          this.range = _kline.default.instance.range;
-          this.symbol = _kline.default.instance.symbol;
-        },
-        success: function success(res) {
-          if (_kline.default.instance.G_KLINE_HTTP_REQUEST) {
-            Control.klineRequestSuccessHandler(res);
-          }
-        },
-        error: function error(xhr, textStatus, errorThrown) {
-          if (_kline.default.instance.debug) {
-            console.log(xhr);
-          }
-
-          if (xhr.status === 200 && xhr.readyState === 4) {
-            return;
-          }
-
-          _kline.default.instance.klineTimer = setTimeout(function () {
-            Control.klineRequestData(true);
-          }, _kline.default.instance.klineIntervalTime);
-        },
-        complete: function complete() {
-          _kline.default.instance.G_KLINE_HTTP_REQUEST = null;
-        }
-      }));
-    }
-  }, {
-    key: "klineRequestSuccessHandler",
-    value: function klineRequestSuccessHandler(res) {
-      debugger;
-
-      if (!res || !res.data || !Array.isArray(res.data)) {
-        if (_kline.default.instance.type === 'poll') {
-          _kline.default.instance.klineTimer = setTimeout(function () {
-            Control.klineRequestData(true);
-          }, _kline.default.instance.klineIntervalTime);
-        }
-
-        return;
-      }
-
-      var chart = _chart_manager.ChartManager.instance.getChart();
-
-      chart.setTitle();
-      _kline.default.instance.klineData = eval(res.data);
-
-      var updateDataRes = _kline.default.instance.chartMgr.updateData("frame0.k0", _kline.default.instance.klineData);
-
-      _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
-      var intervalTime = _kline.default.instance.klineIntervalTime < _kline.default.instance.range ? _kline.default.instance.klineIntervalTime : _kline.default.instance.range;
-      (0, _jquery.default)("#chart_loading").removeClass("activated");
-
-      if (!updateDataRes) {
-        if (_kline.default.instance.type === 'poll') {
-          _kline.default.instance.klineTimer = setTimeout(function () {
-            Control.klineRequestData(true);
-          }, intervalTime);
-        }
-
-        return;
-      }
-
-      if (_kline.default.instance.type === 'poll') {
-        _kline.default.instance.klineTimer = setTimeout(Control.klineReqOnTwoSecondThread, intervalTime);
-      }
-
-      _chart_manager.ChartManager.instance.redraw('MainCanvas', false);
-    }
-  }, {
-    key: "klineReqOnTwoSecondThread",
-    value: function klineReqOnTwoSecondThread() {
-      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
-
-      if (f === -1) {
-        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
-      } else {
-        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
-      }
-
-      Control.klineRequestData();
-    }
-  }, {
-    key: "depthRequestOverStomp",
-    value: function depthRequestOverStomp() {}
-  }, {
-    key: "depthRequestOverHttp",
-    value: function depthRequestOverHttp() {
-      var depthRequestParams = {};
-
-      if (_kline.default.instance.depthMarketName && _kline.default.instance.symbol) {
-        depthRequestParams[_kline.default.instance.depthMarketName] = _kline.default.instance.symbol;
-      }
-
-      (0, _jquery.default)(document).ready(_kline.default.instance.G_DEPTH_HTTP_REQUEST = _jquery.default.ajax({
-        type: "GET",
-        url: _kline.default.instance.depthBaseUrl,
-        dataType: 'json',
-        data: depthRequestParams,
-        timeout: 30000,
-        created: Date.now(),
-        beforeSend: function beforeSend() {
-          this.range = _kline.default.instance.range;
-          this.symbol = _kline.default.instance.symbol;
-        },
-        success: function success(res) {
-          if (_kline.default.instance.G_DEPTH_HTTP_REQUEST) {
-            Control.depthRequestSuccessHandler(res);
-          }
-        },
-        error: function error(xhr, textStatus, errorThrown) {
-          if (_kline.default.instance.debug) {
-            console.log(xhr);
-          }
-
-          if (xhr.status === 200 && xhr.readyState === 4) {
-            return;
-          }
-
-          _kline.default.instance.depthTimer = setTimeout(function () {
-            Control.depthRequestData(false);
-          }, _kline.default.instance.depthIntervalTime);
-        },
-        complete: function complete() {
-          _kline.default.instance.G_DEPTH_HTTP_REQUEST = null;
-        }
-      }));
-    }
-  }, {
-    key: "depthRequestSuccessHandler",
-    value: function depthRequestSuccessHandler(res) {
-      if (!res || !res.asks || !Array.isArray(res.asks) || !res.bids || !Array.isArray(res.bids)) {
-        if (_kline.default.instance.type === 'poll') {
-          _kline.default.instance.depthTimer = setTimeout(function () {
-            Control.depthRequestData(true);
-          }, _kline.default.instance.depthIntervalTime);
-        }
-
-        return;
-      }
-
-      _kline.default.instance.depthData = eval(res);
-      var intervalTime = _kline.default.instance.depthIntervalTime;
-
-      if (_kline.default.instance.depthData) {
-        _kline_trade.KlineTrade.instance.updateDepth(_kline.default.instance.depthData);
-      }
-
-      if (_kline.default.instance.type === 'poll') {
-        _kline.default.instance.depthTimer = setTimeout(Control.depthRequestData, intervalTime);
-      }
-    }
-  }, {
-    key: "depthTwoSecondThread",
-    value: function depthTwoSecondThread() {
-      Control.depthRequestData();
-    }
-  }, {
-    key: "tradesRequestOverStomp",
-    value: function tradesRequestOverStomp() {}
-  }, {
-    key: "tradesRequestOverHttp",
-    value: function tradesRequestOverHttp() {
-      var reqParams = {};
-
-      if (_kline.default.instance.tradesMarketName && _kline.default.instance.symbol) {
-        reqParams[_kline.default.instance.tradesMarketName] = _kline.default.instance.symbol;
-      }
-
-      (0, _jquery.default)(document).ready(_kline.default.instance.G_TRADES_HTTP_REQUEST = _jquery.default.ajax({
-        type: "GET",
-        url: _kline.default.instance.tradesBaseUrl,
-        dataType: 'json',
-        data: reqParams,
-        timeout: 30000,
-        created: Date.now(),
-        beforeSend: function beforeSend() {
-          this.range = _kline.default.instance.range;
-          this.symbol = _kline.default.instance.symbol;
-        },
-        success: function success(res) {
-          if (_kline.default.instance.G_TRADES_HTTP_REQUEST) {
-            Control.tradesRequestSuccessHandler(res);
-          }
-        },
-        error: function error(xhr, textStatus, errorThrown) {
-          if (_kline.default.instance.debug) {
-            console.log(xhr);
-          }
-
-          if (xhr.status === 200 && xhr.readyState === 4) {
-            return;
-          }
-
-          _kline.default.instance.tradesTimer = setTimeout(function () {
-            Control.tradesRequestData(false);
-          }, _kline.default.instance.tradesIntervalTime);
-        },
-        complete: function complete() {
-          _kline.default.instance.G_TRADES_HTTP_REQUEST = null;
-        }
-      }));
-    }
-  }, {
-    key: "tradesRequestSuccessHandler",
-    value: function tradesRequestSuccessHandler(res) {
-      if (!res || !Array.isArray(res)) {
-        if (_kline.default.instance.type === 'poll') {
-          _kline.default.instance.tradesTimer = setTimeout(function () {
-            Control.tradesRequestData(false);
-          }, _kline.default.instance.tradesIntervalTime);
-        }
-
-        return;
-      }
-
-      var intervalTime = _kline.default.instance.tradesIntervalTime;
-
-      if (res && res.length > 0) {
-        _kline_trade.KlineTrade.instance.pushTrades(res);
-
-        _kline_trade.KlineTrade.instance.klineTradeInit = true;
-      }
-
-      if (_kline.default.instance.type === 'poll') {
-        _kline.default.instance.tradesTimer = setTimeout(Control.tradesRequestData, intervalTime);
-      }
-    }
-  }, {
-    key: "parseRequestParam",
-    value: function parseRequestParam(str) {
-      return JSON.parse('{"' + decodeURI(str.replace(/&/g, "\",\"").replace(/=/g, "\":\"")) + '"}');
-    }
-  }, {
-    key: "requestOverStomp",
-    value: function requestOverStomp() {
-      if (!_kline.default.instance.socketConnected) {
-        if (_kline.default.instance.debug) {
-          console.log("DEBUG: socket is not coonnected");
-        }
-
-        return;
-      }
-
-      if (_kline.default.instance.stompClient && _kline.default.instance.stompClient.ws.readyState === 1) {
-        _kline.default.instance.stompClient.send(_kline.default.instance.sendPath, {}, JSON.stringify(Control.parseRequestParam(_kline.default.instance.requestParam)));
-
-        return;
-      }
-
-      if (_kline.default.instance.debug) {
-        console.log("DEBUG: stomp client is not ready yet ...");
-      }
-
-      _kline.default.instance.timer = setTimeout(function () {
-        Control.requestData(true);
-      }, 1000);
-    }
-  }, {
-    key: "requestOverHttp",
-    value: function requestOverHttp() {
-      if (_kline.default.instance.debug) {
-        console.log("DEBUG: " + _kline.default.instance.requestParam);
-      }
-
-      (0, _jquery.default)(document).ready(_kline.default.instance.G_HTTP_REQUEST = _jquery.default.ajax({
-        type: "GET",
-        url: _kline.default.instance.url,
-        dataType: 'json',
-        data: _kline.default.instance.requestParam,
-        timeout: 30000,
-        created: Date.now(),
-        beforeSend: function beforeSend() {
-          this.range = _kline.default.instance.range;
-          this.symbol = _kline.default.instance.symbol;
-        },
-        success: function success(res) {
-          if (_kline.default.instance.G_HTTP_REQUEST) {
-            Control.requestSuccessHandler(res);
-          }
-        },
-        error: function error(xhr, textStatus, errorThrown) {
-          if (_kline.default.instance.debug) {
-            console.log(xhr);
-          }
-
-          if (xhr.status === 200 && xhr.readyState === 4) {
-            return;
-          }
-
-          _kline.default.instance.timer = setTimeout(function () {
-            Control.requestData(true);
-          }, _kline.default.instance.intervalTime);
-        },
-        complete: function complete() {
-          _kline.default.instance.G_HTTP_REQUEST = null;
-        }
-      }));
-    }
-  }, {
-    key: "TwoSecondThread",
-    value: function TwoSecondThread() {
-      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
-
-      if (f === -1) {
-        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
-      } else {
-        _kline.default.instance.requestParam = Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
-      }
-
-      Control.requestData();
-    }
-  }, {
-    key: "readCookie",
-    value: function readCookie() {
-      _chart_settings.ChartSettings.get();
-
-      _chart_settings.ChartSettings.save();
-
-      var tmp = _chart_settings.ChartSettings.get();
-
-      _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', tmp.charts.chartStyle);
-
-      var symbol = tmp.charts.symbol;
-
-      if (!_kline.default.instance.init) {
-        symbol = _kline.default.instance.symbol;
-        _kline.default.instance.init = true;
-      }
-
-      _kline.default.instance.symbol = symbol;
-      Control.switchSymbolSelected(symbol);
-      var period = tmp.charts.period;
-      _kline.default.instance.periodTitle = (0, _jquery.default)(".chart_str_period").text();
-      Control.switchPeriod(period);
-      (0, _jquery.default)('#chart_period_' + period + '_v a').addClass('selected');
-      (0, _jquery.default)('#chart_period_' + period + '_h a').addClass('selected');
-
-      if (tmp.charts.indicsStatus === 'close') {
-        Control.switchIndic('off');
-      } else if (tmp.charts.indicsStatus === 'open') {
-        Control.switchIndic('on');
-      }
-
-      var mainIndic = (0, _jquery.default)('#chart_select_main_indicator');
-      mainIndic.find('a').each(function () {
-        if ((0, _jquery.default)(this).attr('name') === tmp.charts.mIndic) {
-          (0, _jquery.default)(this).addClass('selected');
-        }
-      });
-      var chart_style = (0, _jquery.default)('#chart_select_chart_style');
-      chart_style.find('a').each(function () {
-        if ((0, _jquery.default)(this)[0].innerHTML === tmp.charts.chartStyle) {
-          (0, _jquery.default)(this).addClass('selected');
-        }
-      });
-
-      _chart_manager.ChartManager.instance.getChart().setMainIndicator(tmp.charts.mIndic);
-
-      _chart_manager.ChartManager.instance.setThemeName('frame0', tmp.theme);
-
-      Control.switchTools('off');
-
-      if (tmp.theme === 'Dark') {
-        Control.switchTheme('dark');
-      } else if (tmp.theme === 'Light') {
-        Control.switchTheme('light');
-      }
-
-      Control.chartSwitchLanguage(tmp.language || "zh-cn");
-    }
-  }, {
-    key: "setHttpRequestParam",
-    value: function setHttpRequestParam(symbol, range, limit, since) {
-      var str = "symbol=" + symbol + "&range=" + range;
-      if (limit !== null) str += "&limit=" + limit;else str += "&since=" + since;
-
-      if (_kline_trade.KlineTrade.instance.tradeDate.getTime() !== 0) {
-        str += "&prevTradeTime=" + _kline_trade.KlineTrade.instance.tradeDate.getTime();
-      }
-
-      return str;
-    }
-  }, {
-    key: "refreshTemplate",
-    value: function refreshTemplate() {
-      _kline.default.instance.chartMgr = _templates.DefaultTemplate.loadTemplate("frame0.k0", "");
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-    }
-  }, {
-    key: "chartSwitchLanguage",
-    value: function chartSwitchLanguage(lang) {
-      var langTmp = lang.replace(/-/, '_');
-      (0, _jquery.default)('#chart_language_switch_tmp').find('span').each(function () {
-        var name = (0, _jquery.default)(this).attr('name');
-        var attr = (0, _jquery.default)(this).attr(langTmp);
-        name = '.' + name;
-        var obj = (0, _jquery.default)(name)[0];
-        if (!obj) return;
-        (0, _jquery.default)(name).each(function () {
-          (0, _jquery.default)(this)[0].innerHTML = attr;
-        });
-      }); // $("#chart_language_setting_div li a[name='" + lang + "']").addClass("selected");
-
-      _chart_manager.ChartManager.instance.setLanguage(lang);
-
-      _chart_manager.ChartManager.instance.getChart().setTitle();
-
-      var tmp = _chart_settings.ChartSettings.get();
-
-      tmp.language = lang;
-
-      _chart_settings.ChartSettings.save();
-
-      _kline.default.instance.onLangChange(lang);
-    }
-  }, {
-    key: "onSize",
-    value: function onSize(w, h) {
-      var width = w || window.innerWidth;
-      var chartWidth = width;
-      var height = h || window.innerHeight;
-      var remainHeight = height;
-      debugger;
-
-      if (_kline.default.instance.showTrade && !isNaN(_kline.default.instance.tradeHeight)) {
-        remainHeight -= _kline.default.instance.tradeHeight;
-      }
-
-      var container = (0, _jquery.default)(_kline.default.instance.element);
-      container.css({
-        width: width + 'px',
-        height: remainHeight + 'px'
-      });
-      var toolBar = (0, _jquery.default)('#chart_toolbar'); // let toolPanel = $('#chart_toolpanel');
-
-      var canvasGroup = (0, _jquery.default)('#chart_canvasGroup');
-      var chart_container_clone = (0, _jquery.default)('#chart_container_clone');
-      var chart_container_fullscreen = (0, _jquery.default)('#chart_container_fullscreen');
-      var tabBar = (0, _jquery.default)('#chart_tabbar'); //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
-
-      var tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
-      var toolBarRect = {};
-      toolBarRect.x = 0;
-      toolBarRect.y = 0;
-      toolBarRect.w = chartWidth;
-      toolBarRect.h = 29;
-      var toolPanelRect = {};
-      toolPanelRect.x = 0;
-      toolPanelRect.y = toolBarRect.h + 1;
-      toolPanelRect.w = 0;
-      toolPanelRect.h = height - toolPanelRect.y;
-      var tabBarRect = {};
-      tabBarRect.w = chartWidth;
-      tabBarRect.h = tabBarShown ? 22 : -1;
-      tabBarRect.x = chartWidth - tabBarRect.w;
-      tabBarRect.y = remainHeight - (tabBarRect.h + 1);
-      var canvasGroupRect = {};
-      canvasGroupRect.x = tabBarRect.x;
-      canvasGroupRect.y = toolPanelRect.y;
-      canvasGroupRect.w = tabBarRect.w;
-      canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
-      toolBar.css({
-        left: toolBarRect.x + 'px',
-        top: toolBarRect.y + 'px',
-        width: toolBarRect.w + 'px',
-        height: toolBarRect.h + 'px'
-      }); // if (toolPanelShown) {
-      //     toolPanel.css({
-      //         left: toolPanelRect.x + 'px',
-      //         top: toolPanelRect.y + 'px',
-      //         width: toolPanelRect.w + 'px',
-      //         height: toolPanelRect.h + 'px'
-      //     });
-      // }
-
-      canvasGroup.css({
-        left: canvasGroupRect.x + 'px',
-        top: toolBarRect.y + toolBarRect.h + 'px',
-        width: '100%',
-        height: canvasGroupRect.h + 'px'
-      });
-      chart_container_clone.css({
-        left: canvasGroupRect.x + 'px',
-        top: toolBarRect.y + toolBarRect.h + 'px',
-        width: '100%',
-        height: canvasGroupRect.h + 'px'
-      });
-      chart_container_fullscreen.css({
-        left: canvasGroupRect.x + 'px',
-        top: 0 + 'px',
-        width: width + 'px',
-        height: height + 'px'
-      });
-      debugger;
-      var chart_container_clone_image = (0, _jquery.default)('#chart_container_image');
-      chart_container_clone_image.css({
-        left: canvasGroupRect.x + 'px',
-        top: toolBarRect.y + toolBarRect.h + 'px',
-        width: '100%',
-        height: canvasGroupRect.h + 'px'
-      });
-      var mainCanvas = (0, _jquery.default)('#chart_mainCanvas')[0];
-      var overlayCanvas = (0, _jquery.default)('#chart_overlayCanvas')[0];
-      var devicePixelRatio = window.devicePixelRatio;
-      var context = mainCanvas.getContext("2d");
-      var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
-      var ratio = devicePixelRatio / backingStoreRatio;
-      _kline.default.instance.deviceRatio = ratio;
-      mainCanvas.width = canvasGroupRect.w * ratio;
-      mainCanvas.height = canvasGroupRect.h * ratio;
-      mainCanvas.style.width = '100%';
-      mainCanvas.style.height = canvasGroupRect.h + "px";
-      overlayCanvas.width = canvasGroupRect.w * ratio;
-      overlayCanvas.height = canvasGroupRect.h * ratio;
-      overlayCanvas.style.width = '100%';
-      overlayCanvas.style.height = canvasGroupRect.h + "px";
-
-      if (tabBarShown) {
-        tabBar.css({
-          left: tabBarRect.x + 'px',
-          top: tabBarRect.y + 'px',
-          width: tabBarRect.w + 'px',
-          height: tabBarRect.h + 'px'
-        });
-      }
-      /*
-      let dlgSettings = $("#chart_parameter_settings");
-      dlgSettings.css({
-          left: (chartWidth - dlgSettings.width()) >> 1,
-          top: (height - dlgSettings.height()) >> 1,
-          width: canvasGroupRect.w,
-          height: canvasGroupRect.h
-      });
-      */
-
-
-      var dlgLoading = (0, _jquery.default)("#chart_loading");
-      dlgLoading.css({
-        left: chartWidth - dlgLoading.width() >> 1,
-        top: height - dlgLoading.height() >> 2
-      });
-      var domElemCache = (0, _jquery.default)('#chart_dom_elem_cache'); // let rowTheme = $('#chart_select_theme')[0];
-      // let rowTools = $('#chart_enable_tools')[0];
-      //  let rowIndic = $('#chart_enable_indicator')[0];
-
-      var periodsVert = (0, _jquery.default)('#chart_toolbar_periods_vert'); //周期
-
-      var periodsHorz = (0, _jquery.default)('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
-
-      var showIndic = (0, _jquery.default)('#chart_show_indicator')[0]; //   let showTools = $('#chart_show_tools')[0];
-
-      debugger; //  let selectTheme = $('#chart_toolbar_theme')[0];
-
-      var dropDownSettings = (0, _jquery.default)('#chart_dropdown_settings');
-      var mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
-
-      (0, _jquery.default)(showIndic).hide();
-      (0, _jquery.default)(dropDownSettings).hide();
-      var chatPeriodToolRanages = []; // 根据时间计算显示个数
-
-      var ranges = _kline.default.instance.ranges;
-      var periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
-      var totalCount = ranges.length,
-          showCount = totalCount,
-          totalWidth = 0;
-
-      for (var i = 0; i < totalCount; i++) {
-        var dom = (0, _jquery.default)('#chart_period_' + ranges[i] + '_h');
-        dom.show();
-        totalWidth += dom.width();
-
-        if (totalWidth > periodShowWidth - periodsVert.width()) {
-          dom.hide();
-          showCount--;
-        } else {
-          chatPeriodToolRanages.push(ranges[i]);
-        }
-      }
-
-      if (showCount < ranges.length) {
-        periodsVert.show();
-
-        _kline.default.instance.periodsVertDisplayNone(chatPeriodToolRanages);
-      } else {
-        periodsVert.hide();
-      }
-
-      var periodsVertNW = periodsVert[0].offsetWidth;
-      var periodsHorzNW = periodsVertNW + periodsHorz.offsetWidth;
-      var showIndicNW = periodsHorzNW + showIndic.offsetWidth + 4;
-      var showToolsNW = showIndicNW + 4;
-      var selectThemeNW = showToolsNW;
-      var dropDownSettingsW = dropDownSettings.find(".chart_dropdown_t")[0].offsetWidth + 150;
-      periodsVertNW += dropDownSettingsW;
-      periodsHorzNW += dropDownSettingsW;
-      showIndicNW += dropDownSettingsW;
-      showToolsNW += dropDownSettingsW;
-      selectThemeNW += dropDownSettingsW; // if (chartWidth < periodsHorzNW) {
-      //     domElemCache.append(periodsHorz);
-      // } else {
-      //     periodsVert.after(periodsHorz);
-      // }
-      // if (chartWidth < showIndicNW) {
-      //     domElemCache.append(showIndic);
-      //     rowIndic.style.display = "";
-      // } else {
-      //     dropDownSettings.before(showIndic);
-      //     rowIndic.style.display = "none";
-      // }
-      // if (chartWidth < showToolsNW) {
-      //     domElemCache.append(showTools);
-      //     rowTools.style.display = "";
-      // } else {
-      //     dropDownSettings.before(showTools);
-      //     rowTools.style.display = "none";
-      // }
-      // if (chartWidth < selectThemeNW) {
-      //     domElemCache.append(selectTheme);
-      //     rowTheme.style.display = "";
-      // } else {
-      //     dropDownSettings.before(selectTheme);
-      //     rowTheme.style.display = "none";
-      // }
-
-      if (_kline.default.instance.showTrade) {
-        (0, _jquery.default)(".trade_container").show();
-      } else {
-        (0, _jquery.default)(".trade_container").hide();
-      }
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-
-      _kline.default.instance.onResize(width, height);
-    }
-  }, {
-    key: "mouseWheel",
-    value: function mouseWheel(e, delta) {
-      _chart_manager.ChartManager.instance.scale(delta > 0 ? 1 : -1);
-
-      _chart_manager.ChartManager.instance.redraw("All", true);
-
-      return false;
-    }
-  }, {
-    key: "switchTheme",
-    value: function switchTheme(name) {
-      // $('#chart_toolbar_theme a').removeClass('selected');
-      //  $('#chart_select_theme a').removeClass('selected');
-      // $('#chart_toolbar_theme').find('a').each(function () {
-      //     if ($(this).attr('name') === name) {
-      //         $(this).addClass('selected');
-      //     }
-      // });
-      // $('#chart_select_theme a').each(function () {
-      //     if ($(this).attr('name') === name) {
-      //         $(this).addClass('selected');
-      //     }
-      // });
-      (0, _jquery.default)(".chart_container").attr('class', "chart_container " + name);
-      (0, _jquery.default)(".marketName_ a").attr('class', name);
-
-      if (name === 'dark') {
-        (0, _jquery.default)(".trade_container").addClass("dark").removeClass("light");
-
-        _chart_manager.ChartManager.instance.setThemeName('frame0', 'Dark');
-
-        var tmp = _chart_settings.ChartSettings.get();
-
-        tmp.theme = 'Dark';
-
-        _chart_settings.ChartSettings.save();
-      } else if (name === 'light') {
-        (0, _jquery.default)(".trade_container").addClass("light").removeClass("dark");
-
-        _chart_manager.ChartManager.instance.setThemeName('frame0', 'Light');
-
-        var _tmp = _chart_settings.ChartSettings.get();
-
-        _tmp.theme = 'Light';
-
-        _chart_settings.ChartSettings.save();
-      }
-
-      var a = {};
-      a.command = "set current themes";
-      a.content = name;
-      (0, _jquery.default)('#chart_output_interface_text').val(JSON.stringify(a));
-      (0, _jquery.default)('#chart_output_interface_submit').submit();
-      new _mevent.MEvent().raise(name);
-
-      _chart_manager.ChartManager.instance.redraw();
-
-      _kline.default.instance.onThemeChange(name);
-    }
-  }, {
-    key: "switchTools",
-    value: function switchTools(name) {
-      (0, _jquery.default)(".chart_dropdown_data").removeClass("chart_dropdown-hover"); // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-      //  $('#chart_enable_tools a').removeClass('selected');
-
-      if (name === 'on') {
-        // $('#chart_show_tools').addClass('selected');
-        // $('#chart_enable_tools a').each(function () {
-        //     if ($(this).attr('name') === 'on') {
-        //         $(this).addClass('selected');
-        //     }
-        // });
-        // $('#chart_toolpanel')[0].style.display = 'inline';
-        if (_chart_manager.ChartManager.instance._drawingTool === _chart_manager.ChartManager.DrawingTool.Cursor) {
-          (0, _jquery.default)('#chart_Cursor').parent().addClass('selected');
-        } else if (_chart_manager.ChartManager.instance._drawingTool === _chart_manager.ChartManager.DrawingTool.CrossCursor) {
-          (0, _jquery.default)('#chart_CrossCursor').parent().addClass('selected');
-        }
-      } else if (name === 'off') {
-        //  $('#chart_show_tools').removeClass('selected');
-        // $('#chart_enable_tools a').each(function () {
-        //     if ($(this).attr('name') === 'off') {
-        //         $(this).addClass('selected');
-        //     }
-        // });
-        // $('#chart_toolpanel')[0].style.display = 'none';
-        _chart_manager.ChartManager.instance.setRunningMode(_chart_manager.ChartManager.instance._beforeDrawingTool);
-
-        _chart_manager.ChartManager.instance.redraw("All", true);
-      }
-
-      if (_kline.default.instance.isSized) {
-        Control.onSize();
-      } else {
-        Control.onSize(_kline.default.instance.width, _kline.default.instance.height);
-      }
-    }
-  }, {
-    key: "switchIndic",
-    value: function switchIndic(name) {
-      // $('#chart_enable_indicator a').removeClass('selected');
-      // $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
-      if (name === 'on') {
-        (0, _jquery.default)('#chart_show_indicator').addClass('selected');
-
-        var tmp = _chart_settings.ChartSettings.get();
-
-        tmp.charts.indicsStatus = 'open';
-
-        _chart_settings.ChartSettings.save();
-
-        var value = tmp.charts.indics[1];
-        if (_templates.Template.displayVolume === false) _chart_manager.ChartManager.instance.getChart().setIndicator(2, value);else _chart_manager.ChartManager.instance.getChart().setIndicator(2, value);
-        (0, _jquery.default)("#chart_tabbar").find('a').each(function () {
-          if ((0, _jquery.default)(this).attr('name') === value) (0, _jquery.default)(this).addClass('selected');
-        });
-        (0, _jquery.default)('#chart_tabbar')[0].style.display = 'block';
-      } else if (name === 'off') {
-        (0, _jquery.default)('#chart_show_indicator').removeClass('selected');
-
-        _chart_manager.ChartManager.instance.getChart().setIndicator(2, 'NONE');
-
-        var _tmp2 = _chart_settings.ChartSettings.get();
-
-        _tmp2.charts.indicsStatus = 'close';
-
-        _chart_settings.ChartSettings.save();
-
-        (0, _jquery.default)('#chart_tabbar')[0].style.display = 'none';
-        (0, _jquery.default)("#chart_tabbar a").removeClass("selected");
-      }
-
-      if (_kline.default.instance.isSized) {
-        Control.onSize();
-      } else {
-        Control.onSize(_kline.default.instance.width, _kline.default.instance.height);
-      }
-    }
-  }, {
-    key: "switchPeriod",
-    value: function switchPeriod(name) {
-      (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").removeClass("selected");
-      (0, _jquery.default)("#chart_toolbar_periods_vert ul a").removeClass("selected");
-      (0, _jquery.default)(".chart_container .chart_toolbar_tabgroup a").each(function () {
-        if ((0, _jquery.default)(this).parent().attr('name') === name) {
-          (0, _jquery.default)(this).addClass('selected');
-        }
-      });
-      (0, _jquery.default)("#chart_toolbar_periods_vert ul a").each(function () {
-        if ((0, _jquery.default)(this).parent().attr('name') === name) {
-          (0, _jquery.default)(this).addClass('selected');
-        }
-      });
-      (0, _jquery.default)("#chart_toolbar_periods_vert .chart_dropdown_t").removeClass("chart_dropdown-hover");
-
-      _chart_manager.ChartManager.instance.showCursor();
-
-      Control.calcPeriodWeight(name);
-
-      if (name === 'line') {
-        _chart_manager.ChartManager.instance.getChart().strIsLine = true;
-
-        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', 'Line');
-
-        _chart_manager.ChartManager.instance.getChart().setCurrentPeriod('line');
-
-        var _settings = _chart_settings.ChartSettings.get();
-
-        _settings.charts.period = name;
-
-        _chart_settings.ChartSettings.save();
-
-        return;
-      }
-
-      _chart_manager.ChartManager.instance.getChart().strIsLine = false;
-      var p = _kline.default.instance.tagMapPeriod[name];
-
-      _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', _chart_settings.ChartSettings.get().charts.chartStyle);
-
-      _chart_manager.ChartManager.instance.getChart().setCurrentPeriod(p);
-
-      var settings = _chart_settings.ChartSettings.get();
-
-      settings.charts.period = name;
-
-      _chart_settings.ChartSettings.save();
-    }
-  }, {
-    key: "reset",
-    value: function reset(symbol) {
-      _kline.default.instance.symbol = symbol;
-
-      if (_kline.default.instance.showTrade) {
-        _kline_trade.KlineTrade.instance.reset(symbol);
-      }
-    }
-  }, {
-    key: "switchSymbolSelected",
-    value: function switchSymbolSelected(symbol) {
-      Control.reset(symbol);
-      (0, _jquery.default)(".market_chooser ul a").removeClass("selected");
-      (0, _jquery.default)(".market_chooser ul a[name='" + symbol + "']").addClass("selected");
-      _chart_manager.ChartManager.instance.getChart()._symbol = symbol;
-
-      var settings = _chart_settings.ChartSettings.get();
-
-      settings.charts.symbol = symbol;
-
-      _chart_settings.ChartSettings.save();
-    }
-  }, {
-    key: "switchSymbol",
-    value: function switchSymbol(symbol) {
-      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient.ws.readyState === 1) {
-        _kline.default.instance.subscribed.unsubscribe();
-
-        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + symbol + '/' + _kline.default.instance.range, Control.subscribeCallback);
-      }
-
-      Control.switchSymbolSelected(symbol);
-
-      var settings = _chart_settings.ChartSettings.get();
-
-      if (settings.charts.period === "line") {
-        _chart_manager.ChartManager.instance.getChart().strIsLine = true;
-
-        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', 'Line');
-      } else {
-        _chart_manager.ChartManager.instance.getChart().strIsLine = false;
-
-        _chart_manager.ChartManager.instance.setChartStyle('frame0.k0', _chart_settings.ChartSettings.get().charts.chartStyle);
-      }
-
-      _chart_manager.ChartManager.instance.getChart().setSymbol(symbol);
-    }
-  }, {
-    key: "calcPeriodWeight",
-    value: function calcPeriodWeight(period) {
-      //  debugger
-      var index = period;
-      if (period !== 'line') index = _kline.default.instance.periodMap[_kline.default.instance.tagMapPeriod[period]];
-
-      var periodWeight = _chart_settings.ChartSettings.get().charts.period_weight;
-
-      for (var i in periodWeight) {
-        if (periodWeight[i] > periodWeight[index]) {
-          periodWeight[i] -= 1;
-        }
-      }
-
-      periodWeight[index] = 8;
-
-      _chart_settings.ChartSettings.save();
-    }
-  }, {
-    key: "subscribeCallback",
-    value: function subscribeCallback(res) {
-      Control.requestSuccessHandler(JSON.parse(res.body));
-    }
-  }, {
-    key: "socketConnect",
-    value: function socketConnect() {
-      if (!_kline.default.instance.stompClient || !_kline.default.instance.socketConnected) {
-        if (_kline.default.instance.enableSockjs) {
-          var socket = new SockJS(_kline.default.instance.url);
-          _kline.default.instance.stompClient = Stomp.over(socket);
-        } else {
-          _kline.default.instance.stompClient = Stomp.client(_kline.default.instance.url);
-        }
-
-        _kline.default.instance.socketConnected = true;
-      }
-
-      if (_kline.default.instance.stompClient.ws.readyState === 1) {
-        console.log('DEBUG: already connected');
-        return;
-      }
-
-      if (!_kline.default.instance.debug) {
-        _kline.default.instance.stompClient.debug = null;
-      }
-
-      _kline.default.instance.stompClient.connect({}, function () {
-        _kline.default.instance.stompClient.subscribe('/user' + _kline.default.instance.subscribePath, Control.subscribeCallback);
-
-        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + _kline.default.instance.symbol + '/' + _kline.default.instance.range, Control.subscribeCallback);
-        Control.requestData(true);
-      }, function () {
-        _kline.default.instance.stompClient.disconnect();
-
-        console.log("DEBUG: reconnect in 5 seconds ...");
-        setTimeout(function () {
-          Control.socketConnect();
-        }, 5000);
-      });
-    }
-  }]);
-
-  return Control;
-}();
-
-exports.Control = Control;
-Control.refreshCounter = 0;
-Control.refreshHandler = null;
-Control.requestDuration = {
-  "01d": "1day",
-  "01w": "1week",
-  "03d": "3day",
-  "12h": "12hour",
-  "06h": "6hour",
-  "04h": "4hour",
-  "02h": "2hour",
-  "01h": "1hour",
-  "30m": "30min",
-  "15m": "15min",
-  "05m": "5min",
-  "03m": "3min",
-  "01m": "1min",
-  "line": "line"
-};
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.CPoint = void 0;
-
-var _chart_manager = __webpack_require__(0);
-
-var _named_object = __webpack_require__(1);
-
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
-
-var _util = __webpack_require__(5);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CPoint =
-/*#__PURE__*/
-function (_NamedObject) {
-  _inherits(CPoint, _NamedObject);
-
-  function CPoint(name) {
-    var _this;
-
-    _classCallCheck(this, CPoint);
-
-    _this = _possibleConstructorReturn(this, (CPoint.__proto__ || Object.getPrototypeOf(CPoint)).call(this, name));
-    _this.pos = {
-      index: -1,
-      value: -1
-    };
-    _this.state = CPoint.state.Hide;
-    return _this;
-  }
-
-  _createClass(CPoint, [{
-    key: "getChartObjects",
-    value: function getChartObjects() {
-      var ppMgr = _chart_manager.ChartManager.instance;
-      var ppCDS = ppMgr.getDataSource("frame0.k0");
-      if (ppCDS === null || !_util.Util.isInstance(ppCDS, data_sources.MainDataSource)) return null;
-      var ppTimeline = ppMgr.getTimeline("frame0.k0");
-      if (ppTimeline === null) return null;
-      var ppRange = ppMgr.getRange("frame0.k0.main");
-      if (ppRange === null) return null;
-      return {
-        pMgr: ppMgr,
-        pCDS: ppCDS,
-        pTimeline: ppTimeline,
-        pRange: ppRange
-      };
-    }
-  }, {
-    key: "setPosXY",
-    value: function setPosXY(x, y) {
-      var pObj = this.getChartObjects();
-      var i = pObj.pTimeline.toIndex(x);
-      var v = pObj.pRange.toValue(y);
-      var result = this.snapValue(i, v);
-      if (result !== null) v = result;
-      this.setPosIV(i, v);
-    }
-  }, {
-    key: "setPosXYNoSnap",
-    value: function setPosXYNoSnap(x, y) {
-      var pObj = this.getChartObjects();
-      var i = pObj.pTimeline.toIndex(x);
-      var v = pObj.pRange.toValue(y);
-      this.setPosIV(i, v);
-    }
-  }, {
-    key: "setPosIV",
-    value: function setPosIV(i, v) {
-      this.pos = {
-        index: i,
-        value: v
-      };
-    }
-  }, {
-    key: "getPosXY",
-    value: function getPosXY() {
-      var pObj = this.getChartObjects();
-
-      var _x = pObj.pTimeline.toItemCenter(this.pos.index);
-
-      var _y = pObj.pRange.toY(this.pos.value);
-
-      return {
-        x: _x,
-        y: _y
-      };
-    }
-  }, {
-    key: "getPosIV",
-    value: function getPosIV() {
-      return {
-        i: this.pos.index,
-        v: this.pos.value
-      };
-    }
-  }, {
-    key: "setState",
-    value: function setState(s) {
-      this.state = s;
-    }
-  }, {
-    key: "getState",
-    value: function getState() {
-      return this.state;
-    }
-  }, {
-    key: "isSelected",
-    value: function isSelected(x, y) {
-      var xy = this.getPosXY();
-      if (x < xy.x - 4 || x > xy.x + 4 || y < xy.y - 4 || y > xy.y + 4) return false;
-      this.setState(CPoint.state.Highlight);
-      return true;
-    }
-  }, {
-    key: "snapValue",
-    value: function snapValue(i, v) {
-      var pObj = this.getChartObjects();
-      var result = null;
-      var first = Math.floor(pObj.pTimeline.getFirstIndex());
-      var last = Math.floor(pObj.pTimeline.getLastIndex());
-      if (i < first || i > last) return result;
-      var y = pObj.pRange.toY(v);
-      var pData = pObj.pCDS.getDataAt(i);
-      if (pData === null || pData === undefined) return result;
-      var pDataPre = null;
-      if (i > 0) pDataPre = pObj.pCDS.getDataAt(i - 1);else pDataPre = pObj.pCDS.getDataAt(i);
-      var candleStickStyle = pObj.pMgr.getChartStyle(pObj.pCDS.getFrameName());
-      var open = pObj.pRange.toY(pData.open);
-      var high = pObj.pRange.toY(pData.high);
-      var low = pObj.pRange.toY(pData.low);
-      var close = pObj.pRange.toY(pData.close);
-
-      if (candleStickStyle === "CandleStickHLC") {
-        open = pObj.pRange.toY(pDataPre.close);
-      }
-
-      var dif_open = Math.abs(open - y);
-      var dif_high = Math.abs(high - y);
-      var dif_low = Math.abs(low - y);
-      var dif_close = Math.abs(close - y);
-
-      if (dif_open <= dif_high && dif_open <= dif_low && dif_open <= dif_close) {
-        if (dif_open < 6) result = pData.open;
-      }
-
-      if (dif_high <= dif_open && dif_high <= dif_low && dif_high <= dif_close) {
-        if (dif_high < 6) result = pData.high;
-      }
-
-      if (dif_low <= dif_open && dif_low <= dif_high && dif_low <= dif_close) {
-        if (dif_low < 6) result = pData.low;
-      }
-
-      if (dif_close <= dif_open && dif_close <= dif_high && dif_close <= dif_low) {
-        if (dif_close < 6) result = pData.close;
-      }
-
-      return result;
-    }
-  }]);
-
-  return CPoint;
-}(_named_object.NamedObject);
-
-exports.CPoint = CPoint;
-CPoint.state = {
-  Hide: 0,
-  Show: 1,
-  Highlight: 2
-};
-
-/***/ }),
-/* 10 */
+/***/ 40:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4789,17 +8645,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CArrowLineObject = exports.CPriceLineObject = exports.CVertiStraightLineObject = exports.CTriParallelLineObject = exports.CStraightLineObject = exports.CSegLineObject = exports.CRayLineObject = exports.CHoriStraightLineObject = exports.CHoriSegLineObject = exports.CHoriRayLineObject = exports.CFibRetraceObject = exports.CFibFansObject = exports.CBiParallelRayLineObject = exports.CBiParallelLineObject = exports.CBandLineObject = exports.CTriToolObject = exports.CBiToolObject = exports.CToolObject = void 0;
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
-var _named_object = __webpack_require__(1);
+var _named_object = __webpack_require__(9);
 
-var _cpoint = __webpack_require__(9);
+var _cpoint = __webpack_require__(39);
 
-var _util = __webpack_require__(5);
+var _util = __webpack_require__(21);
 
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
-var plotters = _interopRequireWildcard(__webpack_require__(11));
+var plotters = _interopRequireWildcard(__webpack_require__(41));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -6103,7 +9959,8 @@ function (_CSegLineObject2) {
 exports.CArrowLineObject = CArrowLineObject;
 
 /***/ }),
-/* 11 */
+
+/***/ 41:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6114,25 +9971,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CDynamicLinePlotter = exports.DrawFibFansPlotter = exports.DrawBandLinesPlotter = exports.DrawFibRetracePlotter = exports.BandLinesPlotter = exports.DrawTriParallelLinesPlotter = exports.DrawBiParallelRayLinesPlotter = exports.DrawBiParallelLinesPlotter = exports.ParallelLinesPlotter = exports.DrawPriceLinesPlotter = exports.DrawVertiStraightLinesPlotter = exports.DrawHoriSegLinesPlotter = exports.DrawHoriRayLinesPlotter = exports.DrawHoriStraightLinesPlotter = exports.DrawArrowLinesPlotter = exports.DrawRayLinesPlotter = exports.DrawSegLinesPlotter = exports.DrawStraightLinesPlotter = exports.CToolPlotter = exports.RangeSelectionPlotter = exports.TimelineSelectionPlotter = exports.SelectionPlotter = exports.LastClosePlotter = exports.LastVolumePlotter = exports.COrderGraphPlotter = exports.RangePlotter = exports.TimelinePlotter = exports.MinMaxPlotter = exports.IndicatorInfoPlotter = exports.IndicatorPlotter = exports.MainInfoPlotter = exports.OHLCPlotter = exports.CandlestickHLCPlotter = exports.CandlestickPlotter = exports.CGridPlotter = exports.TimelineAreaBackgroundPlotter = exports.RangeAreaBackgroundPlotter = exports.MainAreaBackgroundPlotter = exports.BackgroundPlotter = exports.Plotter = void 0;
 
-var _kline = _interopRequireDefault(__webpack_require__(3));
+var _kline = _interopRequireDefault(__webpack_require__(17));
 
-var _named_object = __webpack_require__(1);
+var _named_object = __webpack_require__(9);
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
-var _util = __webpack_require__(5);
+var _util = __webpack_require__(21);
 
-var _cpoint = __webpack_require__(9);
+var _cpoint = __webpack_require__(39);
 
-var exprs = _interopRequireWildcard(__webpack_require__(16));
+var exprs = _interopRequireWildcard(__webpack_require__(59));
 
-var themes = _interopRequireWildcard(__webpack_require__(6));
+var themes = _interopRequireWildcard(__webpack_require__(22));
 
-var data_providers = _interopRequireWildcard(__webpack_require__(12));
+var data_providers = _interopRequireWildcard(__webpack_require__(42));
 
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
-var ctools = _interopRequireWildcard(__webpack_require__(10));
+var ctools = _interopRequireWildcard(__webpack_require__(40));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -9513,7 +13370,8 @@ function (_NamedObject10) {
 exports.CDynamicLinePlotter = CDynamicLinePlotter;
 
 /***/ }),
-/* 12 */
+
+/***/ 42:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9524,13 +13382,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.IndicatorDataProvider = exports.MainDataProvider = exports.DataProvider = void 0;
 
-var _named_object = __webpack_require__(1);
+var _named_object = __webpack_require__(9);
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
-var _util = __webpack_require__(5);
+var _util = __webpack_require__(21);
 
-var data_sources = _interopRequireWildcard(__webpack_require__(2));
+var data_sources = _interopRequireWildcard(__webpack_require__(12));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -9824,7 +13682,8 @@ function (_DataProvider2) {
 exports.IndicatorDataProvider = IndicatorDataProvider;
 
 /***/ }),
-/* 13 */
+
+/***/ 43:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9835,11 +13694,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ChartAreaGroup = exports.TimelineArea = exports.IndicatorRangeArea = exports.MainRangeArea = exports.IndicatorArea = exports.MainArea = exports.ChartArea = void 0;
 
-var _named_object = __webpack_require__(1);
+var _named_object = __webpack_require__(9);
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
-var _mevent = __webpack_require__(17);
+var _mevent = __webpack_require__(60);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -10521,7 +14380,8 @@ function (_ChartArea6) {
 exports.ChartAreaGroup = ChartAreaGroup;
 
 /***/ }),
-/* 14 */
+
+/***/ 57:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10532,7 +14392,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.KlineTrade = void 0;
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -11042,7 +14902,8 @@ KlineTrade.created = false;
 KlineTrade.instance = null;
 
 /***/ }),
-/* 15 */
+
+/***/ 58:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11116,7 +14977,8 @@ function () {
 exports.CName = CName;
 
 /***/ }),
-/* 16 */
+
+/***/ 59:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12716,7 +16578,8 @@ function (_OpABCDExpr) {
 exports.SarExpr = SarExpr;
 
 /***/ }),
-/* 17 */
+
+/***/ 60:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12792,7 +16655,8 @@ function () {
 exports.MEvent = MEvent;
 
 /***/ }),
-/* 18 */
+
+/***/ 61:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12803,9 +16667,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PercentageRange = exports.ZeroCenteredRange = exports.MainRange = exports.ZeroBasedPositiveRange = exports.PositiveRange = exports.Range = void 0;
 
-var _named_object = __webpack_require__(1);
+var _named_object = __webpack_require__(9);
 
-var _chart_manager = __webpack_require__(0);
+var _chart_manager = __webpack_require__(4);
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -13328,3890 +17192,15 @@ function (_Range5) {
 exports.PercentageRange = PercentageRange;
 
 /***/ }),
-/* 19 */
+
+/***/ 62:
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_62__;
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _kline = _interopRequireDefault(__webpack_require__(3));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-window.Kline = _kline.default;
-var _default = _kline.default;
-exports.default = _default;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Chart = void 0;
-
-var _chart_manager = __webpack_require__(0);
-
-var _control = __webpack_require__(8);
-
-var _kline = _interopRequireDefault(__webpack_require__(3));
-
-var _templates = __webpack_require__(7);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Chart =
-/*#__PURE__*/
-function () {
-  function Chart() {
-    _classCallCheck(this, Chart);
-
-    this._data = null;
-    this._charStyle = "CandleStick";
-    this._depthData = {
-      array: null,
-      asks_count: 0,
-      bids_count: 0,
-      asks_si: 0,
-      asks_ei: 0,
-      bids_si: 0,
-      bids_ei: 0
-    };
-    this.strIsLine = false; // debugger
-
-    this._range = _kline.default.instance.range;
-    this._symbol = _kline.default.instance.symbol;
-  }
-
-  _createClass(Chart, [{
-    key: "setTitle",
-    value: function setTitle() {
-      var lang = _chart_manager.ChartManager.instance.getLanguage();
-
-      var title = _kline.default.instance.symbolName;
-      title += ' ';
-      title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
-      title += (this._contract_unit + '/' + this._money_type).toUpperCase(); // debugger
-
-      _chart_manager.ChartManager.instance.setTitle('frame0.k0', title);
-    }
-  }, {
-    key: "setSymbol",
-    value: function setSymbol(symbol) {
-      this._symbol = symbol;
-      this.updateDataAndDisplay();
-    }
-  }, {
-    key: "updateDataAndDisplay",
-    value: function updateDataAndDisplay() {
-      //   debugger
-      _kline.default.instance.symbol = this._symbol;
-      _kline.default.instance.range = this._range;
-
-      _chart_manager.ChartManager.instance.setCurrentDataSource('frame0.k0', this._symbol + '.' + this._range);
-
-      _chart_manager.ChartManager.instance.setNormalMode();
-
-      var f = _kline.default.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
-
-      $('.symbol-title>a').text(_kline.default.instance.symbolName);
-
-      if (f === -1) {
-        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, _kline.default.instance.limit, null);
-
-        _control.Control.klineRequestData(true);
-
-        _control.Control.tradesRequestData();
-
-        _control.Control.depthRequestData();
-      } else {
-        _kline.default.instance.requestParam = _control.Control.setHttpRequestParam(_kline.default.instance.symbol, _kline.default.instance.range, null, f.toString());
-
-        _control.Control.klineRequestData();
-
-        _control.Control.tradesRequestData();
-
-        _control.Control.depthRequestData();
-      }
-
-      _chart_manager.ChartManager.instance.redraw('All', false);
-    }
-  }, {
-    key: "setCurrentContractUnit",
-    value: function setCurrentContractUnit(contractUnit) {
-      this._contract_unit = contractUnit;
-      this.updateDataAndDisplay();
-    }
-  }, {
-    key: "setCurrentMoneyType",
-    value: function setCurrentMoneyType(moneyType) {
-      this._money_type = moneyType;
-      this.updateDataAndDisplay();
-    }
-  }, {
-    key: "setCurrentPeriod",
-    value: function setCurrentPeriod(period) {
-      //   debugger
-      this._range = _kline.default.instance.periodMap[period];
-
-      if (_kline.default.instance.type === "stomp" && _kline.default.instance.stompClient.ws.readyState === 1) {
-        _kline.default.instance.subscribed.unsubscribe();
-
-        _kline.default.instance.subscribed = _kline.default.instance.stompClient.subscribe(_kline.default.instance.subscribePath + '/' + _kline.default.instance.symbol + '/' + this._range, _control.Control.subscribeCallback);
-      }
-
-      this.updateDataAndDisplay(); //   debugger
-
-      _kline.default.instance.onRangeChange(this._range);
-    }
-  }, {
-    key: "updateDataSource",
-    value: function updateDataSource(data) {
-      this._data = data;
-
-      _chart_manager.ChartManager.instance.updateData("frame0.k0", this._data);
-    }
-  }, {
-    key: "updateDepth",
-    value: function updateDepth(array) {
-      if (array === null) {
-        this._depthData.array = [];
-
-        _chart_manager.ChartManager.instance.redraw('All', false);
-
-        return;
-      }
-
-      if (!array.asks || !array.bids || array.asks === '' || array.bids === '') return;
-      var _data = this._depthData;
-      _data.array = [];
-
-      for (var i = 0; i < array.asks.length; i++) {
-        var data = {};
-        data.rate = array.asks[i][0];
-        data.amount = array.asks[i][1];
-
-        _data.array.push(data);
-      }
-
-      for (var _i = 0; _i < array.bids.length; _i++) {
-        var _data2 = {};
-        _data2.rate = array.bids[_i][0];
-        _data2.amount = array.bids[_i][1];
-
-        _data.array.push(_data2);
-      }
-
-      _data.asks_count = array.asks.length;
-      _data.bids_count = array.bids.length;
-      _data.asks_si = _data.asks_count - 1;
-      _data.asks_ei = 0;
-      _data.bids_si = _data.asks_count - 1;
-      _data.bids_ei = _data.asks_count + _data.bids_count - 2;
-
-      for (var _i2 = _data.asks_si; _i2 >= _data.asks_ei; _i2--) {
-        if (_i2 === _data.asks_si && _data.array[_i2] !== undefined) {
-          _data.array[_i2].amounts = _data.array[_i2].amount;
-        } else if (_data.array[_i2 + 1] !== undefined) {
-          _data.array[_i2].amounts = _data.array[_i2 + 1].amounts + _data.array[_i2].amount;
-        }
-      }
-
-      for (var _i3 = _data.bids_si; _i3 <= _data.bids_ei; _i3++) {
-        if (_i3 === _data.bids_si && _data.array[_i3] !== undefined) {
-          _data.array[_i3].amounts = _data.array[_i3].amount;
-        } else if (_data.array[_i3 - 1] !== undefined) {
-          _data.array[_i3].amounts = _data.array[_i3 - 1].amounts + _data.array[_i3].amount;
-        }
-      }
-
-      _chart_manager.ChartManager.instance.redraw('All', false);
-    }
-  }, {
-    key: "setMainIndicator",
-    value: function setMainIndicator(indicName) {
-      this._mainIndicator = indicName;
-
-      if (indicName === 'NONE') {
-        _chart_manager.ChartManager.instance.removeMainIndicator('frame0.k0');
-      } else {
-        _chart_manager.ChartManager.instance.setMainIndicator('frame0.k0', indicName);
-      }
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-    }
-  }, {
-    key: "setIndicator",
-    value: function setIndicator(index, indicName) {
-      if (indicName === 'NONE') {
-        var _index = 2;
-        if (_templates.Template.displayVolume === false) _index = 1;
-
-        var areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName('frame0.k0', _index);
-
-        if (areaName !== '') _chart_manager.ChartManager.instance.removeIndicator(areaName);
-      } else {
-        var _index2 = 2;
-        if (_templates.Template.displayVolume === false) _index2 = 1;
-
-        var _areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName('frame0.k0', _index2);
-
-        if (_areaName === '') {
-          _templates.Template.createIndicatorChartComps('frame0.k0', indicName);
-        } else {
-          _chart_manager.ChartManager.instance.setIndicator(_areaName, indicName);
-        }
-      }
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-    }
-  }, {
-    key: "addIndicator",
-    value: function addIndicator(indicName) {
-      _chart_manager.ChartManager.instance.addIndicator(indicName);
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-    }
-  }, {
-    key: "removeIndicator",
-    value: function removeIndicator(indicName) {
-      var areaName = _chart_manager.ChartManager.instance.getIndicatorAreaName(2);
-
-      _chart_manager.ChartManager.instance.removeIndicator(areaName);
-
-      _chart_manager.ChartManager.instance.redraw('All', true);
-    }
-  }]);
-
-  return Chart;
-}();
-
-exports.Chart = Chart;
-Chart.strPeriod = {
-  'zh-cn': {
-    'line': '(分时)',
-    '1min': '(1分钟)',
-    '5min': '(5分钟)',
-    '15min': '(15分钟)',
-    '30min': '(30分钟)',
-    '1hour': '(1小时)',
-    '1day': '(日线)',
-    '1week': '(周线)',
-    '3min': '(3分钟)',
-    '2hour': '(2小时)',
-    '4hour': '(4小时)',
-    '6hour': '(6小时)',
-    '12hour': '(12小时)',
-    '3day': '(3天)'
-  },
-  'en-us': {
-    'line': '(Line)',
-    '1min': '(1m)',
-    '5min': '(5m)',
-    '15min': '(15m)',
-    '30min': '(30m)',
-    '1hour': '(1h)',
-    '1day': '(1d)',
-    '1week': '(1w)',
-    '3min': '(3m)',
-    '2hour': '(2h)',
-    '4hour': '(4h)',
-    '6hour': '(6h)',
-    '12hour': '(12h)',
-    '3day': '(3d)'
-  },
-  'zh-tw': {
-    'line': '(分時)',
-    '1min': '(1分鐘)',
-    '5min': '(5分鐘)',
-    '15min': '(15分鐘)',
-    '30min': '(30分鐘)',
-    '1hour': '(1小時)',
-    '1day': '(日線)',
-    '1week': '(周線)',
-    '3min': '(3分鐘)',
-    '2hour': '(2小時)',
-    '4hour': '(4小時)',
-    '6hour': '(6小時)',
-    '12hour': '(12小時)',
-    '3day': '(3天)'
-  }
-};
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.CToolManager = void 0;
-
-var _named_object = __webpack_require__(1);
-
-var _cpoint = __webpack_require__(9);
-
-var ctools = _interopRequireWildcard(__webpack_require__(10));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CToolManager =
-/*#__PURE__*/
-function (_NamedObject) {
-  _inherits(CToolManager, _NamedObject);
-
-  function CToolManager(name) {
-    var _this;
-
-    _classCallCheck(this, CToolManager);
-
-    _this = _possibleConstructorReturn(this, (CToolManager.__proto__ || Object.getPrototypeOf(CToolManager)).call(this, name));
-    _this.selectedObject = -1;
-    _this.toolObjects = [];
-    return _this;
-  }
-
-  _createClass(CToolManager, [{
-    key: "getToolObjectCount",
-    value: function getToolObjectCount() {
-      return this.toolObjects.length;
-    }
-  }, {
-    key: "addToolObject",
-    value: function addToolObject(o) {
-      this.toolObjects.push(o);
-    }
-  }, {
-    key: "getToolObject",
-    value: function getToolObject(i) {
-      if (i < this.toolObjects.length && i >= 0) {
-        return this.toolObjects[i];
-      }
-
-      return null;
-    }
-  }, {
-    key: "getCurrentObject",
-    value: function getCurrentObject() {
-      return this.getToolObject(this.getToolObjectCount() - 1);
-    }
-  }, {
-    key: "getSelectedObject",
-    value: function getSelectedObject() {
-      return this.getToolObject(this.selectedObject);
-    }
-  }, {
-    key: "delCurrentObject",
-    value: function delCurrentObject() {
-      this.toolObjects.splice(this.getToolObjectCount() - 1, 1);
-    }
-  }, {
-    key: "delSelectedObject",
-    value: function delSelectedObject() {
-      this.toolObjects.splice(this.selectedObject, 1);
-      this.selectedObject = -1;
-    }
-  }, {
-    key: "acceptMouseMoveEvent",
-    value: function acceptMouseMoveEvent(x, y) {
-      if (this.selectedObject === -1) {
-        var curr = this.toolObjects[this.getToolObjectCount() - 1];
-        if (curr !== null && curr !== undefined && curr.getState() !== ctools.CToolObject.state.AfterDraw) return curr.acceptMouseMoveEvent(x, y);
-      } else {
-        var sel = this.toolObjects[this.selectedObject];
-
-        if (sel.getState() === ctools.CToolObject.state.Draw) {
-          return sel.acceptMouseMoveEvent(x, y);
-        }
-
-        sel.unselect();
-        this.selectedObject = -1;
-      }
-
-      for (var index in this.toolObjects) {
-        if (this.toolObjects[index].isSelected(x, y)) {
-          this.selectedObject = index;
-          return false;
-        }
-      }
-
-      return false;
-    }
-  }, {
-    key: "acceptMouseDownEvent",
-    value: function acceptMouseDownEvent(x, y) {
-      this.mouseDownMove = false;
-
-      if (this.selectedObject === -1) {
-        var curr = this.toolObjects[this.getToolObjectCount() - 1];
-        if (curr !== null && curr !== undefined && curr.getState() !== ctools.CToolObject.state.AfterDraw) return curr.acceptMouseDownEvent(x, y);
-      } else {
-        var sel = this.toolObjects[this.selectedObject];
-        if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) return sel.acceptMouseDownEvent(x, y);
-      }
-
-      return false;
-    }
-  }, {
-    key: "acceptMouseDownMoveEvent",
-    value: function acceptMouseDownMoveEvent(x, y) {
-      this.mouseDownMove = true;
-
-      if (this.selectedObject === -1) {
-        var curr = this.toolObjects[this.getToolObjectCount() - 1];
-        if (curr !== null && curr !== undefined && curr.getState() === ctools.CToolObject.state.Draw) return curr.acceptMouseDownMoveEvent(x, y);
-        return false;
-      } else {
-        var sel = this.toolObjects[this.selectedObject];
-
-        if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) {
-          if (sel.acceptMouseDownMoveEvent(x, y) === true) {
-            var point = this.toolObjects[this.selectedObject].points;
-
-            for (var i = 0; i < point.length; i++) {
-              if (point[i].state === _cpoint.CPoint.state.Highlight || point[i].state === _cpoint.CPoint.state.Show) {
-                return true;
-              }
-            }
-          }
-
-          return true;
-        }
-      }
-    }
-  }, {
-    key: "acceptMouseUpEvent",
-    value: function acceptMouseUpEvent(x, y) {
-      if (this.mouseDownMove === true) {
-        if (this.selectedObject === -1) {
-          var _curr = this.toolObjects[this.getToolObjectCount() - 1];
-          if (_curr !== null && _curr !== undefined && _curr.getState() === ctools.CToolObject.state.Draw) return _curr.acceptMouseUpEvent(x, y);
-          return true;
-        } else {
-          var sel = this.toolObjects[this.selectedObject];
-          if (sel.getState() !== ctools.CToolObject.state.BeforeDraw) return sel.acceptMouseUpEvent(x, y);
-        }
-      }
-
-      if (this.selectedObject !== -1) {
-        return true;
-      }
-
-      var curr = this.toolObjects[this.getToolObjectCount() - 1];
-
-      if (curr !== null && curr !== undefined) {
-        if (curr.getState() === ctools.CToolObject.state.Draw) return true;
-
-        if (!curr.isValidMouseXY(x, y)) {
-          return false;
-        }
-
-        if (curr.isSelected(x, y)) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-  }]);
-
-  return CToolManager;
-}(_named_object.NamedObject);
-
-exports.CToolManager = CToolManager;
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Timeline = void 0;
-
-var _named_object = __webpack_require__(1);
-
-var _chart_manager = __webpack_require__(0);
-
-var _data_sources = __webpack_require__(2);
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Timeline =
-/*#__PURE__*/
-function (_NamedObject) {
-  _inherits(Timeline, _NamedObject);
-
-  function Timeline(name) {
-    var _this;
-
-    _classCallCheck(this, Timeline);
-
-    _this = _possibleConstructorReturn(this, (Timeline.__proto__ || Object.getPrototypeOf(Timeline)).call(this, name));
-    _this._updated = false;
-    _this._innerLeft = 0;
-    _this._innerWidth = 0;
-    _this._firstColumnLeft = 0;
-    _this._scale = 3;
-    _this._lastScale = -1;
-    _this._maxItemCount = 0;
-    _this._maxIndex = 0;
-    _this._firstIndex = -1;
-    _this._selectedIndex = -1;
-    _this._savedFirstIndex = -1;
-    return _this;
-  }
-
-  _createClass(Timeline, [{
-    key: "isLatestShown",
-    value: function isLatestShown() {
-      return this.getLastIndex() === this._maxIndex;
-    }
-  }, {
-    key: "isUpdated",
-    value: function isUpdated() {
-      return this._updated;
-    }
-  }, {
-    key: "setUpdated",
-    value: function setUpdated(v) {
-      this._updated = v;
-    }
-  }, {
-    key: "getItemWidth",
-    value: function getItemWidth() {
-      return Timeline.itemWidth[this._scale];
-    }
-  }, {
-    key: "getSpaceWidth",
-    value: function getSpaceWidth() {
-      return Timeline.spaceWidth[this._scale];
-    }
-  }, {
-    key: "getColumnWidth",
-    value: function getColumnWidth() {
-      return this.getSpaceWidth() + this.getItemWidth();
-    }
-  }, {
-    key: "getInnerWidth",
-    value: function getInnerWidth() {
-      return this._innerWidth;
-    }
-  }, {
-    key: "getItemLeftOffset",
-    value: function getItemLeftOffset() {
-      return this.getSpaceWidth();
-    }
-  }, {
-    key: "getItemCenterOffset",
-    value: function getItemCenterOffset() {
-      return this.getSpaceWidth() + (this.getItemWidth() >> 1);
-    }
-  }, {
-    key: "getFirstColumnLeft",
-    value: function getFirstColumnLeft() {
-      return this._firstColumnLeft;
-    }
-  }, {
-    key: "getMaxItemCount",
-    value: function getMaxItemCount() {
-      return this._maxItemCount;
-    }
-  }, {
-    key: "getFirstIndex",
-    value: function getFirstIndex() {
-      return this._firstIndex;
-    }
-  }, {
-    key: "getLastIndex",
-    value: function getLastIndex() {
-      return Math.min(this._firstIndex + this._maxItemCount, this._maxIndex);
-    }
-  }, {
-    key: "getSelectedIndex",
-    value: function getSelectedIndex() {
-      return this._selectedIndex;
-    }
-  }, {
-    key: "getMaxIndex",
-    value: function getMaxIndex() {
-      return this._maxIndex;
-    }
-  }, {
-    key: "calcColumnCount",
-    value: function calcColumnCount(w) {
-      return Math.floor(w / this.getColumnWidth()) << 0;
-    }
-  }, {
-    key: "calcFirstColumnLeft",
-    value: function calcFirstColumnLeft(maxItemCount) {
-      return this._innerLeft + this._innerWidth - this.getColumnWidth() * maxItemCount;
-    }
-  }, {
-    key: "calcFirstIndexAlignRight",
-    value: function calcFirstIndexAlignRight(oldFirstIndex, oldMaxItemCount, newMaxItemCount) {
-      return Math.max(0, oldFirstIndex + Math.max(oldMaxItemCount, 1) - Math.max(newMaxItemCount, 1));
-    }
-  }, {
-    key: "calcFirstIndex",
-    value: function calcFirstIndex(newMaxItemCount) {
-      return this.validateFirstIndex(this.calcFirstIndexAlignRight(this._firstIndex, this._maxItemCount, newMaxItemCount), newMaxItemCount);
-    }
-  }, {
-    key: "updateMaxItemCount",
-    value: function updateMaxItemCount() {
-      var newMaxItemCount = this.calcColumnCount(this._innerWidth);
-      var newFirstIndex;
-
-      if (this._maxItemCount < 1) {
-        newFirstIndex = this.calcFirstIndex(newMaxItemCount);
-      } else if (this._lastScale === this._scale) {
-        newFirstIndex = this.validateFirstIndex(this._firstIndex - (newMaxItemCount - this._maxItemCount));
-      } else {
-        var focusedIndex = this._selectedIndex >= 0 ? this._selectedIndex : this.getLastIndex() - 1;
-        newFirstIndex = this.validateFirstIndex(focusedIndex - Math.round((focusedIndex - this._firstIndex) * newMaxItemCount / this._maxItemCount));
-      }
-
-      this._lastScale = this._scale;
-
-      if (this._firstIndex !== newFirstIndex) {
-        if (this._selectedIndex === this._firstIndex) this._selectedIndex = newFirstIndex;
-        this._firstIndex = newFirstIndex;
-        this._updated = true;
-      }
-
-      if (this._maxItemCount !== newMaxItemCount) {
-        this._maxItemCount = newMaxItemCount;
-        this._updated = true;
-      }
-
-      this._firstColumnLeft = this.calcFirstColumnLeft(newMaxItemCount);
-    }
-  }, {
-    key: "validateFirstIndex",
-    value: function validateFirstIndex(firstIndex, maxItemCount) {
-      if (this._maxIndex < 1) {
-        return -1;
-      }
-
-      if (firstIndex < 0) {
-        return 0;
-      }
-
-      var lastFirst = Math.max(0, this._maxIndex - 1
-      /*maxItemCount*/
-      );
-
-      if (firstIndex > lastFirst) {
-        return lastFirst;
-      }
-
-      return firstIndex;
-    }
-  }, {
-    key: "validateSelectedIndex",
-    value: function validateSelectedIndex() {
-      if (this._selectedIndex < this._firstIndex) this._selectedIndex = -1;else if (this._selectedIndex >= this.getLastIndex()) this._selectedIndex = -1;
-    }
-  }, {
-    key: "onLayout",
-    value: function onLayout() {
-      var mgr = _chart_manager.ChartManager.instance;
-      var area = mgr.getArea(this.getDataSourceName() + ".main");
-
-      if (area !== null) {
-        this._innerLeft = area.getLeft() + Timeline.PADDING_LEFT;
-        var w = Math.max(0, area.getWidth() - (Timeline.PADDING_LEFT + Timeline.PADDING_RIGHT));
-
-        if (this._innerWidth !== w) {
-          this._innerWidth = w;
-          this.updateMaxItemCount();
-        }
-      }
-    }
-  }, {
-    key: "toIndex",
-    value: function toIndex(x) {
-      return this._firstIndex + this.calcColumnCount(x - this._firstColumnLeft);
-    }
-  }, {
-    key: "toColumnLeft",
-    value: function toColumnLeft(index) {
-      return this._firstColumnLeft + this.getColumnWidth() * (index - this._firstIndex);
-    }
-  }, {
-    key: "toItemLeft",
-    value: function toItemLeft(index) {
-      return this.toColumnLeft(index) + this.getItemLeftOffset();
-    }
-  }, {
-    key: "toItemCenter",
-    value: function toItemCenter(index) {
-      return this.toColumnLeft(index) + this.getItemCenterOffset();
-    }
-  }, {
-    key: "selectAt",
-    value: function selectAt(x) {
-      this._selectedIndex = this.toIndex(x);
-      this.validateSelectedIndex();
-      return this._selectedIndex >= 0;
-    }
-  }, {
-    key: "unselect",
-    value: function unselect() {
-      this._selectedIndex = -1;
-    }
-  }, {
-    key: "update",
-    value: function update() {
-      var mgr = _chart_manager.ChartManager.instance;
-      var ds = mgr.getDataSource(this.getDataSourceName());
-      var oldMaxIndex = this._maxIndex;
-      this._maxIndex = ds.getDataCount();
-
-      switch (ds.getUpdateMode()) {
-        case _data_sources.DataSource.UpdateMode.Refresh:
-          if (this._maxIndex < 1) this._firstIndex = -1;else this._firstIndex = Math.max(this._maxIndex - this._maxItemCount, 0);
-          this._selectedIndex = -1;
-          this._updated = true;
-          break;
-
-        case _data_sources.DataSource.UpdateMode.Append:
-          var lastIndex = this.getLastIndex();
-          var erasedCount = ds.getErasedCount();
-
-          if (lastIndex < oldMaxIndex) {
-            if (erasedCount > 0) {
-              this._firstIndex = Math.max(this._firstIndex - erasedCount, 0);
-
-              if (this._selectedIndex >= 0) {
-                this._selectedIndex -= erasedCount;
-                this.validateSelectedIndex();
-              }
-
-              this._updated = true;
-            }
-          } else if (lastIndex === oldMaxIndex) {
-            this._firstIndex += this._maxIndex - oldMaxIndex;
-
-            if (this._selectedIndex >= 0) {
-              this._selectedIndex -= erasedCount;
-              this.validateSelectedIndex();
-            }
-
-            this._updated = true;
-          }
-
-          break;
-      }
-    }
-  }, {
-    key: "move",
-    value: function move(x) {
-      if (this.isLatestShown()) {
-        _chart_manager.ChartManager.instance.getArea(this.getDataSourceName() + ".mainRange").setChanged(true);
-      }
-
-      this._firstIndex = this.validateFirstIndex(this._savedFirstIndex - this.calcColumnCount(x), this._maxItemCount);
-      this._updated = true;
-      if (this._selectedIndex >= 0) this.validateSelectedIndex();
-    }
-  }, {
-    key: "startMove",
-    value: function startMove() {
-      this._savedFirstIndex = this._firstIndex;
-    }
-  }, {
-    key: "scale",
-    value: function scale(s) {
-      this._scale += s;
-
-      if (this._scale < 0) {
-        this._scale = 0;
-      } else if (this._scale >= Timeline.itemWidth.length) {
-        this._scale = Timeline.itemWidth.length - 1;
-      }
-
-      this.updateMaxItemCount();
-
-      if (this._selectedIndex >= 0) {
-        this.validateSelectedIndex();
-      }
-    }
-  }]);
-
-  return Timeline;
-}(_named_object.NamedObject);
-
-exports.Timeline = Timeline;
-Timeline.devicePixelRatio = window.devicePixelRatio || 1;
-Timeline.itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio, 15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio, 23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
-Timeline.spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio, 2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
-Timeline.PADDING_LEFT = 4;
-Timeline.PADDING_RIGHT = 8;
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.DockableLayout = exports.TableLayout = void 0;
-
-var areas = _interopRequireWildcard(__webpack_require__(13));
-
-var _chart_manager = __webpack_require__(0);
-
-var themes = _interopRequireWildcard(__webpack_require__(6));
-
-var _chart_settings = __webpack_require__(4);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return _get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var TableLayout =
-/*#__PURE__*/
-function (_areas$ChartAreaGroup) {
-  _inherits(TableLayout, _areas$ChartAreaGroup);
-
-  function TableLayout(name) {
-    var _this;
-
-    _classCallCheck(this, TableLayout);
-
-    _this = _possibleConstructorReturn(this, (TableLayout.__proto__ || Object.getPrototypeOf(TableLayout)).call(this, name));
-    _this._nextRowId = 0;
-    _this._focusedRowIndex = -1;
-    return _this;
-  }
-
-  _createClass(TableLayout, [{
-    key: "getNextRowId",
-    value: function getNextRowId() {
-      return this._nextRowId++;
-    }
-  }, {
-    key: "measure",
-    value: function measure(context, width, height) {
-      this.setMeasuredDimension(width, height);
-      var rowH,
-          prevH = 0,
-          totalH = 0;
-      var h, rows;
-      var rh = [];
-      var i,
-          cnt = this._areas.length;
-
-      for (i = 0; i < cnt; i += 2) {
-        rowH = this._areas[i].getHeight();
-
-        if (rowH === 0) {
-          if (i === 0) {
-            rows = cnt + 1 >> 1;
-            var n = rows * 2 + 5;
-            var nh = height / n * 2 << 0;
-            h = height;
-
-            for (i = rows - 1; i > 0; i--) {
-              rh.unshift(nh);
-              h -= nh;
-            }
-
-            rh.unshift(h);
-            break;
-          } else if (i === 2) {
-            rowH = prevH / 3;
-          } else {
-            rowH = prevH;
-          }
-        }
-
-        totalH += rowH;
-        prevH = rowH;
-        rh.push(rowH);
-      }
-
-      if (totalH > 0) {
-        var rate = height / totalH;
-        rows = cnt + 1 >> 1;
-        h = height;
-
-        for (i = rows - 1; i > 0; i--) {
-          rh[i] *= rate;
-          h -= rh[i];
-        }
-
-        rh[0] = h;
-      }
-
-      var nw = 8; // chart depths sidebar (深度图侧边栏宽度)
-
-      var minRW = 76;
-      var maxRW = Math.min(240, width >> 1);
-      var rw = minRW;
-      var mgr = _chart_manager.ChartManager.instance;
-      var timeline = mgr.getTimeline(this.getDataSourceName());
-
-      if (timeline.getFirstIndex() >= 0) {
-        var firstIndexes = [];
-
-        for (rw = minRW; rw < maxRW; rw += nw) {
-          firstIndexes.push(timeline.calcFirstIndex(timeline.calcColumnCount(width - rw)));
-        }
-
-        var lastIndex = timeline.getLastIndex();
-        var dpNames = [".main", ".secondary"];
-        var minmaxes = new Array(firstIndexes.length);
-        var iArea, iIndex;
-
-        for (iArea = 0, iIndex = 0, rw = minRW; iArea < this._areas.length && iIndex < firstIndexes.length; iArea += 2) {
-          var area = this._areas[iArea];
-          var plotter = mgr.getPlotter(area.getName() + "Range.main");
-
-          for (var iDp in dpNames) {
-            var dp = mgr.getDataProvider(area.getName() + dpNames[iDp]);
-
-            if (dp === undefined) {
-              continue;
-            }
-
-            dp.calcRange(firstIndexes, lastIndex, minmaxes, null);
-
-            while (iIndex < firstIndexes.length) {
-              var minW = plotter.getRequiredWidth(context, minmaxes[iIndex].min);
-              var maxW = plotter.getRequiredWidth(context, minmaxes[iIndex].max);
-
-              if (Math.max(minW, maxW) < rw) {
-                break;
-              }
-
-              iIndex++;
-              rw += nw;
-            }
-          }
-        }
-      }
-
-      for (i = 1; i < this._areas.length; i += 2) {
-        this._areas[i].measure(context, rw, rh[i >> 1]);
-      }
-
-      var lw = width - rw;
-
-      for (i = 0; i < this._areas.length; i += 2) {
-        this._areas[i].measure(context, lw, rh[i >> 1]);
-      }
-    }
-  }, {
-    key: "layout",
-    value: function layout(left, top, right, bottom, forceChange) {
-      _get(TableLayout.prototype.__proto__ || Object.getPrototypeOf(TableLayout.prototype), "layout", this).call(this, left, top, right, bottom, forceChange);
-
-      if (this._areas.length < 1) return;
-      var area;
-
-      var center = left + this._areas[0].getMeasuredWidth();
-
-      var t = top,
-          b;
-      if (!forceChange) forceChange = this.isChanged();
-      var i,
-          cnt = this._areas.length;
-
-      for (i = 0; i < cnt; i++) {
-        area = this._areas[i];
-        b = t + area.getMeasuredHeight();
-        area.layout(left, t, center, b, forceChange);
-        i++;
-        area = this._areas[i];
-        area.layout(center, t, this.getRight(), b, forceChange);
-        t = b;
-      }
-
-      this.setChanged(false);
-    }
-  }, {
-    key: "drawGrid",
-    value: function drawGrid(context) {
-      if (this._areas.length < 1) {
-        return;
-      }
-
-      var mgr = _chart_manager.ChartManager.instance;
-      var theme = mgr.getTheme(this.getFrameName());
-      context.fillStyle = theme.getColor(themes.Theme.Color.Grid1);
-      context.fillRect(this._areas[0].getRight(), this.getTop(), 1, this.getHeight());
-      var i,
-          cnt = this._areas.length - 2;
-
-      for (i = 0; i < cnt; i += 2) {
-        context.fillRect(this.getLeft(), this._areas[i].getBottom(), this.getWidth(), 1);
-      }
-
-      if (!mgr.getCaptureMouseWheelDirectly()) {
-        for (i = 0, cnt += 2; i < cnt; i += 2) {
-          if (this._areas[i].isSelected()) {
-            context.strokeStyle = theme.getColor(themes.Theme.Color.Indicator1);
-            context.strokeRect(this.getLeft() + 0.5, this.getTop() + 0.5, this.getWidth() - 1, this.getHeight() - 1);
-            break;
-          }
-        }
-      }
-    }
-  }, {
-    key: "highlight",
-    value: function highlight(area) {
-      this._highlightedArea = null;
-      var e,
-          i,
-          cnt = this._areas.length;
-
-      for (i = 0; i < cnt; i++) {
-        e = this._areas[i];
-
-        if (e === area) {
-          i &= ~1;
-          e = this._areas[i];
-          e.highlight(e);
-          this._highlightedArea = e;
-          i++;
-          e = this._areas[i];
-          e.highlight(null);
-          e.highlight(e);
-        } else {
-          e.highlight(null);
-        }
-      }
-
-      return this._highlightedArea !== null ? this : null;
-    }
-  }, {
-    key: "select",
-    value: function select(area) {
-      this._selectedArea = null;
-      var e,
-          i,
-          cnt = this._areas.length;
-
-      for (i = 0; i < cnt; i++) {
-        e = this._areas[i];
-
-        if (e === area) {
-          i &= ~1;
-          e = this._areas[i];
-          e.select(e);
-          this._selectedArea = e;
-          i++;
-          e = this._areas[i];
-          e.select(e);
-        } else {
-          e.select(null);
-        }
-      }
-
-      return this._selectedArea !== null ? this : null;
-    }
-  }, {
-    key: "onMouseMove",
-    value: function onMouseMove(x, y) {
-      if (this._focusedRowIndex >= 0) {
-        var upper = this._areas[this._focusedRowIndex];
-        var lower = this._areas[this._focusedRowIndex + 2];
-        var d = y - this._oldY;
-        if (d === 0) return this;
-        var upperBottom = this._oldUpperBottom + d;
-        var lowerTop = this._oldLowerTop + d;
-
-        if (upperBottom - upper.getTop() >= 60 && lower.getBottom() - lowerTop >= 60) {
-          upper.setBottom(upperBottom);
-          lower.setTop(lowerTop);
-        }
-
-        return this;
-      }
-
-      var i,
-          cnt = this._areas.length - 2;
-
-      for (i = 0; i < cnt; i += 2) {
-        var b = this._areas[i].getBottom();
-
-        if (y >= b - 4 && y < b + 4) {
-          _chart_manager.ChartManager.instance.showCursor('n-resize');
-
-          return this;
-        }
-      }
-
-      return null;
-    }
-  }, {
-    key: "onMouseLeave",
-    value: function onMouseLeave(x, y) {
-      this._focusedRowIndex = -1;
-    }
-  }, {
-    key: "onMouseDown",
-    value: function onMouseDown(x, y) {
-      var i,
-          cnt = this._areas.length - 2;
-
-      for (i = 0; i < cnt; i += 2) {
-        var b = this._areas[i].getBottom();
-
-        if (y >= b - 4 && y < b + 4) {
-          this._focusedRowIndex = i;
-          this._oldY = y;
-          this._oldUpperBottom = b;
-          this._oldLowerTop = this._areas[i + 2].getTop();
-          return this;
-        }
-      }
-
-      return null;
-    }
-  }, {
-    key: "onMouseUp",
-    value: function onMouseUp(x, y) {
-      if (this._focusedRowIndex >= 0) {
-        this._focusedRowIndex = -1;
-        var i,
-            cnt = this._areas.length;
-        var height = [];
-
-        for (i = 0; i < cnt; i += 2) {
-          height.push(this._areas[i].getHeight());
-        }
-
-        _chart_settings.ChartSettings.get().charts.areaHeight = height;
-
-        _chart_settings.ChartSettings.save();
-      }
-
-      return this;
-    }
-  }]);
-
-  return TableLayout;
-}(areas.ChartAreaGroup);
-
-exports.TableLayout = TableLayout;
-
-var DockableLayout =
-/*#__PURE__*/
-function (_areas$ChartAreaGroup2) {
-  _inherits(DockableLayout, _areas$ChartAreaGroup2);
-
-  function DockableLayout(name) {
-    _classCallCheck(this, DockableLayout);
-
-    return _possibleConstructorReturn(this, (DockableLayout.__proto__ || Object.getPrototypeOf(DockableLayout)).call(this, name));
-  }
-
-  _createClass(DockableLayout, [{
-    key: "measure",
-    value: function measure(context, width, height) {
-      _get(DockableLayout.prototype.__proto__ || Object.getPrototypeOf(DockableLayout.prototype), "measure", this).call(this, context, width, height);
-
-      width = this.getMeasuredWidth();
-      height = this.getMeasuredHeight();
-
-      for (var i in this._areas) {
-        var area = this._areas[i];
-        area.measure(context, width, height);
-
-        switch (area.getDockStyle()) {
-          case areas.ChartArea.DockStyle.left:
-          case areas.ChartArea.DockStyle.Right:
-            width -= area.getMeasuredWidth();
-            break;
-
-          case areas.ChartArea.DockStyle.Top:
-          case areas.ChartArea.DockStyle.Bottom:
-            height -= area.getMeasuredHeight();
-            break;
-
-          case areas.ChartArea.DockStyle.Fill:
-            width = 0;
-            height = 0;
-            break;
-        }
-      }
-    }
-  }, {
-    key: "layout",
-    value: function layout(left, top, right, bottom, forceChange) {
-      _get(DockableLayout.prototype.__proto__ || Object.getPrototypeOf(DockableLayout.prototype), "layout", this).call(this, left, top, right, bottom, forceChange);
-
-      left = this.getLeft();
-      top = this.getTop();
-      right = this.getRight();
-      bottom = this.getBottom();
-      var w, h;
-
-      if (!forceChange) {
-        forceChange = this.isChanged();
-      }
-
-      for (var i in this._areas) {
-        var area = this._areas[i];
-
-        switch (area.getDockStyle()) {
-          case areas.ChartArea.DockStyle.left:
-            w = area.getMeasuredWidth();
-            area.layout(left, top, left + w, bottom, forceChange);
-            left += w;
-            break;
-
-          case areas.ChartArea.DockStyle.Top:
-            h = area.getMeasuredHeight();
-            area.layout(left, top, right, top + h, forceChange);
-            top += h;
-            break;
-
-          case areas.ChartArea.DockStyle.Right:
-            w = area.getMeasuredWidth();
-            area.layout(right - w, top, right, bottom, forceChange);
-            right -= w;
-            break;
-
-          case areas.ChartArea.DockStyle.Bottom:
-            h = area.getMeasuredHeight();
-            area.layout(left, bottom - h, right, bottom, forceChange);
-            bottom -= h;
-            break;
-
-          case areas.ChartArea.DockStyle.Fill:
-            area.layout(left, top, right, bottom, forceChange);
-            left = right;
-            top = bottom;
-            break;
-        }
-      }
-
-      this.setChanged(false);
-    }
-  }, {
-    key: "drawGrid",
-    value: function drawGrid(context) {
-      var mgr = _chart_manager.ChartManager.instance;
-      var theme = mgr.getTheme(this.getFrameName());
-      var left = this.getLeft();
-      var top = this.getTop();
-      var right = this.getRight();
-      var bottom = this.getBottom();
-      context.fillStyle = theme.getColor(this._gridColor);
-
-      for (var i in this._areas) {
-        var area = this._areas[i];
-
-        switch (area.getDockStyle()) {
-          case areas.ChartArea.DockStyle.Left:
-            context.fillRect(area.getRight(), top, 1, bottom - top);
-            left += area.getWidth();
-            break;
-
-          case areas.ChartArea.DockStyle.Top:
-            context.fillRect(left, area.getBottom(), right - left, 1);
-            top += area.getHeight();
-            break;
-
-          case areas.ChartArea.DockStyle.Right:
-            context.fillRect(area.getLeft(), top, 1, bottom - top);
-            right -= area.getWidth();
-            break;
-
-          case areas.ChartArea.DockStyle.Bottom:
-            context.fillRect(left, area.getTop(), right - left, 1);
-            bottom -= area.getHeight();
-            break;
-        }
-      }
-    }
-  }]);
-
-  return DockableLayout;
-}(areas.ChartAreaGroup);
-
-exports.DockableLayout = DockableLayout;
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.STOCHRSIIndicator = exports.PSYIndicator = exports.BOLLIndicator = exports.MTMIndicator = exports.ROCIndicator = exports.KDJIndicator = exports.SARIndicator = exports.WRIndicator = exports.RSIIndicator = exports.EMVIndicator = exports.OBVIndicator = exports.VRIndicator = exports.BRARIndicator = exports.TRIXIndicator = exports.DMAIndicator = exports.DMIIndicator = exports.MACDIndicator = exports.VOLUMEIndicator = exports.EMAIndicator = exports.MAIndicator = exports.HLCIndicator = exports.Indicator = void 0;
-
-var exprs = _interopRequireWildcard(__webpack_require__(16));
-
-var themes = _interopRequireWildcard(__webpack_require__(6));
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Indicator =
-/*#__PURE__*/
-function () {
-  function Indicator() {
-    _classCallCheck(this, Indicator);
-
-    this._exprEnv = new exprs.ExprEnv();
-    this._rid = 0;
-    this._params = [];
-    this._assigns = [];
-    this._outputs = [];
-  }
-
-  _createClass(Indicator, [{
-    key: "addParameter",
-    value: function addParameter(expr) {
-      this._params.push(expr);
-    }
-  }, {
-    key: "addAssign",
-    value: function addAssign(expr) {
-      this._assigns.push(expr);
-    }
-  }, {
-    key: "addOutput",
-    value: function addOutput(expr) {
-      this._outputs.push(expr);
-    }
-  }, {
-    key: "getParameterCount",
-    value: function getParameterCount() {
-      return this._params.length;
-    }
-  }, {
-    key: "getParameterAt",
-    value: function getParameterAt(index) {
-      return this._params[index];
-    }
-  }, {
-    key: "getOutputCount",
-    value: function getOutputCount() {
-      return this._outputs.length;
-    }
-  }, {
-    key: "getOutputAt",
-    value: function getOutputAt(index) {
-      return this._outputs[index];
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      this._exprEnv.setFirstIndex(-1);
-
-      var i, cnt;
-      cnt = this._assigns.length;
-
-      for (i = 0; i < cnt; i++) {
-        this._assigns[i].clear();
-      }
-
-      cnt = this._outputs.length;
-
-      for (i = 0; i < cnt; i++) {
-        this._outputs[i].clear();
-      }
-    }
-  }, {
-    key: "reserve",
-    value: function reserve(count) {
-      this._rid++;
-      var i, cnt;
-      cnt = this._assigns.length;
-
-      for (i = 0; i < cnt; i++) {
-        this._assigns[i].reserve(this._rid, count);
-      }
-
-      cnt = this._outputs.length;
-
-      for (i = 0; i < cnt; i++) {
-        this._outputs[i].reserve(this._rid, count);
-      }
-    }
-  }, {
-    key: "execute",
-    value: function execute(ds, index) {
-      if (index < 0) {
-        return;
-      }
-
-      this._exprEnv.setDataSource(ds);
-
-      exprs.ExprEnv.set(this._exprEnv);
-
-      try {
-        var i, cnt;
-        cnt = this._assigns.length;
-
-        for (i = 0; i < cnt; i++) {
-          this._assigns[i].assign(index);
-        }
-
-        cnt = this._outputs.length;
-
-        for (i = 0; i < cnt; i++) {
-          this._outputs[i].assign(index);
-        }
-
-        if (this._exprEnv.getFirstIndex() < 0) {
-          this._exprEnv.setFirstIndex(index);
-        }
-      } catch (e) {
-        if (this._exprEnv.getFirstIndex() >= 0) {
-          alert(e);
-          throw e;
-        }
-      }
-    }
-  }, {
-    key: "getParameters",
-    value: function getParameters() {
-      var params = [];
-      var i,
-          cnt = this._params.length;
-
-      for (i = 0; i < cnt; i++) {
-        params.push(this._params[i].getValue());
-      }
-
-      return params;
-    }
-  }, {
-    key: "setParameters",
-    value: function setParameters(params) {
-      if (params instanceof Array && params.length === this._params.length) {
-        for (var i in this._params) {
-          this._params[i].setValue(params[i]);
-        }
-      }
-    }
-  }]);
-
-  return Indicator;
-}();
-
-exports.Indicator = Indicator;
-
-var HLCIndicator =
-/*#__PURE__*/
-function (_Indicator) {
-  _inherits(HLCIndicator, _Indicator);
-
-  function HLCIndicator() {
-    var _this;
-
-    _classCallCheck(this, HLCIndicator);
-
-    _this = _possibleConstructorReturn(this, (HLCIndicator.__proto__ || Object.getPrototypeOf(HLCIndicator)).call(this));
-    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 60);
-
-    _this.addParameter(M1);
-
-    _this.addOutput(new exprs.OutputExpr("HIGH", new exprs.HighExpr(), exprs.OutputExpr.outputStyle.None));
-
-    _this.addOutput(new exprs.OutputExpr("LOW", new exprs.LowExpr(), exprs.OutputExpr.outputStyle.None));
-
-    _this.addOutput(new exprs.OutputExpr("CLOSE", new exprs.CloseExpr(), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator0));
-
-    _this.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M1), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator1));
-
-    return _this;
-  }
-
-  _createClass(HLCIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "CLOSE";
-    }
-  }]);
-
-  return HLCIndicator;
-}(Indicator);
-
-exports.HLCIndicator = HLCIndicator;
-
-var MAIndicator =
-/*#__PURE__*/
-function (_Indicator2) {
-  _inherits(MAIndicator, _Indicator2);
-
-  function MAIndicator() {
-    var _this2;
-
-    _classCallCheck(this, MAIndicator);
-
-    _this2 = _possibleConstructorReturn(this, (MAIndicator.__proto__ || Object.getPrototypeOf(MAIndicator)).call(this));
-    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 7);
-    var M2 = new exprs.ParameterExpr("M2", 2, 1000, 30);
-    var M3 = new exprs.ParameterExpr("M3", 2, 1000, 0);
-    var M4 = new exprs.ParameterExpr("M4", 2, 1000, 0);
-    var M5 = new exprs.ParameterExpr("M5", 2, 1000, 0);
-    var M6 = new exprs.ParameterExpr("M6", 2, 1000, 0);
-
-    _this2.addParameter(M1);
-
-    _this2.addParameter(M2);
-
-    _this2.addParameter(M3);
-
-    _this2.addParameter(M4);
-
-    _this2.addParameter(M5);
-
-    _this2.addParameter(M6);
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M1)));
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M2)));
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M3)));
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M4)));
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M5)));
-
-    _this2.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(new exprs.CloseExpr(), M6)));
-
-    return _this2;
-  }
-
-  _createClass(MAIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "MA";
-    }
-  }]);
-
-  return MAIndicator;
-}(Indicator);
-
-exports.MAIndicator = MAIndicator;
-
-var EMAIndicator =
-/*#__PURE__*/
-function (_Indicator3) {
-  _inherits(EMAIndicator, _Indicator3);
-
-  function EMAIndicator() {
-    var _this3;
-
-    _classCallCheck(this, EMAIndicator);
-
-    _this3 = _possibleConstructorReturn(this, (EMAIndicator.__proto__ || Object.getPrototypeOf(EMAIndicator)).call(this));
-    var M1 = new exprs.ParameterExpr("M1", 2, 1000, 7);
-    var M2 = new exprs.ParameterExpr("M2", 2, 1000, 30);
-    var M3 = new exprs.ParameterExpr("M3", 2, 1000, 0);
-    var M4 = new exprs.ParameterExpr("M4", 2, 1000, 0);
-    var M5 = new exprs.ParameterExpr("M5", 2, 1000, 0);
-    var M6 = new exprs.ParameterExpr("M6", 2, 1000, 0);
-
-    _this3.addParameter(M1);
-
-    _this3.addParameter(M2);
-
-    _this3.addParameter(M3);
-
-    _this3.addParameter(M4);
-
-    _this3.addParameter(M5);
-
-    _this3.addParameter(M6);
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M1)));
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M2)));
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M3)));
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M4)));
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M5)));
-
-    _this3.addOutput(new exprs.RangeOutputExpr("EMA", new exprs.EmaExpr(new exprs.CloseExpr(), M6)));
-
-    return _this3;
-  }
-
-  _createClass(EMAIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "EMA";
-    }
-  }]);
-
-  return EMAIndicator;
-}(Indicator);
-
-exports.EMAIndicator = EMAIndicator;
-
-var VOLUMEIndicator =
-/*#__PURE__*/
-function (_Indicator4) {
-  _inherits(VOLUMEIndicator, _Indicator4);
-
-  function VOLUMEIndicator() {
-    var _this4;
-
-    _classCallCheck(this, VOLUMEIndicator);
-
-    _this4 = _possibleConstructorReturn(this, (VOLUMEIndicator.__proto__ || Object.getPrototypeOf(VOLUMEIndicator)).call(this));
-    var M1 = new exprs.ParameterExpr("M1", 2, 500, 5);
-    var M2 = new exprs.ParameterExpr("M2", 2, 500, 10);
-
-    _this4.addParameter(M1);
-
-    _this4.addParameter(M2);
-
-    var VOLUME = new exprs.OutputExpr("VOLUME", new exprs.VolumeExpr(), exprs.OutputExpr.outputStyle.VolumeStick, themes.Theme.Color.Text4);
-
-    _this4.addOutput(VOLUME);
-
-    _this4.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(VOLUME, M1), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator0));
-
-    _this4.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(VOLUME, M2), exprs.OutputExpr.outputStyle.Line, themes.Theme.Color.Indicator1));
-
-    return _this4;
-  }
-
-  _createClass(VOLUMEIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "VOLUME";
-    }
-  }]);
-
-  return VOLUMEIndicator;
-}(Indicator);
-
-exports.VOLUMEIndicator = VOLUMEIndicator;
-
-var MACDIndicator =
-/*#__PURE__*/
-function (_Indicator5) {
-  _inherits(MACDIndicator, _Indicator5);
-
-  function MACDIndicator() {
-    var _this5;
-
-    _classCallCheck(this, MACDIndicator);
-
-    _this5 = _possibleConstructorReturn(this, (MACDIndicator.__proto__ || Object.getPrototypeOf(MACDIndicator)).call(this));
-    var SHORT = new exprs.ParameterExpr("SHORT", 2, 200, 12);
-    var LONG = new exprs.ParameterExpr("LONG", 2, 200, 26);
-    var MID = new exprs.ParameterExpr("MID", 2, 200, 9);
-
-    _this5.addParameter(SHORT);
-
-    _this5.addParameter(LONG);
-
-    _this5.addParameter(MID);
-
-    var DIF = new exprs.OutputExpr("DIF", new exprs.SubExpr(new exprs.EmaExpr(new exprs.CloseExpr(), SHORT), new exprs.EmaExpr(new exprs.CloseExpr(), LONG)));
-
-    _this5.addOutput(DIF);
-
-    var DEA = new exprs.OutputExpr("DEA", new exprs.EmaExpr(DIF, MID));
-
-    _this5.addOutput(DEA);
-
-    var MACD = new exprs.OutputExpr("MACD", new exprs.MulExpr(new exprs.SubExpr(DIF, DEA), new exprs.ConstExpr(2)), exprs.OutputExpr.outputStyle.MACDStick);
-
-    _this5.addOutput(MACD);
-
-    return _this5;
-  }
-
-  _createClass(MACDIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "MACD";
-    }
-  }]);
-
-  return MACDIndicator;
-}(Indicator);
-
-exports.MACDIndicator = MACDIndicator;
-
-var DMIIndicator =
-/*#__PURE__*/
-function (_Indicator6) {
-  _inherits(DMIIndicator, _Indicator6);
-
-  function DMIIndicator() {
-    var _this6;
-
-    _classCallCheck(this, DMIIndicator);
-
-    _this6 = _possibleConstructorReturn(this, (DMIIndicator.__proto__ || Object.getPrototypeOf(DMIIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 90, 14);
-    var MM = new exprs.ParameterExpr("MM", 2, 60, 6);
-
-    _this6.addParameter(N);
-
-    _this6.addParameter(MM);
-
-    var MTR = new exprs.AssignExpr("MTR", new exprs.ExpmemaExpr(new exprs.MaxExpr(new exprs.MaxExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.AbsExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1))))), new exprs.AbsExpr(new exprs.SubExpr(new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)), new exprs.LowExpr()))), N));
-
-    _this6.addAssign(MTR);
-
-    var HD = new exprs.AssignExpr("HD", new exprs.SubExpr(new exprs.HighExpr(), new exprs.RefExpr(new exprs.HighExpr(), new exprs.ConstExpr(1))));
-
-    _this6.addAssign(HD);
-
-    var LD = new exprs.AssignExpr("LD", new exprs.SubExpr(new exprs.RefExpr(new exprs.LowExpr(), new exprs.ConstExpr(1)), new exprs.LowExpr()));
-
-    _this6.addAssign(LD);
-
-    var DMP = new exprs.AssignExpr("DMP", new exprs.ExpmemaExpr(new exprs.IfExpr(new exprs.AndExpr(new exprs.GtExpr(HD, new exprs.ConstExpr(0)), new exprs.GtExpr(HD, LD)), HD, new exprs.ConstExpr(0)), N));
-
-    _this6.addAssign(DMP);
-
-    var DMM = new exprs.AssignExpr("DMM", new exprs.ExpmemaExpr(new exprs.IfExpr(new exprs.AndExpr(new exprs.GtExpr(LD, new exprs.ConstExpr(0)), new exprs.GtExpr(LD, HD)), LD, new exprs.ConstExpr(0)), N));
-
-    _this6.addAssign(DMM);
-
-    var PDI = new exprs.OutputExpr("PDI", new exprs.MulExpr(new exprs.DivExpr(DMP, MTR), new exprs.ConstExpr(100)));
-
-    _this6.addOutput(PDI);
-
-    var MDI = new exprs.OutputExpr("MDI", new exprs.MulExpr(new exprs.DivExpr(DMM, MTR), new exprs.ConstExpr(100)));
-
-    _this6.addOutput(MDI);
-
-    var ADX = new exprs.OutputExpr("ADX", new exprs.ExpmemaExpr(new exprs.MulExpr(new exprs.DivExpr(new exprs.AbsExpr(new exprs.SubExpr(MDI, PDI)), new exprs.AddExpr(MDI, PDI)), new exprs.ConstExpr(100)), MM));
-
-    _this6.addOutput(ADX);
-
-    var ADXR = new exprs.OutputExpr("ADXR", new exprs.ExpmemaExpr(ADX, MM));
-
-    _this6.addOutput(ADXR);
-
-    return _this6;
-  }
-
-  _createClass(DMIIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "DMI";
-    }
-  }]);
-
-  return DMIIndicator;
-}(Indicator);
-
-exports.DMIIndicator = DMIIndicator;
-
-var DMAIndicator =
-/*#__PURE__*/
-function (_Indicator7) {
-  _inherits(DMAIndicator, _Indicator7);
-
-  function DMAIndicator() {
-    var _this7;
-
-    _classCallCheck(this, DMAIndicator);
-
-    _this7 = _possibleConstructorReturn(this, (DMAIndicator.__proto__ || Object.getPrototypeOf(DMAIndicator)).call(this));
-    var N1 = new exprs.ParameterExpr("N1", 2, 60, 10);
-    var N2 = new exprs.ParameterExpr("N2", 2, 250, 50);
-    var M = new exprs.ParameterExpr("M", 2, 100, 10);
-
-    _this7.addParameter(N1);
-
-    _this7.addParameter(N2);
-
-    _this7.addParameter(M);
-
-    var DIF = new exprs.OutputExpr("DIF", new exprs.SubExpr(new exprs.MaExpr(new exprs.CloseExpr(), N1), new exprs.MaExpr(new exprs.CloseExpr(), N2)));
-
-    _this7.addOutput(DIF);
-
-    var DIFMA = new exprs.OutputExpr("DIFMA", new exprs.MaExpr(DIF, M));
-
-    _this7.addOutput(DIFMA);
-
-    return _this7;
-  }
-
-  _createClass(DMAIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "DMA";
-    }
-  }]);
-
-  return DMAIndicator;
-}(Indicator);
-
-exports.DMAIndicator = DMAIndicator;
-
-var TRIXIndicator =
-/*#__PURE__*/
-function (_Indicator8) {
-  _inherits(TRIXIndicator, _Indicator8);
-
-  function TRIXIndicator() {
-    var _this8;
-
-    _classCallCheck(this, TRIXIndicator);
-
-    _this8 = _possibleConstructorReturn(this, (TRIXIndicator.__proto__ || Object.getPrototypeOf(TRIXIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 100, 12);
-    var M = new exprs.ParameterExpr("M", 2, 100, 9);
-
-    _this8.addParameter(N);
-
-    _this8.addParameter(M);
-
-    var MTR = new exprs.AssignExpr("MTR", new exprs.EmaExpr(new exprs.EmaExpr(new exprs.EmaExpr(new exprs.CloseExpr(), N), N), N));
-
-    _this8.addAssign(MTR);
-
-    var TRIX = new exprs.OutputExpr("TRIX", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(MTR, new exprs.RefExpr(MTR, new exprs.ConstExpr(1))), new exprs.RefExpr(MTR, new exprs.ConstExpr(1))), new exprs.ConstExpr(100)));
-
-    _this8.addOutput(TRIX);
-
-    var MATRIX = new exprs.OutputExpr("MATRIX", new exprs.MaExpr(TRIX, M));
-
-    _this8.addOutput(MATRIX);
-
-    return _this8;
-  }
-
-  _createClass(TRIXIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "TRIX";
-    }
-  }]);
-
-  return TRIXIndicator;
-}(Indicator);
-
-exports.TRIXIndicator = TRIXIndicator;
-
-var BRARIndicator =
-/*#__PURE__*/
-function (_Indicator9) {
-  _inherits(BRARIndicator, _Indicator9);
-
-  function BRARIndicator() {
-    var _this9;
-
-    _classCallCheck(this, BRARIndicator);
-
-    _this9 = _possibleConstructorReturn(this, (BRARIndicator.__proto__ || Object.getPrototypeOf(BRARIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 120, 26);
-
-    _this9.addParameter(N);
-
-    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
-
-    _this9.addAssign(REF_CLOSE_1);
-
-    var BR = new exprs.OutputExpr("BR", new exprs.MulExpr(new exprs.DivExpr(new exprs.SumExpr(new exprs.MaxExpr(new exprs.ConstExpr(0), new exprs.SubExpr(new exprs.HighExpr(), REF_CLOSE_1)), N), new exprs.SumExpr(new exprs.MaxExpr(new exprs.ConstExpr(0), new exprs.SubExpr(REF_CLOSE_1, new exprs.LowExpr())), N)), new exprs.ConstExpr(100)));
-
-    _this9.addOutput(BR);
-
-    var AR = new exprs.OutputExpr("AR", new exprs.MulExpr(new exprs.DivExpr(new exprs.SumExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.OpenExpr()), N), new exprs.SumExpr(new exprs.SubExpr(new exprs.OpenExpr(), new exprs.LowExpr()), N)), new exprs.ConstExpr(100)));
-
-    _this9.addOutput(AR);
-
-    return _this9;
-  }
-
-  _createClass(BRARIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "BRAR";
-    }
-  }]);
-
-  return BRARIndicator;
-}(Indicator);
-
-exports.BRARIndicator = BRARIndicator;
-
-var VRIndicator =
-/*#__PURE__*/
-function (_Indicator10) {
-  _inherits(VRIndicator, _Indicator10);
-
-  function VRIndicator() {
-    var _this10;
-
-    _classCallCheck(this, VRIndicator);
-
-    _this10 = _possibleConstructorReturn(this, (VRIndicator.__proto__ || Object.getPrototypeOf(VRIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 100, 26);
-    var M = new exprs.ParameterExpr("M", 2, 100, 6);
-
-    _this10.addParameter(N);
-
-    _this10.addParameter(M);
-
-    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
-
-    _this10.addAssign(REF_CLOSE_1);
-
-    var TH = new exprs.AssignExpr("TH", new exprs.SumExpr(new exprs.IfExpr(new exprs.GtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
-
-    _this10.addAssign(TH);
-
-    var TL = new exprs.AssignExpr("TL", new exprs.SumExpr(new exprs.IfExpr(new exprs.LtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
-
-    _this10.addAssign(TL);
-
-    var TQ = new exprs.AssignExpr("TQ", new exprs.SumExpr(new exprs.IfExpr(new exprs.EqExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.ConstExpr(0)), N));
-
-    _this10.addAssign(TQ);
-
-    var VR = new exprs.OutputExpr("VR", new exprs.MulExpr(new exprs.DivExpr(new exprs.AddExpr(new exprs.MulExpr(TH, new exprs.ConstExpr(2)), TQ), new exprs.AddExpr(new exprs.MulExpr(TL, new exprs.ConstExpr(2)), TQ)), new exprs.ConstExpr(100)));
-
-    _this10.addOutput(VR);
-
-    var MAVR = new exprs.OutputExpr("MAVR", new exprs.MaExpr(VR, M));
-
-    _this10.addOutput(MAVR);
-
-    return _this10;
-  }
-
-  _createClass(VRIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "VR";
-    }
-  }]);
-
-  return VRIndicator;
-}(Indicator);
-
-exports.VRIndicator = VRIndicator;
-
-var OBVIndicator =
-/*#__PURE__*/
-function (_Indicator11) {
-  _inherits(OBVIndicator, _Indicator11);
-
-  function OBVIndicator() {
-    var _this11;
-
-    _classCallCheck(this, OBVIndicator);
-
-    _this11 = _possibleConstructorReturn(this, (OBVIndicator.__proto__ || Object.getPrototypeOf(OBVIndicator)).call(this));
-    var M = new exprs.ParameterExpr("M", 2, 100, 30);
-
-    _this11.addParameter(M);
-
-    var REF_CLOSE_1 = new exprs.AssignExpr("REF_CLOSE_1", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
-
-    _this11.addAssign(REF_CLOSE_1);
-
-    var VA = new exprs.AssignExpr("VA", new exprs.IfExpr(new exprs.GtExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.VolumeExpr(), new exprs.NegExpr(new exprs.VolumeExpr())));
-
-    _this11.addAssign(VA);
-
-    var OBV = new exprs.OutputExpr("OBV", new exprs.SumExpr(new exprs.IfExpr(new exprs.EqExpr(new exprs.CloseExpr(), REF_CLOSE_1), new exprs.ConstExpr(0), VA), new exprs.ConstExpr(0)));
-
-    _this11.addOutput(OBV);
-
-    var MAOBV = new exprs.OutputExpr("MAOBV", new exprs.MaExpr(OBV, M));
-
-    _this11.addOutput(MAOBV);
-
-    return _this11;
-  }
-
-  _createClass(OBVIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "OBV";
-    }
-  }]);
-
-  return OBVIndicator;
-}(Indicator);
-
-exports.OBVIndicator = OBVIndicator;
-
-var EMVIndicator =
-/*#__PURE__*/
-function (_Indicator12) {
-  _inherits(EMVIndicator, _Indicator12);
-
-  function EMVIndicator() {
-    var _this12;
-
-    _classCallCheck(this, EMVIndicator);
-
-    _this12 = _possibleConstructorReturn(this, (EMVIndicator.__proto__ || Object.getPrototypeOf(EMVIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 90, 14);
-    var M = new exprs.ParameterExpr("M", 2, 60, 9);
-
-    _this12.addParameter(N);
-
-    _this12.addParameter(M);
-
-    var VOLUME = new exprs.AssignExpr("VOLUME", new exprs.DivExpr(new exprs.MaExpr(new exprs.VolumeExpr(), N), new exprs.VolumeExpr()));
-
-    _this12.addAssign(VOLUME);
-
-    var MID = new exprs.AssignExpr("MID", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.RefExpr(new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr()), new exprs.ConstExpr(1))), new exprs.AddExpr(new exprs.HighExpr(), new exprs.LowExpr())), new exprs.ConstExpr(100)));
-
-    _this12.addAssign(MID);
-
-    var EMV = new exprs.OutputExpr("EMV", new exprs.MaExpr(new exprs.DivExpr(new exprs.MulExpr(MID, new exprs.MulExpr(VOLUME, new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()))), new exprs.MaExpr(new exprs.SubExpr(new exprs.HighExpr(), new exprs.LowExpr()), N)), N));
-
-    _this12.addOutput(EMV);
-
-    var MAEMV = new exprs.OutputExpr("MAEMV", new exprs.MaExpr(EMV, M));
-
-    _this12.addOutput(MAEMV);
-
-    return _this12;
-  }
-
-  _createClass(EMVIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "EMV";
-    }
-  }]);
-
-  return EMVIndicator;
-}(Indicator);
-
-exports.EMVIndicator = EMVIndicator;
-
-var RSIIndicator =
-/*#__PURE__*/
-function (_Indicator13) {
-  _inherits(RSIIndicator, _Indicator13);
-
-  function RSIIndicator() {
-    var _this13;
-
-    _classCallCheck(this, RSIIndicator);
-
-    _this13 = _possibleConstructorReturn(this, (RSIIndicator.__proto__ || Object.getPrototypeOf(RSIIndicator)).call(this));
-    var N1 = new exprs.ParameterExpr("N1", 2, 120, 6);
-    var N2 = new exprs.ParameterExpr("N2", 2, 250, 12);
-    var N3 = new exprs.ParameterExpr("N3", 2, 500, 24);
-
-    _this13.addParameter(N1);
-
-    _this13.addParameter(N2);
-
-    _this13.addParameter(N3);
-
-    var LC = new exprs.AssignExpr("LC", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
-
-    _this13.addAssign(LC);
-
-    var CLOSE_LC = new exprs.AssignExpr("CLOSE_LC", new exprs.SubExpr(new exprs.CloseExpr(), LC));
-
-    _this13.addAssign(CLOSE_LC);
-
-    _this13.addOutput(new exprs.OutputExpr("RSI1", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N1, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N1, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
-
-    _this13.addOutput(new exprs.OutputExpr("RSI2", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N2, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N2, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
-
-    _this13.addOutput(new exprs.OutputExpr("RSI3", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N3, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N3, new exprs.ConstExpr(1))), new exprs.ConstExpr(100))));
-
-    return _this13;
-  }
-
-  _createClass(RSIIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "RSI";
-    }
-  }]);
-
-  return RSIIndicator;
-}(Indicator);
-
-exports.RSIIndicator = RSIIndicator;
-
-var WRIndicator =
-/*#__PURE__*/
-function (_Indicator14) {
-  _inherits(WRIndicator, _Indicator14);
-
-  function WRIndicator() {
-    var _this14;
-
-    _classCallCheck(this, WRIndicator);
-
-    _this14 = _possibleConstructorReturn(this, (WRIndicator.__proto__ || Object.getPrototypeOf(WRIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 100, 10);
-    var N1 = new exprs.ParameterExpr("N1", 2, 100, 6);
-
-    _this14.addParameter(N);
-
-    _this14.addParameter(N1);
-
-    var HHV = new exprs.AssignExpr("HHV", new exprs.HhvExpr(new exprs.HighExpr(), N));
-
-    _this14.addAssign(HHV);
-
-    var HHV1 = new exprs.AssignExpr("HHV1", new exprs.HhvExpr(new exprs.HighExpr(), N1));
-
-    _this14.addAssign(HHV1);
-
-    var LLV = new exprs.AssignExpr("LLV", new exprs.LlvExpr(new exprs.LowExpr(), N));
-
-    _this14.addAssign(LLV);
-
-    var LLV1 = new exprs.AssignExpr("LLV1", new exprs.LlvExpr(new exprs.LowExpr(), N1));
-
-    _this14.addAssign(LLV1);
-
-    var WR1 = new exprs.OutputExpr("WR1", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(HHV, new exprs.CloseExpr()), new exprs.SubExpr(HHV, LLV)), new exprs.ConstExpr(100)));
-
-    _this14.addOutput(WR1);
-
-    var WR2 = new exprs.OutputExpr("WR2", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(HHV1, new exprs.CloseExpr()), new exprs.SubExpr(HHV1, LLV1)), new exprs.ConstExpr(100)));
-
-    _this14.addOutput(WR2);
-
-    return _this14;
-  }
-
-  _createClass(WRIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "WR";
-    }
-  }]);
-
-  return WRIndicator;
-}(Indicator);
-
-exports.WRIndicator = WRIndicator;
-
-var SARIndicator =
-/*#__PURE__*/
-function (_Indicator15) {
-  _inherits(SARIndicator, _Indicator15);
-
-  function SARIndicator() {
-    var _this15;
-
-    _classCallCheck(this, SARIndicator);
-
-    _this15 = _possibleConstructorReturn(this, (SARIndicator.__proto__ || Object.getPrototypeOf(SARIndicator)).call(this));
-    var N = new exprs.ConstExpr(4);
-    var MIN = new exprs.ConstExpr(2);
-    var STEP = new exprs.ConstExpr(2);
-    var MAX = new exprs.ConstExpr(20);
-
-    _this15.addOutput(new exprs.OutputExpr("SAR", new exprs.SarExpr(N, MIN, STEP, MAX), exprs.OutputExpr.outputStyle.SARPoint));
-
-    return _this15;
-  }
-
-  _createClass(SARIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "SAR";
-    }
-  }]);
-
-  return SARIndicator;
-}(Indicator);
-
-exports.SARIndicator = SARIndicator;
-
-var KDJIndicator =
-/*#__PURE__*/
-function (_Indicator16) {
-  _inherits(KDJIndicator, _Indicator16);
-
-  function KDJIndicator() {
-    var _this16;
-
-    _classCallCheck(this, KDJIndicator);
-
-    _this16 = _possibleConstructorReturn(this, (KDJIndicator.__proto__ || Object.getPrototypeOf(KDJIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 90, 9);
-    var M1 = new exprs.ParameterExpr("M1", 2, 30, 3);
-    var M2 = new exprs.ParameterExpr("M2", 2, 30, 3);
-
-    _this16.addParameter(N);
-
-    _this16.addParameter(M1);
-
-    _this16.addParameter(M2);
-
-    var HHV = new exprs.AssignExpr("HHV", new exprs.HhvExpr(new exprs.HighExpr(), N));
-
-    _this16.addAssign(HHV);
-
-    var LLV = new exprs.AssignExpr("LLV", new exprs.LlvExpr(new exprs.LowExpr(), N));
-
-    _this16.addAssign(LLV);
-
-    var RSV = new exprs.AssignExpr("RSV", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.CloseExpr(), LLV), new exprs.SubExpr(HHV, LLV)), new exprs.ConstExpr(100)));
-
-    _this16.addAssign(RSV);
-
-    var K = new exprs.OutputExpr("K", new exprs.SmaExpr(RSV, M1, new exprs.ConstExpr(1)));
-
-    _this16.addOutput(K);
-
-    var D = new exprs.OutputExpr("D", new exprs.SmaExpr(K, M2, new exprs.ConstExpr(1)));
-
-    _this16.addOutput(D);
-
-    var J = new exprs.OutputExpr("J", new exprs.SubExpr(new exprs.MulExpr(K, new exprs.ConstExpr(3)), new exprs.MulExpr(D, new exprs.ConstExpr(2))));
-
-    _this16.addOutput(J);
-
-    return _this16;
-  }
-
-  _createClass(KDJIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "KDJ";
-    }
-  }]);
-
-  return KDJIndicator;
-}(Indicator);
-
-exports.KDJIndicator = KDJIndicator;
-
-var ROCIndicator =
-/*#__PURE__*/
-function (_Indicator17) {
-  _inherits(ROCIndicator, _Indicator17);
-
-  function ROCIndicator() {
-    var _this17;
-
-    _classCallCheck(this, ROCIndicator);
-
-    _this17 = _possibleConstructorReturn(this, (ROCIndicator.__proto__ || Object.getPrototypeOf(ROCIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 120, 12);
-    var M = new exprs.ParameterExpr("M", 2, 60, 6);
-
-    _this17.addParameter(N);
-
-    _this17.addParameter(M);
-
-    var REF_CLOSE_N = new exprs.AssignExpr("REF_CLOSE_N", new exprs.RefExpr(new exprs.CloseExpr(), N));
-
-    _this17.addAssign(REF_CLOSE_N);
-
-    var ROC = new exprs.OutputExpr("ROC", new exprs.MulExpr(new exprs.DivExpr(new exprs.SubExpr(new exprs.CloseExpr(), REF_CLOSE_N), REF_CLOSE_N), new exprs.ConstExpr(100)));
-
-    _this17.addOutput(ROC);
-
-    var MAROC = new exprs.OutputExpr("MAROC", new exprs.MaExpr(ROC, M));
-
-    _this17.addOutput(MAROC);
-
-    return _this17;
-  }
-
-  _createClass(ROCIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "ROC";
-    }
-  }]);
-
-  return ROCIndicator;
-}(Indicator);
-
-exports.ROCIndicator = ROCIndicator;
-
-var MTMIndicator =
-/*#__PURE__*/
-function (_Indicator18) {
-  _inherits(MTMIndicator, _Indicator18);
-
-  function MTMIndicator() {
-    var _this18;
-
-    _classCallCheck(this, MTMIndicator);
-
-    _this18 = _possibleConstructorReturn(this, (MTMIndicator.__proto__ || Object.getPrototypeOf(MTMIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 120, 12);
-    var M = new exprs.ParameterExpr("M", 2, 60, 6);
-
-    _this18.addParameter(N);
-
-    _this18.addParameter(M);
-
-    var MTM = new exprs.OutputExpr("MTM", new exprs.SubExpr(new exprs.CloseExpr(), new exprs.RefExpr(new exprs.CloseExpr(), N)));
-
-    _this18.addOutput(MTM);
-
-    var MTMMA = new exprs.OutputExpr("MTMMA", new exprs.MaExpr(MTM, M));
-
-    _this18.addOutput(MTMMA);
-
-    return _this18;
-  }
-
-  _createClass(MTMIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "MTM";
-    }
-  }]);
-
-  return MTMIndicator;
-}(Indicator);
-
-exports.MTMIndicator = MTMIndicator;
-
-var BOLLIndicator =
-/*#__PURE__*/
-function (_Indicator19) {
-  _inherits(BOLLIndicator, _Indicator19);
-
-  function BOLLIndicator() {
-    var _this19;
-
-    _classCallCheck(this, BOLLIndicator);
-
-    _this19 = _possibleConstructorReturn(this, (BOLLIndicator.__proto__ || Object.getPrototypeOf(BOLLIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 120, 20);
-
-    _this19.addParameter(N);
-
-    var STD_CLOSE_N = new exprs.AssignExpr("STD_CLOSE_N", new exprs.StdExpr(new exprs.CloseExpr(), N));
-
-    _this19.addAssign(STD_CLOSE_N);
-
-    var BOLL = new exprs.OutputExpr("BOLL", new exprs.MaExpr(new exprs.CloseExpr(), N));
-
-    _this19.addOutput(BOLL);
-
-    var UB = new exprs.OutputExpr("UB", new exprs.AddExpr(BOLL, new exprs.MulExpr(new exprs.ConstExpr(2), STD_CLOSE_N)));
-
-    _this19.addOutput(UB);
-
-    var LB = new exprs.OutputExpr("LB", new exprs.SubExpr(BOLL, new exprs.MulExpr(new exprs.ConstExpr(2), STD_CLOSE_N)));
-
-    _this19.addOutput(LB);
-
-    return _this19;
-  }
-
-  _createClass(BOLLIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "BOLL";
-    }
-  }]);
-
-  return BOLLIndicator;
-}(Indicator);
-
-exports.BOLLIndicator = BOLLIndicator;
-
-var PSYIndicator =
-/*#__PURE__*/
-function (_Indicator20) {
-  _inherits(PSYIndicator, _Indicator20);
-
-  function PSYIndicator() {
-    var _this20;
-
-    _classCallCheck(this, PSYIndicator);
-
-    _this20 = _possibleConstructorReturn(this, (PSYIndicator.__proto__ || Object.getPrototypeOf(PSYIndicator)).call(this));
-    var N = new exprs.ParameterExpr("N", 2, 100, 12);
-    var M = new exprs.ParameterExpr("M", 2, 100, 6);
-
-    _this20.addParameter(N);
-
-    _this20.addParameter(M);
-
-    var PSY = new exprs.OutputExpr("PSY", new exprs.MulExpr(new exprs.DivExpr(new exprs.CountExpr(new exprs.GtExpr(new exprs.CloseExpr(), new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1))), N), N), new exprs.ConstExpr(100)));
-
-    _this20.addOutput(PSY);
-
-    var PSYMA = new exprs.OutputExpr("PSYMA", new exprs.MaExpr(PSY, M));
-
-    _this20.addOutput(PSYMA);
-
-    return _this20;
-  }
-
-  _createClass(PSYIndicator, [{
-    key: "getName",
-    value: function getName() {
-      return "PSY";
-    }
-  }]);
-
-  return PSYIndicator;
-}(Indicator);
-
-exports.PSYIndicator = PSYIndicator;
-
-var STOCHRSIIndicator =
-/*#__PURE__*/
-function (_Indicator21) {
-  _inherits(STOCHRSIIndicator, _Indicator21);
-
-  function STOCHRSIIndicator() {
-    var _this21;
-
-    _classCallCheck(this, STOCHRSIIndicator);
-
-    _this21 = _possibleConstructorReturn(this, (STOCHRSIIndicator.__proto__ || Object.getPrototypeOf(STOCHRSIIndicator)).call(this));
-
-    _this21.getName = function () {
-      return "StochRSI";
-    };
-
-    var N = new exprs.ParameterExpr("N", 3, 100, 14);
-    var M = new exprs.ParameterExpr("M", 3, 100, 14);
-    var P1 = new exprs.ParameterExpr("P1", 2, 50, 3);
-    var P2 = new exprs.ParameterExpr("P2", 2, 50, 3);
-
-    _this21.addParameter(N);
-
-    _this21.addParameter(M);
-
-    _this21.addParameter(P1);
-
-    _this21.addParameter(P2);
-
-    var LC = new exprs.AssignExpr("LC", new exprs.RefExpr(new exprs.CloseExpr(), new exprs.ConstExpr(1)));
-
-    _this21.addAssign(LC);
-
-    var CLOSE_LC = new exprs.AssignExpr("CLOSE_LC", new exprs.SubExpr(new exprs.CloseExpr(), LC));
-
-    _this21.addAssign(CLOSE_LC);
-
-    var RSI = new exprs.AssignExpr("RSI", new exprs.MulExpr(new exprs.DivExpr(new exprs.SmaExpr(new exprs.MaxExpr(CLOSE_LC, new exprs.ConstExpr(0)), N, new exprs.ConstExpr(1)), new exprs.SmaExpr(new exprs.AbsExpr(CLOSE_LC), N, new exprs.ConstExpr(1))), new exprs.ConstExpr(100)));
-
-    _this21.addAssign(RSI);
-
-    var STOCHRSI = new exprs.OutputExpr("STOCHRSI", new exprs.MulExpr(new exprs.DivExpr(new exprs.MaExpr(new exprs.SubExpr(RSI, new exprs.LlvExpr(RSI, M)), P1), new exprs.MaExpr(new exprs.SubExpr(new exprs.HhvExpr(RSI, M), new exprs.LlvExpr(RSI, M)), P1)), new exprs.ConstExpr(100)));
-
-    _this21.addOutput(STOCHRSI);
-
-    _this21.addOutput(new exprs.RangeOutputExpr("MA", new exprs.MaExpr(STOCHRSI, P2)));
-
-    return _this21;
-  }
-
-  return STOCHRSIIndicator;
-}(Indicator);
-
-exports.STOCHRSIIndicator = STOCHRSIIndicator;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(27);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
-var transform;
-
-var options = {"hmr":true}
-options.transform = transform
-// add the styles to the DOM
-var update = __webpack_require__(40)(content, options);
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!./main.css", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!./main.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var escape = __webpack_require__(28);
-exports = module.exports = __webpack_require__(29)(false);
-// imports
-
-
-// module
-exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\n.kline {  \n    -webkit-overflow-scrolling:touch;\n  }\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n                /*\n                    position: absolute;\n    left: 0;\n    top: 80px;\n                */\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%;\n    overflow:auto;\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(30)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(31)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n#chart_toolbar_periods_vert div a.selected {\n    color: #ffac00\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(32)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(33)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n/* .chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n} */\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(34)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(35)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(36)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(37)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(38)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(39)) + ") no-repeat;\n}\n\n.chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n}\n\n.chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n}\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n/* #chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n} */\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    padding-left: 15px;    \n    padding-top: 20px;\n}\n\n.chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n.chart_trade_quotation .green {\n    color: #0F0\n}\n\n.chart_trade_quotation .red {\n    color: #F00\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n    font-size: 12px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 20px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 26px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: orchid;\n    top: 49px;\n    right: 10px;\n}\n\n \n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-module.exports = function escape(url) {
-    if (typeof url !== 'string') {
-        return url
-    }
-    // If url is already wrapped in quotes, remove them
-    if (/^['"].*['"]$/.test(url)) {
-        url = url.slice(1, -1);
-    }
-    // Should url be wrapped?
-    // See https://drafts.csswg.org/css-values-3/#urls
-    if (/["'() \t\n]/.test(url)) {
-        return '"' + url.replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"'
-    }
-
-    return url
-}
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAJn2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyI+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NTwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDx4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+eG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDY8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkhpc3Rvcnk+CiAgICAgICAgICAgIDxyZGY6U2VxPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNC0xMi0wM1QxNzo1Njo1MiswODowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDozNjIzYmJlYi1iNGU2LWNhNDktOTRjZi05MTIyY2Q1Y2NiZTk8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+eG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBODwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkRlcml2ZWRGcm9tIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgPHN0UmVmOmluc3RhbmNlSUQ+eG1wLmlpZDo4MzE3OTEwZi1kOTE5LTY4NDAtYWVhOS0zNzI5NWE2NGI1NmU8L3N0UmVmOmluc3RhbmNlSUQ+CiAgICAgICAgICAgIDxzdFJlZjpkb2N1bWVudElEPnhtcC5kaWQ6MWYwY2U2ZjQtZTRlNS1jODQ3LWIyOTgtNGNkNjRiYzBkYzA2PC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZWRGcm9tPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOkNyZWF0ZURhdGU+MjAxNC0xMi0wM1QxNzo1NjoyOCswODowMDwveG1wOkNyZWF0ZURhdGU+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqC9xe+AAAAWUlEQVQIHWO8cOHCFgYGBm8gRgZbmRgZGXOBIj+QRH8wMTHlMenr69////9/J0wCxNbT07vHCBK4f/8+x8ePH6+B2Pz8/FqKioo/mEAcEAOoEmRkHogNEgMA0qYfb8X3frQAAAAASUVORK5CYII="
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA21pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6M0E5Qjc0ODc3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6M0E5Qjc0ODY3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvrZrC8AAABOSURBVHjaYvz//z8DCFy8eNEbSDHq6+tvAfEZQRJAQQ4g+xoDBGgBJX8wQTkVQKwIxRVgHRcuXFCEquaAKvoBxNogHZORBBmg7EkAAQYAImEV+46peUgAAAAASUVORK5CYII="
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkMxOTJFRDk2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkMxOTJFRDg2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjgzMTc5MTBmLWQ5MTktNjg0MC1hZWE5LTM3Mjk1YTY0YjU2ZSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5MkIK1AAAAPklEQVR42mJ0CUvewsDA4M2ACrYyAYlcIP6BJAhi54Ek7gNxJ5IEiH2PCcrpgCq4D2UzsCBpBxnJCDMWIMAAVuANgw9cJ2UAAAAASUVORK5CYII="
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADcWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMTQgNzkuMTUxNDgxLCAyMDEzLzAzLzEzLTEyOjA5OjE1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2QzE5MkVEODY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODMxNzkxMGYtZDkxOS02ODQwLWFlYTktMzcyOTVhNjRiNTZlIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkyQgrUAAABCSURBVBhXY3QJS2aAAh8g/g/EW0EcJhABBBxAPAmIJ0PZcIkKIFaEYhAbLKEExOUgDhSA2IogCZARYO1QAGQzTAYAPbkH1E4jJr8AAAAASUVORK5CYII="
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6N0EwQTE5MkI4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6N0EwQTE5MkE4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjYzNEUzRUIyODExOTExRTRBNkJDQzhDODM5MEQxQTkwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjYzNEUzRUIzODExOTExRTRBNkJDQzhDODM5MEQxQTkwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+VsD84AAABMxJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBEEQJ3jITVDUgxL1YoggHlSU6MHlKkEQ3FFREEEviogexJlTDqIxcQl60Is4oujFDVFhfN+p1kqlu7ZZMhN+w6My1f1fVXf9ev2r+6eDfD4fRMhkMpeBaXKdCalg5NYFPMpms0sDy62OWKINhtGPn8ABoC+dTud1BKmE+onAUeAOSBt8CKKtExgESafrKagb1fcB+3FKv1x68K8hYA/Qj0aafAiijUZnACRdUUVoYfQbuA8MAy+BF8BzG4LPwARgCtCLcx9wGYVXwHLgqvjd6zKMGWAZWqRunhF1a3HeC2wITtHYw/gT/UD5AMWQOG6v0Q/iNrTcI4jJvZtA+sZ1GK8AX4V773J1ZTqNLyjOi16ccD4Fp+lcmwRavYM+Zlw10XljghIQ1NFQafa3k6xr5kkH+8H48AOWtDEgGBUGuQSVYoLl5b8r6wfofqu43QcuMZJsfARYAiEZdOqBZHxINrYNMBKNjQQmYy2BjXEiga1xLIGLcVy0HhkfhPGQ7Y1FPYd2W+NCWKr4tuvcKHouhIaVCktaOQlw4etRvE95GpPHngUafVR5xFyxVST1oP+y5iPlJXVlW00cUsK7uirVRO3Vtlmx+IhL6UbBdLW1BD5qLKvyLJSnfYwjTXwHNMD4A0taBQkw7ItQbAXmWhMIo/UCLaK6L3RoeAP5ilJ30TVOpOcoPeLnMHynJeWoxrOlh1PXrZc8irhQDw4D1zhO5DiR48SaeZ5oiJvqqfQV1chjt1cmTtRNNBdZj52lJkUyx0y+EWr5I1XbmIk1kTWRCZig/ASqeyet4HTvWNKRkSDLOt0bbad56Pjkgv2ACZiACewjFJunV6MIrLRPF2AoPejgCIUJmIAJakMTVfEJZSPaCWRMrcrHO2tibA9cNVE+nv2ACaqDgPPSqjqtzHbtXPTStzRPsopZO7MncoIjE5SDALMvJ8SjMfpbEpTYurgZmHOpCzVakLOpS+xBXKtOPVBbjLsGVTSMscPjShAZCbL+omQdZOucCWLHmKdzrROY3vpp8xMtjEfnJ9omtankYdJ6UDbWkVvfXIk8akAmD6VueT1TC5OywZVzTiQPA807VhP53w3q2paguq3ADaBdt98rP1EeSufwVu2ZU4ykzT8wvWvX5h+Y3nhrc/dN+YmmiWWTn6h9F8+ayJrImlikJkbgnG3O2WZNLLUmOhrH5ycmGetmaWg7hZMEN6UTzKIfxtlqYuLOymui7VBqPZHzEz2f6vLb/zHOjCs+sc3mFanoUaYspzBOXlxn2JXZlVnSKkSAEZmB4gKwG6PxWt5ne2vbCdxWjbUxUsztblJ5XNn34qGHZDvZ650r6ueh2AfcSgqyiPgccAkXLqvUbwZWAcew72HSKGwEcorx/KDwr4nTgW1kHDsKOHAOijVAt/hNn/vaAqwUrQ7oojSasseBezjwJn43B4UPbD2h9QHqvpv8YHVQ+DbaXRhTD1YEhe/Gxa0b6LtZzfLSd6a4cPQtrE3AY9HqD7F/KorFAMWS9F+mRDAcLX1HxYrAW6BNGC0EiOgZ8JRKEH8bcQpKpugO4KMwoI+tnVS/FSc/Q4nz8W7T9/LU1bt3sitrYhD8EWAAdoU1AmCjen8AAAAASUVORK5CYII="
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NjI0MkEyMUI4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NjI0MkEyMUE4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjZDNzdDQUY4NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjZDNzdDQUY5NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+s3AxtQAABPZJREFUeNrsXE1oHkUYnvkYq0IFC5ImubRI1WolSUEoFIqWHnIr6KqHStWLtaceJFhyUryG4ElKf8RaKELNYkFETyYXPYhNW3+CHtqL+NX+XdoKxQrTZ3bny7ffdv43+Wziu/BssrP7Pjs7M++z7+683zIpJVvEDDsBPNJT5kGL9S57gTMs58+xwKVlKHsC+A4kEwBPIVDLGmAK+Bok61MIOss4cA4k46kEahnUNZkCHkghUItqiwnge5BsSiHoLKp35kGyt1MgAoz+Bb4FFoDfgd+AX0MIbgDqmh8GJlkm52Ma8QKwHfhMb0/G9MIssA1nVNU8rMtewnU/FUJwqOj7TF4vtjL5A9bn9XHvGrtHOYRzyfl+TfwPsAmkf8R240nglh7e79R3+rsxkzdRi481wUfxl5DojauGIOez//s2WBEEHLcyV1eNFbJu95Od7nsfyGPvjdSN/804IElrTCCiLXIum9cgk7xA/8dBzkf07T6hDUrjD4CtqH5XZIKC6hk2ApwGxur7Ghn7CTzGboIAYztBoLGZIML4XoKu8WjoI4+oj+3iZpLJ88HjA2eTlRrImAeuJbmxCJOLkqgutyZ29WEA68utRGMlLkeAYRY7cOq+IlKkvEfWAs9qHe596IWywazDXSRJeY87N9REEdzaVkEJbO1lFpSA1vYpUqe14wRVi+pgrJTXe+ESsB5nvkKa2E9NzPkzWL8JbBSRRq9obNGl0zE1eBV4r1b2SWycqN7m7NdbCxg7W1qRUj5UeTn1eXgjdn3l/UIfcv4X/j8VpsoUJ1KcSHHi/U5QxomsWZyY86HGcWIj4zgCi5f6ojR/zJQaofYhUg2MmURyhGptA9JE0kQioGjdJ6j6Jey9Q9k+x/LColFJNhf77Bzk5rH3BfJGIiACInBoYqD2uUW1qn0BKQNuVVaT0RShEAEREMHK0MTa8WmaWDk+XhONNYjVxMrxpIlEsBIIKD+xPwR2PQjUypZX+zwiu8yTdSFaSRmSlOBIBMvhjTlvax0YXvy/qw3mMoMHtmPKXK8D2yFlwiNpw9ZtTeZTpLazDe4LXxDGxqlfe9A46BgpspzPNJP1TL4cT2Dqd1KkFU+gpgxzfhoYs+wfULf/ltW4mndi3l/kJwpHMLHVYdwhvyRsz4M9xg7y8EasBlwV8mpeWtI7NeGdoPWRO+dYg3JxUo31/l53TunK6JmdWs3ifMEwQsPzE23DO2jG25m778tP9OZkqcaaYQOOgNs5F0+qTJpImthUE43ORDnblLNNmpisicmRifl3LLYzO7xUBLuwRXBbLsFs/jIuwEtFYFjj+B1LQ02knG1G+YmMMuOW5O2+CE4bsRzXeIJiFYwDEZt7syrbgIYySVrfCHK+DvgCeDy1BgeAr9CVF9OHMmMP+h+6ljzd2N0uyvahtDnXnKtPoh0EvhQO9uPAp2i4uVr568Au4EPs+9HWC3uAds34SVb+NPFR4C1lbO6FnG/A+kVgn95Wn/t6A3hen3XePg7KT7xNFNXP5FVsb9ZnXQu8bfpeWL0Gu1n5bbRvYKxqsAOYtjx0qM9ebe7qQc4fw/ooK7+F9RpwtngqyeRtvV/V4llAxc/qV6aKYKEkMMWKjP0JjGqjpwFF9Avwc/E3k393Fal8iKhmyR8DrmmDn5j6yFom79hE1TTG98EgSOvMlxCR7EqiythdAQYAbEvqZUahHBUAAAAASUVORK5CYII="
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABC0lEQVQ4T7WTYVEDMRSEv1VAJYCDOmgdgAPAASigKGhx0CoACcUBEsDBVcFj9ibpvF6TDn/IzM0kL9l9t5usImIFvHA6niVtcikinoB1qg3AmyIiSnEslPle0n5CsAT8eZjsChgqwaEUtpIeJ39zsoyILXAPjJhK8Apcl40uSQLvgG9LPxJIWqUDZyQZLOmhemcC6/mqmlskU7A1RYT9mKultwDuLEvSEBE2+MOdp+ebBKXDzOBLhnrvfwiKhFvgJkl4b13xJRN3VXPH2Dmw6F3jEVw9mJLka/RTzg/pDNwiAX7yQ7LbM6ALbpCMGEvwZAwGUBP42QnTIoXJDQ8mcJxrumqjv8TZYdr8Ai/uwaXkPGIcAAAAAElFTkSuQmCC"
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEI1Q0Q4QzI4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEI1Q0Q4QzE4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDc2N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDc3N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+R+XfywAABNVJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBFEMJnjITVDUgxL1YogXDypK9OBylSAI4r6CCOpBEdGDOAEhB9GYuIR40Is4QdGLG6LC+H6mWsua7lq6Z8aZ8Bsela7u/7q669ebX10/7WWzWS/A0uWtl4Apcp0JKe/frQN4vKylbbFnuVURS7DBMNj5AewDevoepLM6glRE/XjgMHAHpDVxCIKtHRgASbvrLagb1fcAe3FLP11a8OdCwC6gDxepi0MQbNQ7/SDpCCp8C6NfwH1gCHgJDAMvbAg+AeOASUA37r3fpRde0TMFroj9bpduTANLcEVq5klRtwb3Pc+G4Dj1PYw/0g7KhygGxXm7jX4QtuHKXYKY3LsOpG9cu/Ey8EW49w5XV6bb+IzirGjFMedbcBrOlUmg1TvoY9pVE503JigAQRV1leZ4M8m6Zpy0sR+MDT9gSUtO4Lsa5IVBLkGlGGBZ+e/S+gGa3yh+7t2fgTA+BCyCkAw4tUAyPiAb2wYYkcZGApOxlsDGOJLA1jiUwMU4LFoPjPfDeND2h0W9h2Zb49FN9W3XsZF4LPiGmQprYjE0UXK6ahTvUjGNyWNPAbV+TONgrIzYKpJ60l9ZiyPlBXVlW00cVMK7qjLVRO3TtpmxxBGXwvWC6WlrCeKosazKM1CeiGMcDOcRoAbG71kTS6iJ6PYFKLYAs61bIIzWCTSI6h6XFqwnX1HqzrvGifQepUvsDsF3GlKOajxTejl1zXrKo4gLteAgcJXjRI4TOU6smPeJhripmspYLZA8dltp4kTdQHOR9dBRalIkc8wUN0ItfqRqGzOxJrImMgETFJ9Ade+oGZxujaU1MBJkvU6/jbbD3Hd8c8F+wARMwAT2EYrN26s8Aivts32HMroYzREKEzABE1SEJqri48tGdBBIm64qn++siaEtcNVE+Xz2AyYoDwLOSyvrtDLbuXPiqW9h3mQlmTuzJ3KCIxMUgwCjLyPEozb4WxKU0LqwEZhxqfM1WpCxqYtsQdhVnVqgXjHsGZRRN4Z2j6sqB0ZEBlxPJOsgW+tMENrHPJwrhEA3nLWrftr8RAvj/PxE26Q2dd3Zj5oPysY6cusfVyIPLiCT+1KzYr1T86OywZV7jiT3Pc0aq4l8dIO6NkWobiNwA2jWHY+Vnyh3pXN4q7bMKUbS5h+Y1tq1+QemFW9t7r4pP9E0sGzyE7Vr8ayJrImsiQk1MQDnbHPONmtioTXR0Tg8PzHKWDdKfdshHCW4KZ1gJn4ZZ6uJkQdLr4m2Xal1Zc5PjDmcefX/P2fGJU9ss1kiFS1KF+UWxsjCdZpdmV2ZJa1EBOiRaSjOATvRG6/lY7Y/bduB26qxKVJVmzahOK4c9+GhhWQ7MdaaK+rnoNgD3PI17BeAi3hwvUr9JmAlcATHHkX1wgYgoxjP9XL/mjgV2ErGob2AE2ehWA10in363NdmYIW4ar8uSqMhexS4hxNvYr/ey31g6ynND1D3zeQHq7zct9Huwpha0OLlvhsXNm+g72bVy1Pf6ShOe7lvYW0EnoirfhfHJ6NYCFAsSf9lSgRDwdQ3L1YE3gJNwmg+QETPgWdUgvirPHdWM0XPAB+EAd3/sPqtOPkdSpiPd5q+l6fO3mMnu7Imet5vAQYAtaODAARZxFkAAAAASUVORK5CYII="
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEY5QjlCQTA4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEY5QjlCOUY4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDdBN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDdCN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+2tcnMAAABOxJREFUeNrsXDtoFUEU3SzjDwwoiNE0WsS/aAQ/IIiKRTpBUQvBT+MPxEKDEhs1hU0IVvEHahREUAtBRCu10UI0RtSghTbiE39NoiAqPM9NZnWzmZm9My/vaeIdOGx2svfs7Myds3d37tuoWCxGCbqbFl0AqtN1eYij/mUT8Kjn4OKFEbPEhrppwD2QNAJVIQRURgItwE2Q1IQQJKUB6ARJQygBlUm6JS3AiBACKtQXjcB9kNSFECSFRqcDJJuSCsUw+gncBrqAl8AL4DmHoBugax4DNFUffdDh04mvgKXAJb3f5DMKd4AlOCM185SuW4vrnsEhOEFjD+PPtIPtA2ye6OP2G4eHJoSr4Mw7NfF3oA6kb3yH8SLwRbv3Xm9Hwhl7sDmjW9HmfQmhs3G4EGAI7/zvfTA0CKpwK3MNVT3JumOerHTe94jc994ow/hX/EAkrXQC5WsAnSyW3ALMwipC5f0AzZ+nb/f+faCNm4EFaH6nVx+kjA+njVkELmPOrc1p7CTgGFsJuMZGAh/jAcOYMj4E4yfcG0vWk+q5xn0BMQhSN5KizwPXoNxYlGmKiqiWWRNTTjcRm/dxoDF57GmgNg40TubKO8U0yo71H1njuKvL3cs/Cvqare6uQqR8UDVRsXvbVri9XV5B4fR2niIlHeYnqFqV6SXLSR8pz7bgHVAD4w+iiRXURAz7bGy2AlOVp9F6jTm6utWnBRvIVzJ153zjRHqPslPvdsF35sQexuTuk1Mvp66ExonUgiPAZe6LKIkTJU6UOPGfJtBxYlgnpjx2V8lxYlyCcadXH9hmaV6Ulh8zhUao5Y9UuTGTCo1QRRNFE4VACHwUqZ+LJi9hTdPZtsayIjHSZHdzn1xDnmJ97wsyG4VACISAH6HYtM8pqmnt46QMOFW5dzFaIhQhEAIh+CtxIjcetAVeQZqYPt5bE40t8NXE9PGiiUIwBAgkP7FScaJND7haGedpX57IlnexjqWVkiEpCY5CUIbZiNlX0DpQm/yd0gZjnWkGFnzqXK8DC5w6lSNptbb9hCxPkQquPvg35oIydU722ll+kBgRGXC1JFkH2TpvAlMPiyINSUHJTCTnqp8zP5Fh/Ds/UTmCiQUOY3N+Yvp5MG3sImd3YjrgGrDuHJrUljw7OxdoOfmJ1jVWzuqvYhi7hrK533QOGUrvlR3UzwOuAfXecaLpstj5ic78g7z8RFeH5uYn5o0GJz/RuRYvqiyaKJqoC2bjfI7y2BCkidZnZ8nZlpzt/1gT40BjsybajF2zVHGnsE1wY5dglvwyjquJnLCmQprIHUqnK0t+YvgLCFn9L5MmVubtvuKmjdiOK3mBYhj4gfLNvRmOfSCuLJIWVeq3fRiR8dicBfZhNF6HtGAPcCNr7OXKKKNyH7oGPd04p1/IdnTQmivq6ZNoB4DrysHeDpxHx93N1G8GVgHH8L+HtlHYCBQyxtOjvp8mjgO2kbFxFHDgFGzWANv1Pn3uawuwXJ+1w+oH+hNv9Fmzdhz4Efsz9VnHAjtM3wvLtmB11PdttFswphYsA1otzw303ayZ6UffCVHfT0/b9IPoY32t3/T/qRVzAYol6VemRNDVKyiG4aKPCr0F5mujWQARPQOe0hbEX/tdQiZLfjfwSRvQx9aO4/8/bKJq8vHtMGBpnfESfJJdRVSj6JcAAwDMequ4kXXO2QAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKElEQVQ4T7VTwU0DMRCcrYArwby9j3QQOoAOgA5CBYQKCB0kFUAJoQMe9v/o4JD8X7SWfVo5vhMfLJ1krT3jm9kdYuY9gGeYJSJPMcaDrXnvd0T0amoTgDdiZinFXCj7cwjhbAmY+QaAfrp2AK4ATJXgRwsicowxPlpgu/feH4noHkDGVIIXEXF6sEZSwSJyIqJRpc8EIYS9uXDxJxYcY3yo3lEx56tq7pG0YJWlnojIhnp6C+AupeTGcZyYeRKRD325vd8l0EvOuUHBa4bq2f8QFAm3KaVrI+G91+I1E09V84KxGyLaLrVxBlcPWpK5jWWU7SBdgHskRPRtB0ndHnTCeq1qQlVHOWNUgm5yMADUBH4uhGlrwjRoHpRA41zTlc//GGcN0+EXyGXo9iBlz1cAAAAASUVORK5CYII="
-
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-
-var stylesInDom = {};
-
-var	memoize = function (fn) {
-	var memo;
-
-	return function () {
-		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-		return memo;
-	};
-};
-
-var isOldIE = memoize(function () {
-	// Test for IE <= 9 as proposed by Browserhacks
-	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-	// Tests for existence of standard globals is to allow style-loader
-	// to operate correctly into non-standard environments
-	// @see https://github.com/webpack-contrib/style-loader/issues/177
-	return window && document && document.all && !window.atob;
-});
-
-var getElement = (function (fn) {
-	var memo = {};
-
-	return function(selector) {
-		if (typeof memo[selector] === "undefined") {
-			var styleTarget = fn.call(this, selector);
-			// Special case to return head of iframe instead of iframe itself
-			if (styleTarget instanceof window.HTMLIFrameElement) {
-				try {
-					// This will throw an exception if access to iframe is blocked
-					// due to cross-origin restrictions
-					styleTarget = styleTarget.contentDocument.head;
-				} catch(e) {
-					styleTarget = null;
-				}
-			}
-			memo[selector] = styleTarget;
-		}
-		return memo[selector]
-	};
-})(function (target) {
-	return document.querySelector(target)
-});
-
-var singleton = null;
-var	singletonCounter = 0;
-var	stylesInsertedAtTop = [];
-
-var	fixUrls = __webpack_require__(41);
-
-module.exports = function(list, options) {
-	if (typeof DEBUG !== "undefined" && DEBUG) {
-		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-
-	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
-
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the <head> element
-	if (!options.insertInto) options.insertInto = "head";
-
-	// By default, add <style> tags to the bottom of the target
-	if (!options.insertAt) options.insertAt = "bottom";
-
-	var styles = listToStyles(list, options);
-
-	addStylesToDom(styles, options);
-
-	return function update (newList) {
-		var mayRemove = [];
-
-		for (var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-
-		if(newList) {
-			var newStyles = listToStyles(newList, options);
-			addStylesToDom(newStyles, options);
-		}
-
-		for (var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-
-			if(domStyle.refs === 0) {
-				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
-
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-};
-
-function addStylesToDom (styles, options) {
-	for (var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-
-		if(domStyle) {
-			domStyle.refs++;
-
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles (list, options) {
-	var styles = [];
-	var newStyles = {};
-
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = options.base ? item[0] + options.base : item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-
-		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
-		else newStyles[id].parts.push(part);
-	}
-
-	return styles;
-}
-
-function insertStyleElement (options, style) {
-	var target = getElement(options.insertInto)
-
-	if (!target) {
-		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
-	}
-
-	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
-
-	if (options.insertAt === "top") {
-		if (!lastStyleElementInsertedAtTop) {
-			target.insertBefore(style, target.firstChild);
-		} else if (lastStyleElementInsertedAtTop.nextSibling) {
-			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			target.appendChild(style);
-		}
-		stylesInsertedAtTop.push(style);
-	} else if (options.insertAt === "bottom") {
-		target.appendChild(style);
-	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
-		var nextSibling = getElement(options.insertInto + " " + options.insertAt.before);
-		target.insertBefore(style, nextSibling);
-	} else {
-		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
-	}
-}
-
-function removeStyleElement (style) {
-	if (style.parentNode === null) return false;
-	style.parentNode.removeChild(style);
-
-	var idx = stylesInsertedAtTop.indexOf(style);
-	if(idx >= 0) {
-		stylesInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement (options) {
-	var style = document.createElement("style");
-
-	options.attrs.type = "text/css";
-
-	addAttrs(style, options.attrs);
-	insertStyleElement(options, style);
-
-	return style;
-}
-
-function createLinkElement (options) {
-	var link = document.createElement("link");
-
-	options.attrs.type = "text/css";
-	options.attrs.rel = "stylesheet";
-
-	addAttrs(link, options.attrs);
-	insertStyleElement(options, link);
-
-	return link;
-}
-
-function addAttrs (el, attrs) {
-	Object.keys(attrs).forEach(function (key) {
-		el.setAttribute(key, attrs[key]);
-	});
-}
-
-function addStyle (obj, options) {
-	var style, update, remove, result;
-
-	// If a transform function was defined, run it on the css
-	if (options.transform && obj.css) {
-	    result = options.transform(obj.css);
-
-	    if (result) {
-	    	// If transform returns a value, use that instead of the original css.
-	    	// This allows running runtime transformations on the css.
-	    	obj.css = result;
-	    } else {
-	    	// If the transform function returns a falsy value, don't add this css.
-	    	// This allows conditional loading of css
-	    	return function() {
-	    		// noop
-	    	};
-	    }
-	}
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-
-		style = singleton || (singleton = createStyleElement(options));
-
-		update = applyToSingletonTag.bind(null, style, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-
-	} else if (
-		obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function"
-	) {
-		style = createLinkElement(options);
-		update = updateLink.bind(null, style, options);
-		remove = function () {
-			removeStyleElement(style);
-
-			if(style.href) URL.revokeObjectURL(style.href);
-		};
-	} else {
-		style = createStyleElement(options);
-		update = applyToTag.bind(null, style);
-		remove = function () {
-			removeStyleElement(style);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle (newObj) {
-		if (newObj) {
-			if (
-				newObj.css === obj.css &&
-				newObj.media === obj.media &&
-				newObj.sourceMap === obj.sourceMap
-			) {
-				return;
-			}
-
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag (style, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (style.styleSheet) {
-		style.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = style.childNodes;
-
-		if (childNodes[index]) style.removeChild(childNodes[index]);
-
-		if (childNodes.length) {
-			style.insertBefore(cssNode, childNodes[index]);
-		} else {
-			style.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag (style, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		style.setAttribute("media", media)
-	}
-
-	if(style.styleSheet) {
-		style.styleSheet.cssText = css;
-	} else {
-		while(style.firstChild) {
-			style.removeChild(style.firstChild);
-		}
-
-		style.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink (link, options, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	/*
-		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
-		and there is no publicPath defined then lets turn convertToAbsoluteUrls
-		on by default.  Otherwise default to the convertToAbsoluteUrls option
-		directly
-	*/
-	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
-
-	if (options.convertToAbsoluteUrls || autoFixUrls) {
-		css = fixUrls(css);
-	}
-
-	if (sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = link.href;
-
-	link.href = URL.createObjectURL(blob);
-
-	if(oldSrc) URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	/*
-	This regular expression is just a way to recursively match brackets within
-	a string.
-
-	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
-	   (  = Start a capturing group
-	     (?:  = Start a non-capturing group
-	         [^)(]  = Match anything that isn't a parentheses
-	         |  = OR
-	         \(  = Match a start parentheses
-	             (?:  = Start another non-capturing groups
-	                 [^)(]+  = Match anything that isn't a parentheses
-	                 |  = OR
-	                 \(  = Match a start parentheses
-	                     [^)(]*  = Match anything that isn't a parentheses
-	                 \)  = Match a end parentheses
-	             )  = End Group
-              *\) = Match anything and then a close parens
-          )  = Close non-capturing group
-          *  = Match anything
-       )  = Close capturing group
-	 \)  = Match a close parens
-
-	 /gi  = Get all matches, not the first.  Be case insensitive.
-	 */
-	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.trim()
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        <div id=\"chart_show_indicator\" class=\"chart_toolbar_button chart_str_indicator_cap selected\">技术指标</div>\n        <!-- <div id=\"chart_show_tools\" class=\"chart_toolbar_button chart_str_tools_cap\">画线工具</div> -->\n        <!-- <div id=\"chart_toolbar_theme\">\n            <div class=\"chart_toolbar_label chart_str_theme_cap\">\n                主题选择\n            </div>\n            <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n            <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n        </div> -->\n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_dropdown_settings\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_settings\">更多</a>\n            </div>\n\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <table>\n                    <tbody>\n                        <tr id=\"chart_select_main_indicator\">\n                            <td class=\"chart_str_main_indicator\">主指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"MA\" class=\"selected\">MA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"EMA\" class=\"\">EMA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"SAR\" class=\"\">SAR</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"NONE\" class=\"\">None</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <tr id=\"chart_select_chart_style\">\n                            <td class=\"chart_str_chart_style\">主图样式</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a class=\"selected\">CandleStick</a>\n                                    </li>\n                                    <li>\n                                        <a>CandleStickHLC</a>\n                                    </li>\n                                    <li>\n                                        <a class=\"\">OHLC</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <!-- <tr id=\"chart_select_theme\" style=\"display: none;\">\n                            <td class=\"chart_str_theme\">主题选择</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n                                    </li>\n\n                                    <li>\n                                        <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr id=\"chart_enable_tools\" style=\"display: none;\">\n                            <td class=\"chart_str_tools\">画线工具</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off selected\">关闭</a>\n                                    </li>\n\n                                </ul>\n\n                            </td>\n                        </tr> -->\n                        <!-- <tr id=\"chart_enable_indicator\" style=\"display: none;\">\n                            <td class=\"chart_str_indicator\">技术指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on selected\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off\">关闭</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr> -->\n                        <!-- <tr>\n                            <td></td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a id=\"chart_btn_parameter_settings\" class=\"chart_str_indicator_parameters\">指标参数设置</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr> -->\n                    </tbody>\n                </table>\n            </div>\n        </div>\n\n        <div class=\"chart_dropdown\" id=\"chart_language_setting_div\" style=\"padding-left: 5px;\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_language_setting\">语言(LANG)</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"padding-top: 15px; margin-left: -12px;\">\n                <ul>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-cn\" class=\"selected\">简体中文(zh-CN)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"en-us\">English(en-US)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-tw\">繁體中文(zh-HK)</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n    <!-- ToolPanel -->\n    <!-- <div id=\"chart_toolpanel\">\n        <div class=\"chart_toolpanel_separator\"></div>\n\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_Cursor\" name=\"Cursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cursor\">\n                光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_CrossCursor\" name=\"CrossCursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cross_cursor\">\n                十字光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_SegLine\" name=\"SegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_seg_line\">\n                线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_StraightLine\" name=\"StraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_straight_line\">\n                直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_RayLine\" name=\"RayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_ray_line\">\n                射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_ArrowLine\" name=\"ArrowLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_arrow_line\">\n                箭头\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriSegLine\" name=\"HoriSegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_seg_line\">\n                水平线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriStraightLine\" name=\"HoriStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_straight_line\">\n                水平直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriRayLine\" name=\"HoriRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_ray_line\">\n                水平射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_VertiStraightLine\" name=\"VertiStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_vert_straight_line\">\n                垂直直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_PriceLine\" name=\"PriceLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_price_line\">\n                价格线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_TriParallelLine\" name=\"TriParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_tri_parallel_line\">\n                价格通道线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelLine\" name=\"BiParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_line\">\n                平行直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelRayLine\" name=\"BiParallelRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_ray\">\n                平行射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibRetrace\" name=\"DrawFibRetrace\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_retrace\">\n                斐波纳契回调\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibFans\" name=\"DrawFibFans\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_fans\">\n                斐波纳契扇形\n            </div>\n        </div>\n        <div style=\"padding-left: 3px;padding-top: 10px;\">\n            <button style=\"color: red;\" id=\"clearCanvas\" title=\"Clear All\">X</button>\n        </div>\n    </div> -->\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n\n    </div>\n\n    <!-- <div id=\"chart_parameter_settings\">\n        <h2 class=\"chart_str_indicator_parameters\">指标参数设置</h2>\n        <table>\n            <tbody>\n                <tr>\n                    <th>MA</th>\n                    <td>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <br>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>DMA</th>\n                    <td>\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>EMA</th>\n                    <td>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <br>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>TRIX</th>\n                    <td>\n                        <input name=\"TRIX\">\n                        <input name=\"TRIX\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>VOLUME</th>\n                    <td>\n                        <input name=\"VOLUME\">\n                        <input name=\"VOLUME\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>BRAR</th>\n                    <td>\n                        <input name=\"BRAR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>MACD</th>\n                    <td>\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>VR</th>\n                    <td>\n                        <input name=\"VR\">\n                        <input name=\"VR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>KDJ</th>\n                    <td>\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>EMV</th>\n                    <td>\n                        <input name=\"EMV\">\n                        <input name=\"EMV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>StochRSI</th>\n                    <td>\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>WR</th>\n                    <td>\n                        <input name=\"WR\">\n                        <input name=\"WR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>RSI</th>\n                    <td>\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>ROC</th>\n                    <td>\n                        <input name=\"ROC\">\n                        <input name=\"ROC\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>DMI</th>\n                    <td>\n                        <input name=\"DMI\">\n                        <input name=\"DMI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>MTM</th>\n                    <td>\n                        <input name=\"MTM\">\n                        <input name=\"MTM\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>OBV</th>\n                    <td>\n                        <input name=\"OBV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>PSY</th>\n                    <td>\n                        <input name=\"PSY\">\n                        <input name=\"PSY\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>BOLL</th>\n                    <td>\n                        <input name=\"BOLL\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n\n        <div id=\"close_settings\">\n            <a class=\"chart_str_close\">关闭</a>\n        </div>\n\n    </div> -->\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var formatRegExp = /%[sdj%]/g;
-exports.format = function(f) {
-  if (!isString(f)) {
-    var objects = [];
-    for (var i = 0; i < arguments.length; i++) {
-      objects.push(inspect(arguments[i]));
-    }
-    return objects.join(' ');
-  }
-
-  var i = 1;
-  var args = arguments;
-  var len = args.length;
-  var str = String(f).replace(formatRegExp, function(x) {
-    if (x === '%%') return '%';
-    if (i >= len) return x;
-    switch (x) {
-      case '%s': return String(args[i++]);
-      case '%d': return Number(args[i++]);
-      case '%j':
-        try {
-          return JSON.stringify(args[i++]);
-        } catch (_) {
-          return '[Circular]';
-        }
-      default:
-        return x;
-    }
-  });
-  for (var x = args[i]; i < len; x = args[++i]) {
-    if (isNull(x) || !isObject(x)) {
-      str += ' ' + x;
-    } else {
-      str += ' ' + inspect(x);
-    }
-  }
-  return str;
-};
-
-
-// Mark that a method should not be used.
-// Returns a modified function which warns once by default.
-// If --no-deprecation is set, then it is a no-op.
-exports.deprecate = function(fn, msg) {
-  // Allow for deprecating things in the process of starting up.
-  if (isUndefined(global.process)) {
-    return function() {
-      return exports.deprecate(fn, msg).apply(this, arguments);
-    };
-  }
-
-  if (process.noDeprecation === true) {
-    return fn;
-  }
-
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      if (process.throwDeprecation) {
-        throw new Error(msg);
-      } else if (process.traceDeprecation) {
-        console.trace(msg);
-      } else {
-        console.error(msg);
-      }
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-};
-
-
-var debugs = {};
-var debugEnviron;
-exports.debuglog = function(set) {
-  if (isUndefined(debugEnviron))
-    debugEnviron = process.env.NODE_DEBUG || '';
-  set = set.toUpperCase();
-  if (!debugs[set]) {
-    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-      var pid = process.pid;
-      debugs[set] = function() {
-        var msg = exports.format.apply(exports, arguments);
-        console.error('%s %d: %s', set, pid, msg);
-      };
-    } else {
-      debugs[set] = function() {};
-    }
-  }
-  return debugs[set];
-};
-
-
-/**
- * Echos the value of a value. Trys to print the value out
- * in the best way possible given the different types.
- *
- * @param {Object} obj The object to print out.
- * @param {Object} opts Optional options object that alters the output.
- */
-/* legacy: obj, showHidden, depth, colors*/
-function inspect(obj, opts) {
-  // default options
-  var ctx = {
-    seen: [],
-    stylize: stylizeNoColor
-  };
-  // legacy...
-  if (arguments.length >= 3) ctx.depth = arguments[2];
-  if (arguments.length >= 4) ctx.colors = arguments[3];
-  if (isBoolean(opts)) {
-    // legacy...
-    ctx.showHidden = opts;
-  } else if (opts) {
-    // got an "options" object
-    exports._extend(ctx, opts);
-  }
-  // set default options
-  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-  if (isUndefined(ctx.depth)) ctx.depth = 2;
-  if (isUndefined(ctx.colors)) ctx.colors = false;
-  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-  if (ctx.colors) ctx.stylize = stylizeWithColor;
-  return formatValue(ctx, obj, ctx.depth);
-}
-exports.inspect = inspect;
-
-
-// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-inspect.colors = {
-  'bold' : [1, 22],
-  'italic' : [3, 23],
-  'underline' : [4, 24],
-  'inverse' : [7, 27],
-  'white' : [37, 39],
-  'grey' : [90, 39],
-  'black' : [30, 39],
-  'blue' : [34, 39],
-  'cyan' : [36, 39],
-  'green' : [32, 39],
-  'magenta' : [35, 39],
-  'red' : [31, 39],
-  'yellow' : [33, 39]
-};
-
-// Don't use 'blue' not visible on cmd.exe
-inspect.styles = {
-  'special': 'cyan',
-  'number': 'yellow',
-  'boolean': 'yellow',
-  'undefined': 'grey',
-  'null': 'bold',
-  'string': 'green',
-  'date': 'magenta',
-  // "name": intentionally not styling
-  'regexp': 'red'
-};
-
-
-function stylizeWithColor(str, styleType) {
-  var style = inspect.styles[styleType];
-
-  if (style) {
-    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-           '\u001b[' + inspect.colors[style][1] + 'm';
-  } else {
-    return str;
-  }
-}
-
-
-function stylizeNoColor(str, styleType) {
-  return str;
-}
-
-
-function arrayToHash(array) {
-  var hash = {};
-
-  array.forEach(function(val, idx) {
-    hash[val] = true;
-  });
-
-  return hash;
-}
-
-
-function formatValue(ctx, value, recurseTimes) {
-  // Provide a hook for user-specified inspect functions.
-  // Check that value is an object with an inspect function on it
-  if (ctx.customInspect &&
-      value &&
-      isFunction(value.inspect) &&
-      // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect &&
-      // Also filter out any prototype objects using the circular check.
-      !(value.constructor && value.constructor.prototype === value)) {
-    var ret = value.inspect(recurseTimes, ctx);
-    if (!isString(ret)) {
-      ret = formatValue(ctx, ret, recurseTimes);
-    }
-    return ret;
-  }
-
-  // Primitive types cannot have properties
-  var primitive = formatPrimitive(ctx, value);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Look up the keys of the object.
-  var keys = Object.keys(value);
-  var visibleKeys = arrayToHash(keys);
-
-  if (ctx.showHidden) {
-    keys = Object.getOwnPropertyNames(value);
-  }
-
-  // IE doesn't make error fields non-enumerable
-  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-  if (isError(value)
-      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-    return formatError(value);
-  }
-
-  // Some type of object without properties can be shortcutted.
-  if (keys.length === 0) {
-    if (isFunction(value)) {
-      var name = value.name ? ': ' + value.name : '';
-      return ctx.stylize('[Function' + name + ']', 'special');
-    }
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    }
-    if (isDate(value)) {
-      return ctx.stylize(Date.prototype.toString.call(value), 'date');
-    }
-    if (isError(value)) {
-      return formatError(value);
-    }
-  }
-
-  var base = '', array = false, braces = ['{', '}'];
-
-  // Make Array say that they are Array
-  if (isArray(value)) {
-    array = true;
-    braces = ['[', ']'];
-  }
-
-  // Make functions say that they are functions
-  if (isFunction(value)) {
-    var n = value.name ? ': ' + value.name : '';
-    base = ' [Function' + n + ']';
-  }
-
-  // Make RegExps say that they are RegExps
-  if (isRegExp(value)) {
-    base = ' ' + RegExp.prototype.toString.call(value);
-  }
-
-  // Make dates with properties first say the date
-  if (isDate(value)) {
-    base = ' ' + Date.prototype.toUTCString.call(value);
-  }
-
-  // Make error with message first say the error
-  if (isError(value)) {
-    base = ' ' + formatError(value);
-  }
-
-  if (keys.length === 0 && (!array || value.length == 0)) {
-    return braces[0] + base + braces[1];
-  }
-
-  if (recurseTimes < 0) {
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    } else {
-      return ctx.stylize('[Object]', 'special');
-    }
-  }
-
-  ctx.seen.push(value);
-
-  var output;
-  if (array) {
-    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-  } else {
-    output = keys.map(function(key) {
-      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-    });
-  }
-
-  ctx.seen.pop();
-
-  return reduceToSingleString(output, base, braces);
-}
-
-
-function formatPrimitive(ctx, value) {
-  if (isUndefined(value))
-    return ctx.stylize('undefined', 'undefined');
-  if (isString(value)) {
-    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-                                             .replace(/'/g, "\\'")
-                                             .replace(/\\"/g, '"') + '\'';
-    return ctx.stylize(simple, 'string');
-  }
-  if (isNumber(value))
-    return ctx.stylize('' + value, 'number');
-  if (isBoolean(value))
-    return ctx.stylize('' + value, 'boolean');
-  // For some reason typeof null is "object", so special case here.
-  if (isNull(value))
-    return ctx.stylize('null', 'null');
-}
-
-
-function formatError(value) {
-  return '[' + Error.prototype.toString.call(value) + ']';
-}
-
-
-function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-  var output = [];
-  for (var i = 0, l = value.length; i < l; ++i) {
-    if (hasOwnProperty(value, String(i))) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          String(i), true));
-    } else {
-      output.push('');
-    }
-  }
-  keys.forEach(function(key) {
-    if (!key.match(/^\d+$/)) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          key, true));
-    }
-  });
-  return output;
-}
-
-
-function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-  var name, str, desc;
-  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-  if (desc.get) {
-    if (desc.set) {
-      str = ctx.stylize('[Getter/Setter]', 'special');
-    } else {
-      str = ctx.stylize('[Getter]', 'special');
-    }
-  } else {
-    if (desc.set) {
-      str = ctx.stylize('[Setter]', 'special');
-    }
-  }
-  if (!hasOwnProperty(visibleKeys, key)) {
-    name = '[' + key + ']';
-  }
-  if (!str) {
-    if (ctx.seen.indexOf(desc.value) < 0) {
-      if (isNull(recurseTimes)) {
-        str = formatValue(ctx, desc.value, null);
-      } else {
-        str = formatValue(ctx, desc.value, recurseTimes - 1);
-      }
-      if (str.indexOf('\n') > -1) {
-        if (array) {
-          str = str.split('\n').map(function(line) {
-            return '  ' + line;
-          }).join('\n').substr(2);
-        } else {
-          str = '\n' + str.split('\n').map(function(line) {
-            return '   ' + line;
-          }).join('\n');
-        }
-      }
-    } else {
-      str = ctx.stylize('[Circular]', 'special');
-    }
-  }
-  if (isUndefined(name)) {
-    if (array && key.match(/^\d+$/)) {
-      return str;
-    }
-    name = JSON.stringify('' + key);
-    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-      name = name.substr(1, name.length - 2);
-      name = ctx.stylize(name, 'name');
-    } else {
-      name = name.replace(/'/g, "\\'")
-                 .replace(/\\"/g, '"')
-                 .replace(/(^"|"$)/g, "'");
-      name = ctx.stylize(name, 'string');
-    }
-  }
-
-  return name + ': ' + str;
-}
-
-
-function reduceToSingleString(output, base, braces) {
-  var numLinesEst = 0;
-  var length = output.reduce(function(prev, cur) {
-    numLinesEst++;
-    if (cur.indexOf('\n') >= 0) numLinesEst++;
-    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-  }, 0);
-
-  if (length > 60) {
-    return braces[0] +
-           (base === '' ? '' : base + '\n ') +
-           ' ' +
-           output.join(',\n  ') +
-           ' ' +
-           braces[1];
-  }
-
-  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-}
-
-
-// NOTE: These type checking functions intentionally don't use `instanceof`
-// because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
-}
-exports.isArray = isArray;
-
-function isBoolean(arg) {
-  return typeof arg === 'boolean';
-}
-exports.isBoolean = isBoolean;
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-exports.isNumber = isNumber;
-
-function isString(arg) {
-  return typeof arg === 'string';
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-exports.isObject = isObject;
-
-function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return arg === null ||
-         typeof arg === 'boolean' ||
-         typeof arg === 'number' ||
-         typeof arg === 'string' ||
-         typeof arg === 'symbol' ||  // ES6 symbol
-         typeof arg === 'undefined';
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = __webpack_require__(46);
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
-}
-
-
-function pad(n) {
-  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-}
-
-
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'];
-
-// 26 Feb 16:19:34
-function timestamp() {
-  var d = new Date();
-  var time = [pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())].join(':');
-  return [d.getDate(), months[d.getMonth()], time].join(' ');
-}
-
-
-// log is just a thin wrapper to console.log that prepends a timestamp
-exports.log = function() {
-  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-};
-
-
-/**
- * Inherit the prototype methods from one constructor into another.
- *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be rewritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
- */
-exports.inherits = __webpack_require__(47);
-
-exports._extend = function(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || !isObject(add)) return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-};
-
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44), __webpack_require__(45)))
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 45 */
+/***/ 63:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -17401,46 +17390,106 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 46 */
-/***/ (function(module, exports) {
 
-module.exports = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-}
+/***/ 9:
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ }),
-/* 47 */
-/***/ (function(module, exports) {
+"use strict";
 
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NamedObject = void 0;
+
+var _cname = __webpack_require__(58);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var NamedObject =
+/*#__PURE__*/
+function () {
+  function NamedObject(name) {
+    _classCallCheck(this, NamedObject);
+
+    this._name = name;
+    this._nameObj = new _cname.CName(name);
   }
-}
 
+  _createClass(NamedObject, [{
+    key: "getFrameName",
+    value: function getFrameName() {
+      return this._nameObj.getName(0);
+    }
+  }, {
+    key: "getDataSourceName",
+    value: function getDataSourceName() {
+      return this._nameObj.getName(1);
+    }
+  }, {
+    key: "getAreaName",
+    value: function getAreaName() {
+      return this._nameObj.getName(2);
+    }
+  }, {
+    key: "getName",
+    value: function getName() {
+      return this._nameObj.getName(-1);
+    }
+  }, {
+    key: "getNameObject",
+    value: function getNameObject() {
+      return this._nameObj;
+    }
+  }, {
+    key: "getRectCrossPt",
+    value: function getRectCrossPt(rect, startPt, endPt) {
+      var crossPt;
+      var firstPt = {
+        x: -1,
+        y: -1
+      };
+      var secondPt = {
+        x: -1,
+        y: -1
+      };
+      var xdiff = endPt.x - startPt.x;
+      var ydiff = endPt.y - startPt.y;
+
+      if (Math.abs(xdiff) < 2) {
+        firstPt = {
+          x: startPt.x,
+          y: rect.top
+        };
+        secondPt = {
+          x: endPt.x,
+          y: rect.bottom
+        };
+        crossPt = [firstPt, secondPt];
+        return crossPt;
+      }
+
+      var k = ydiff / xdiff;
+      secondPt.x = rect.right;
+      secondPt.y = startPt.y + (rect.right - startPt.x) * k;
+      firstPt.x = rect.left;
+      firstPt.y = startPt.y + (rect.left - startPt.x) * k;
+      crossPt = [firstPt, secondPt];
+      return crossPt;
+    }
+  }]);
+
+  return NamedObject;
+}();
+
+exports.NamedObject = NamedObject;
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
 //# sourceMappingURL=kline.js.map
