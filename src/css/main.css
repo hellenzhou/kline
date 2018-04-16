@@ -16,11 +16,7 @@ ul, li {
 li {
     list-style: none;
 }
-                /*
-                    position: absolute;
-    left: 0;
-    top: 80px;
-                */
+
 .chart_container {
     cursor: default;
     font-family: arial, sans, serif;
@@ -788,80 +784,6 @@ li {
     background-color: rgba(244, 244, 244, 0.8);
     color: #393c40
 }
-
-/* #chart_parameter_settings {
-    border-radius: 4px;
-    border: 0px solid;
-    width: 640px;
-    position: absolute;
-    overflow: hidden;
-    visibility: hidden;
-    z-index: 500
-}
-
-#chart_parameter_settings.clicked {
-    visibility: visible
-}
-
-#chart_parameter_settings h2 {
-    padding: 8px 12px;
-    margin: 0
-}
-
-#chart_parameter_settings table {
-    border-collapse: collapse;
-    width: 100%
-}
-
-#chart_parameter_settings tr {
-    line-height: 32px
-}
-
-#chart_parameter_settings th {
-    text-align: right;
-    padding: 0 4px 0 16px
-}
-
-#chart_parameter_settings input {
-    width: 2em;
-    margin: 0 2px 0 2px
-}
-
-#chart_parameter_settings #close_settings {
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    text-align: center;
-    margin: 8px auto;
-    padding: 5px 24px 5px 24px;
-    width: 84px
-}
-
-#chart_parameter_settings .chart_str_default {
-    margin-right: 24px
-}
-
-.chart_container.dark #chart_parameter_settings {
-    background-color: rgba(0, 0, 0, 0.9);
-    border-color: rgba(0, 0, 0, 0.9);
-    color: #ccc;
-}
-
-.chart_container.dark #chart_parameter_settings #close_settings {
-    background: #1887da;
-    color: #eee
-}
-
-.chart_container.light #chart_parameter_settings {
-    background-color: rgba(244, 244, 244, 0.8);
-    border-color: #afb1b3;
-    color: #393c40
-}
-
-.chart_container.light #chart_parameter_settings #close_settings {
-    background: #1478c8;
-    color: #eee
-} */
 
 .chart_container input, .chart_container button {
     border-radius: 4px;
