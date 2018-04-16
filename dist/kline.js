@@ -2382,14 +2382,15 @@ function () {
         //         let name = $(this).children().attr('name');
         //         Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
         //     });
+        // $('#chart_show_indicator')
+        //     .click(function () {
+        //         if ($(this).hasClass('selected')) {
+        //             Control.switchIndic('off');
+        //         } else {
+        //             Control.switchIndic('on');
+        //         }
+        //     });
 
-        (0, _jquery.default)('#chart_show_indicator').click(function () {
-          if ((0, _jquery.default)(this).hasClass('selected')) {
-            _control.Control.switchIndic('off');
-          } else {
-            _control.Control.switchIndic('on');
-          }
-        });
         (0, _jquery.default)("#chart_tabbar li a").click(function () {
           (0, _jquery.default)("#chart_tabbar li a").removeClass('selected');
           (0, _jquery.default)(this).addClass('selected');
@@ -4021,8 +4022,8 @@ function () {
     value: function onSize(w, h) {
       var width = w || window.innerWidth;
       var height = h || window.innerHeight;
-      var chartWidth = width;
       var remainHeight = height;
+      var chartWidth = width;
 
       if (w < h) {
         if (_kline.default.instance.showTrade && !isNaN(_kline.default.instance.tradeHeight)) {
@@ -4045,11 +4046,7 @@ function () {
         toolBarRect.y = 0;
         toolBarRect.w = chartWidth;
         toolBarRect.h = 29;
-        var toolPanelRect = {};
-        toolPanelRect.x = 0;
-        toolPanelRect.y = toolBarRect.h + 1;
-        toolPanelRect.w = 0;
-        toolPanelRect.h = height - toolPanelRect.y;
+        var toolbarY = toolBarRect.h + 1;
         var tabBarRect = {};
         tabBarRect.w = chartWidth;
         tabBarRect.h = tabBarShown ? 22 : -1;
@@ -4057,9 +4054,9 @@ function () {
         tabBarRect.y = remainHeight - (tabBarRect.h + 1);
         var canvasGroupRect = {};
         canvasGroupRect.x = tabBarRect.x;
-        canvasGroupRect.y = toolPanelRect.y;
+        canvasGroupRect.y = toolbarY;
         canvasGroupRect.w = tabBarRect.w;
-        canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+        canvasGroupRect.h = tabBarRect.y - toolbarY;
         toolBar.css({
           left: toolBarRect.x + 'px',
           top: toolBarRect.y + 'px',
@@ -4126,10 +4123,8 @@ function () {
 
         var periodsHorz = (0, _jquery.default)('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
 
-        var showIndic = (0, _jquery.default)('#chart_show_indicator')[0];
         var mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
 
-        (0, _jquery.default)(showIndic).hide();
         var chatPeriodToolRanages = []; // 根据时间计算显示个数
 
         var ranges = _kline.default.instance.ranges;
@@ -4164,9 +4159,143 @@ function () {
         } else {
           (0, _jquery.default)(".trade_container").hide();
         }
+      } else {
+        debugger;
 
-        _chart_manager.ChartManager.instance.redraw('All', true);
+        var _container = (0, _jquery.default)(_kline.default.instance.element);
+
+        _container.css({
+          width: height + 'px',
+          height: width + 'px'
+        });
+
+        var _toolBar = (0, _jquery.default)('#chart_toolbar');
+
+        _toolBar.hide();
+
+        var _canvasGroup = (0, _jquery.default)('#chart_canvasGroup');
+
+        var _tabBar = (0, _jquery.default)('#chart_tabbar');
+
+        var _tabBarShown = _tabBar[0].style.display !== 'block' ? false : true;
+
+        var _toolBarRect = {};
+        _toolBarRect.x = 0;
+        _toolBarRect.y = 0;
+        _toolBarRect.w = 29;
+        _toolBarRect.h = width;
+        debugger;
+        var toolPanelRect = {};
+        toolPanelRect.x = 0;
+        toolPanelRect.y = _toolBarRect.h + 1;
+        toolPanelRect.w = 0;
+        toolPanelRect.h = height - toolPanelRect.y;
+        var _tabBarRect = {};
+        _tabBarRect.w = chartWidth;
+        _tabBarRect.h = _tabBarShown ? 22 : -1;
+        _tabBarRect.x = chartWidth - _tabBarRect.w;
+        _tabBarRect.y = remainHeight - (_tabBarRect.h + 1);
+        var _canvasGroupRect = {};
+        _canvasGroupRect.x = _tabBarRect.x;
+        _canvasGroupRect.y = toolPanelRect.y;
+        _canvasGroupRect.w = _tabBarRect.w;
+        _canvasGroupRect.h = _tabBarRect.y - toolPanelRect.y;
+
+        _toolBar.css({
+          left: _toolBarRect.x + 'px',
+          top: _toolBarRect.y + 'px',
+          width: _toolBarRect.w + 'px',
+          height: _toolBarRect.h + 'px'
+        });
+
+        _canvasGroup.css({
+          left: _canvasGroupRect.x + 'px',
+          top: _toolBarRect.y + _toolBarRect.h + 'px',
+          width: '100%',
+          height: _canvasGroupRect.h + 'px'
+        });
+
+        var _mainCanvas = (0, _jquery.default)('#chart_mainCanvas')[0];
+        var _overlayCanvas = (0, _jquery.default)('#chart_overlayCanvas')[0];
+        var _devicePixelRatio = window.devicePixelRatio;
+
+        var _context = _mainCanvas.getContext("2d");
+
+        var _backingStoreRatio = _context.webkitBackingStorePixelRatio || _context.mozBackingStorePixelRatio || _context.msBackingStorePixelRatio || _context.oBackingStorePixelRatio || _context.backingStorePixelRatio || 1;
+
+        var _ratio = _devicePixelRatio / _backingStoreRatio;
+
+        _kline.default.instance.deviceRatio = _ratio;
+        _mainCanvas.width = _canvasGroupRect.w * _ratio;
+        _mainCanvas.height = _canvasGroupRect.h * _ratio;
+        _mainCanvas.style.width = '100%';
+        _mainCanvas.style.height = _canvasGroupRect.h + "px";
+        _overlayCanvas.width = _canvasGroupRect.w * _ratio;
+        _overlayCanvas.height = _canvasGroupRect.h * _ratio;
+        _overlayCanvas.style.width = '100%';
+        _overlayCanvas.style.height = _canvasGroupRect.h + "px";
+
+        if (_tabBarShown) {
+          _tabBar.css({
+            left: _tabBarRect.x + 'px',
+            top: _tabBarRect.y + 'px',
+            width: _tabBarRect.w + 'px',
+            height: _tabBarRect.h + 'px'
+          });
+        }
+
+        var _dlgLoading = (0, _jquery.default)("#chart_loading");
+
+        _dlgLoading.css({
+          left: chartWidth - _dlgLoading.width() >> 1,
+          top: height - _dlgLoading.height() >> 2
+        });
+
+        var _domElemCache = (0, _jquery.default)('#chart_dom_elem_cache');
+
+        var _periodsVert = (0, _jquery.default)('#chart_toolbar_periods_vert'); //周期
+
+
+        var _periodsHorz = (0, _jquery.default)('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
+
+        var _mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
+
+        var _chatPeriodToolRanages = []; // 根据时间计算显示个数
+
+        var _ranges = _kline.default.instance.ranges;
+
+        var _periodShowWidth = chartWidth - _mainIndicator.offsetWidth - 4 - 70;
+
+        var _totalCount = _ranges.length,
+            _showCount = _totalCount,
+            _totalWidth = 0;
+
+        for (var _i = 0; _i < _totalCount; _i++) {
+          var _dom = (0, _jquery.default)('#chart_period_' + _ranges[_i] + '_h');
+
+          _dom.show();
+
+          _totalWidth += _dom.width();
+
+          if (_totalWidth > _periodShowWidth - _periodsVert.width()) {
+            _dom.hide();
+
+            _showCount--;
+          } else {
+            _chatPeriodToolRanages.push(_ranges[_i]);
+          }
+        }
+
+        if (_showCount < _ranges.length) {
+          _periodsVert.show();
+
+          _kline.default.instance.periodsVertDisplayNone(_chatPeriodToolRanages);
+        } else {
+          _periodsVert.hide();
+        }
       }
+
+      _chart_manager.ChartManager.instance.redraw('All', true);
 
       _kline.default.instance.onResize(width, height);
     }
@@ -4273,8 +4402,7 @@ function () {
       // $('#chart_enable_indicator a').removeClass('selected');
       // $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
       if (name === 'on') {
-        (0, _jquery.default)('#chart_show_indicator').addClass('selected');
-
+        // $('#chart_show_indicator').addClass('selected');
         var tmp = _chart_settings.ChartSettings.get();
 
         tmp.charts.indicsStatus = 'open';
@@ -4288,8 +4416,7 @@ function () {
         });
         (0, _jquery.default)('#chart_tabbar')[0].style.display = 'block';
       } else if (name === 'off') {
-        (0, _jquery.default)('#chart_show_indicator').removeClass('selected');
-
+        // $('#chart_show_indicator').removeClass('selected');
         _chart_manager.ChartManager.instance.getChart().setIndicator(2, 'NONE');
 
         var _tmp2 = _chart_settings.ChartSettings.get();
@@ -17360,7 +17487,7 @@ module.exports = function (css) {
 /* 48 */
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        <div id=\"chart_show_indicator\" class=\"chart_toolbar_button chart_str_indicator_cap selected\">技术指标</div>\n      \n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n\n    </div>\n\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n    </div>\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
+module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        \n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n\n    </div>\n\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n    </div>\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
 
 /***/ })
 /******/ ]);

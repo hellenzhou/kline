@@ -438,14 +438,14 @@ export default class Kline {
             //         let name = $(this).children().attr('name');
             //         Kline.instance.chartMgr.setRunningMode(ChartManager.DrawingTool[name]);
             //     });
-            $('#chart_show_indicator')
-                .click(function () {
-                    if ($(this).hasClass('selected')) {
-                        Control.switchIndic('off');
-                    } else {
-                        Control.switchIndic('on');
-                    }
-                });
+            // $('#chart_show_indicator')
+            //     .click(function () {
+            //         if ($(this).hasClass('selected')) {
+            //             Control.switchIndic('off');
+            //         } else {
+            //             Control.switchIndic('on');
+            //         }
+            //     });
             $("#chart_tabbar li a")
                 .click(function () {
                     $("#chart_tabbar li a").removeClass('selected');

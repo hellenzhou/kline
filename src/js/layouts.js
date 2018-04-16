@@ -253,7 +253,6 @@ export class TableLayout extends areas.ChartAreaGroup {
 
 
 export class DockableLayout extends areas.ChartAreaGroup {
-
     constructor(name) {
         super(name);
     }

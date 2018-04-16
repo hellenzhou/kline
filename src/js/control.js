@@ -528,10 +528,12 @@ export class Control {
         let width = w || window.innerWidth;
         let height = h || window.innerHeight;
 
-        let chartWidth = width;
+
         let remainHeight = height;
+        let chartWidth = width;
 
         if (w < h) {
+
             if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
                 remainHeight -= Kline.instance.tradeHeight;
             }
@@ -547,18 +549,15 @@ export class Control {
             let chart_container_clone = $('#chart_container_clone');
             let chart_container_fullscreen = $('#chart_container_fullscreen');
             let tabBar = $('#chart_tabbar');
+  
             let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
             let toolBarRect = {};
             toolBarRect.x = 0;
             toolBarRect.y = 0;
             toolBarRect.w = chartWidth;
-
             toolBarRect.h = 29;
-            let toolPanelRect = {};
-            toolPanelRect.x = 0;
-            toolPanelRect.y = toolBarRect.h + 1;
-            toolPanelRect.w = 0;
-            toolPanelRect.h = height - toolPanelRect.y;
+          
+            let toolbarY = toolBarRect.h + 1;
             let tabBarRect = {};
             tabBarRect.w = chartWidth;
             tabBarRect.h = tabBarShown ? 22 : -1;
@@ -567,9 +566,9 @@ export class Control {
 
             let canvasGroupRect = {};
             canvasGroupRect.x = tabBarRect.x;
-            canvasGroupRect.y = toolPanelRect.y;
+            canvasGroupRect.y = toolbarY;
             canvasGroupRect.w = tabBarRect.w;
-            canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+            canvasGroupRect.h = tabBarRect.y - toolbarY;
 
             toolBar.css({
                 left: toolBarRect.x + 'px',
@@ -649,12 +648,7 @@ export class Control {
 
             let periodsVert = $('#chart_toolbar_periods_vert'); //周期
             let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
-            let showIndic = $('#chart_show_indicator')[0];
-
             let mainIndicator = $('#chart_main_indicator')[0]; //指标
-
-            $(showIndic).hide();
-
 
             let chatPeriodToolRanages = [];
             // 根据时间计算显示个数
@@ -686,10 +680,133 @@ export class Control {
             } else {
                 $(".trade_container").hide();
             }
+        } else {
+            debugger
+            let container = $(Kline.instance.element);
+           
+            container.css({
+                width: height + 'px',
+                height: width + 'px'
+            });
 
-            ChartManager.instance.redraw('All', true);
+            let toolBar = $('#chart_toolbar');
+            toolBar.hide();
+
+            let canvasGroup = $('#chart_canvasGroup');
+         
+            let tabBar = $('#chart_tabbar');
+            let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
+            let toolBarRect = {};
+            toolBarRect.x = 0;
+            toolBarRect.y = 0;
+            toolBarRect.w = 29;
+            toolBarRect.h = width;
+        
+            debugger
+
+            let toolPanelRect = {};
+            toolPanelRect.x = 0;
+            toolPanelRect.y = toolBarRect.h + 1;
+            toolPanelRect.w = 0;
+            toolPanelRect.h = height - toolPanelRect.y;
+            let tabBarRect = {};
+            tabBarRect.w = chartWidth;
+            tabBarRect.h = tabBarShown ? 22 : -1;
+            tabBarRect.x = chartWidth - tabBarRect.w;
+            tabBarRect.y = remainHeight - (tabBarRect.h + 1);
+
+            let canvasGroupRect = {};
+            canvasGroupRect.x = tabBarRect.x;
+            canvasGroupRect.y = toolPanelRect.y;
+            canvasGroupRect.w = tabBarRect.w;
+            canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
+
+            toolBar.css({
+                left: toolBarRect.x + 'px',
+                top: toolBarRect.y + 'px',
+                width: toolBarRect.w + 'px',
+                height: toolBarRect.h + 'px'
+            });
+
+            canvasGroup.css({
+                left: canvasGroupRect.x + 'px',
+                top: toolBarRect.y + toolBarRect.h + 'px',
+                width: '100%',
+                height: canvasGroupRect.h + 'px'
+            });
+
+            let mainCanvas = $('#chart_mainCanvas')[0];
+            let overlayCanvas = $('#chart_overlayCanvas')[0];
+            let devicePixelRatio = window.devicePixelRatio;
+            let context = mainCanvas.getContext("2d");
+            let backingStoreRatio = context.webkitBackingStorePixelRatio ||
+                context.mozBackingStorePixelRatio ||
+                context.msBackingStorePixelRatio ||
+                context.oBackingStorePixelRatio ||
+                context.backingStorePixelRatio || 1;
+
+
+            let ratio = devicePixelRatio / backingStoreRatio;
+
+            Kline.instance.deviceRatio = ratio;
+            mainCanvas.width = canvasGroupRect.w * ratio;
+            mainCanvas.height = canvasGroupRect.h * ratio;
+            mainCanvas.style.width = '100%';
+            mainCanvas.style.height = canvasGroupRect.h + "px";
+
+            overlayCanvas.width = canvasGroupRect.w * ratio;
+            overlayCanvas.height = canvasGroupRect.h * ratio;
+            overlayCanvas.style.width = '100%';
+            overlayCanvas.style.height = canvasGroupRect.h + "px";
+
+            if (tabBarShown) {
+                tabBar.css({
+                    left: tabBarRect.x + 'px',
+                    top: tabBarRect.y + 'px',
+                    width: tabBarRect.w + 'px',
+                    height: tabBarRect.h + 'px'
+                });
+            }
+
+            let dlgLoading = $("#chart_loading");
+            dlgLoading.css({
+                left: (chartWidth - dlgLoading.width()) >> 1,
+                top: (height - dlgLoading.height()) >> 2
+            });
+            let domElemCache = $('#chart_dom_elem_cache');
+
+            let periodsVert = $('#chart_toolbar_periods_vert'); //周期
+            let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
+            let mainIndicator = $('#chart_main_indicator')[0]; //指标
+
+            let chatPeriodToolRanages = [];
+            // 根据时间计算显示个数
+            let ranges = Kline.instance.ranges;
+            let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
+            let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
+
+            for (let i = 0; i < totalCount; i++) {
+                let dom = $('#chart_period_' + ranges[i] + '_h');
+                dom.show();
+                totalWidth += dom.width();
+                if (totalWidth > periodShowWidth - periodsVert.width()) {
+                    dom.hide();
+                    showCount--;
+                } else {
+                    chatPeriodToolRanages.push(ranges[i])
+                }
+            }
+
+            if (showCount < ranges.length) {
+                periodsVert.show();
+                Kline.instance.periodsVertDisplayNone(chatPeriodToolRanages);
+            } else {
+                periodsVert.hide();
+            }
+
         }
 
+        ChartManager.instance.redraw('All', true);
         Kline.instance.onResize(width, height);
     }
 
@@ -779,7 +896,7 @@ export class Control {
         // $('#chart_enable_indicator a').removeClass('selected');
         // $("#chart_enable_indicator a[name='" + name + "']").addClass('selected');
         if (name === 'on') {
-            $('#chart_show_indicator').addClass('selected');
+            // $('#chart_show_indicator').addClass('selected');
             let tmp = ChartSettings.get();
             tmp.charts.indicsStatus = 'open';
             ChartSettings.save();
@@ -794,7 +911,7 @@ export class Control {
             });
             $('#chart_tabbar')[0].style.display = 'block';
         } else if (name === 'off') {
-            $('#chart_show_indicator').removeClass('selected');
+            // $('#chart_show_indicator').removeClass('selected');
             ChartManager.instance.getChart().setIndicator(2, 'NONE');
             let tmp = ChartSettings.get();
             tmp.charts.indicsStatus = 'close';
