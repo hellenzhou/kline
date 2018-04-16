@@ -728,55 +728,23 @@ export default class Kline {
                 }
 
                 Kline.instance.isSized = !Kline.instance.isSized;
-                if (Kline.instance.isSized) {
-                    let chart_container_fullscreen = $('#chart_container_fullscreen');
-                    $('.chart_container').appendTo(chart_container_fullscreen);
-                    $('#chart_container_fullscreen').css('display', "inline-block");
-                    $('.trade_container').css('display', "none");
-
-                    // 修改画布
-
-
-
-
-                } else {
-                    let chart_container_fullscreen = $('#chart_container_fullscreen');
-                    let chart_trade_quotation = $('#chart_trade_quotation');
-                    chart_trade_quotation.after($('.chart_container'));
-                    $('#chart_container_fullscreen').css('display', "none");
-
-
-                    $('.trade_container').css('display', "block");
-                }
-
                 let chart_container_fullscreen = $('#chart_container_fullscreen');
-                $('.chart_container').appendTo(chart_container_fullscreen);
-                $('#chart_container_fullscreen').css('display', "inline-block");
-                return;
+                let chart_trade_quotation = $('.chart_trade_quotation');
+                let chart_container = $('.chart_container');
+                let trade_container = $('.trade_container');
 
-
-                Kline.instance.isSized = !Kline.instance.isSized;
                 if (Kline.instance.isSized) {
-                    $(Kline.instance.element).css({
-                        position: 'fixed',
-                        left: '0',
-                        right: '0',
-                        top: '0',
-                        bottom: '0',
-                        width: '100%',
-                        height: '100%',
-                        zIndex: '10000'
-                    });
-
-                    Control.onSize();
-                    $('html,body').css({ width: '100%', height: '100%', overflow: 'hidden' });
+                    trade_container.css('display', "none");
+                    chart_container.appendTo(chart_container_fullscreen);
+                    chart_container_fullscreen.css('display', "block");
+                    debugger
+                    chart_trade_quotation.css('display', "none");
                 } else {
-                    $(Kline.instance.element).attr('style', '');
-
-                    $('html,body').attr('style', '');
-
-                    Control.onSize(Kline.instance.width, Kline.instance.height);
-                    $(Kline.instance.element).css({ visibility: 'visible', height: Kline.instance.height + 'px' });
+                    chart_trade_quotation.css('display', "block");
+                    chart_container = chart_container_fullscreen.remove();
+                    chart_trade_quotation.after(chart_container);
+                    chart_container_fullscreen.css('display', "none");
+                    trade_container.css('display', "block");
                 }
             });
             $('body').on('click', '#tabList li', function (element) {

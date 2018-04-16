@@ -912,7 +912,6 @@ export class Control {
 
     static reset(symbol) {
         Kline.instance.symbol = symbol;
-
         if (Kline.instance.showTrade) {
             KlineTrade.instance.reset(symbol);
         }
