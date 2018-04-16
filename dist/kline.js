@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("jquery")) : factory(root["$"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_20__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -87,9 +87,9 @@ exports.ChartManager = void 0;
 
 var _control = __webpack_require__(8);
 
-var _chart = __webpack_require__(21);
+var _chart = __webpack_require__(22);
 
-var indicators = _interopRequireWildcard(__webpack_require__(25));
+var indicators = _interopRequireWildcard(__webpack_require__(31));
 
 var ranges = _interopRequireWildcard(__webpack_require__(18));
 
@@ -1580,7 +1580,7 @@ exports.MainDataSource = exports.DataSource = void 0;
 
 var _named_object = __webpack_require__(1);
 
-var _ctool_manager = __webpack_require__(22);
+var _ctool_manager = __webpack_require__(23);
 
 var _kline = _interopRequireDefault(__webpack_require__(3));
 
@@ -1892,13 +1892,13 @@ var _chart_settings = __webpack_require__(4);
 
 var _templates = __webpack_require__(7);
 
-__webpack_require__(26);
+__webpack_require__(32);
 
-var _tpl = _interopRequireDefault(__webpack_require__(42));
+var _tpl = _interopRequireDefault(__webpack_require__(48));
 
-var _jquery = _interopRequireDefault(__webpack_require__(19));
+var _jquery = _interopRequireDefault(__webpack_require__(20));
 
-var _util = __webpack_require__(43);
+var _util = __webpack_require__(19);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3183,17 +3183,17 @@ var areas = _interopRequireWildcard(__webpack_require__(13));
 
 var plotters = _interopRequireWildcard(__webpack_require__(11));
 
-var _timeline = __webpack_require__(23);
+var _timeline = __webpack_require__(24);
 
 var _cname = __webpack_require__(15);
 
-var layouts = _interopRequireWildcard(__webpack_require__(24));
+var layouts = _interopRequireWildcard(__webpack_require__(25));
 
 var themes = _interopRequireWildcard(__webpack_require__(6));
 
 var ranges = _interopRequireWildcard(__webpack_require__(18));
 
-var _util = __webpack_require__(43);
+var _util = __webpack_require__(19);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -3483,7 +3483,7 @@ var _templates = __webpack_require__(7);
 
 var _mevent = __webpack_require__(17);
 
-var _jquery = _interopRequireDefault(__webpack_require__(19));
+var _jquery = _interopRequireDefault(__webpack_require__(20));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13329,12 +13329,605 @@ exports.PercentageRange = PercentageRange;
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+
+// Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+exports.deprecate = function(fn, msg) {
+  // Allow for deprecating things in the process of starting up.
+  if (isUndefined(global.process)) {
+    return function() {
+      return exports.deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  if (process.noDeprecation === true) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (process.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+};
+
+
+var debugs = {};
+var debugEnviron;
+exports.debuglog = function(set) {
+  if (isUndefined(debugEnviron))
+    debugEnviron = process.env.NODE_DEBUG || '';
+  set = set.toUpperCase();
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = process.pid;
+      debugs[set] = function() {
+        var msg = exports.format.apply(exports, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function() {};
+    }
+  }
+  return debugs[set];
+};
+
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  array.forEach(function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  }
+
+  // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  if (isError(value)
+      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) &&
+      (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = __webpack_require__(28);
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = __webpack_require__(29);
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26), __webpack_require__(27)))
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13354,7 +13947,7 @@ var _default = _kline.default;
 exports.default = _default;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13373,7 +13966,7 @@ var _kline = _interopRequireDefault(__webpack_require__(3));
 
 var _templates = __webpack_require__(7);
 
-var _constants = __webpack_require__(48);
+var _constants = __webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13666,7 +14259,7 @@ Chart.strPeriod = {
 };
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13865,7 +14458,7 @@ function (_NamedObject) {
 exports.CToolManager = CToolManager;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14210,7 +14803,7 @@ Timeline.PADDING_LEFT = 4;
 Timeline.PADDING_RIGHT = 8;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14714,7 +15307,270 @@ function (_areas$ChartAreaGroup2) {
 exports.DockableLayout = DockableLayout;
 
 /***/ }),
-/* 25 */
+/* 26 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = {"O_RDONLY":0,"O_WRONLY":1,"O_RDWR":2,"S_IFMT":61440,"S_IFREG":32768,"S_IFDIR":16384,"S_IFCHR":8192,"S_IFBLK":24576,"S_IFIFO":4096,"S_IFLNK":40960,"S_IFSOCK":49152,"O_CREAT":512,"O_EXCL":2048,"O_NOCTTY":131072,"O_TRUNC":1024,"O_APPEND":8,"O_DIRECTORY":1048576,"O_NOFOLLOW":256,"O_SYNC":128,"O_SYMLINK":2097152,"O_NONBLOCK":4,"S_IRWXU":448,"S_IRUSR":256,"S_IWUSR":128,"S_IXUSR":64,"S_IRWXG":56,"S_IRGRP":32,"S_IWGRP":16,"S_IXGRP":8,"S_IRWXO":7,"S_IROTH":4,"S_IWOTH":2,"S_IXOTH":1,"E2BIG":7,"EACCES":13,"EADDRINUSE":48,"EADDRNOTAVAIL":49,"EAFNOSUPPORT":47,"EAGAIN":35,"EALREADY":37,"EBADF":9,"EBADMSG":94,"EBUSY":16,"ECANCELED":89,"ECHILD":10,"ECONNABORTED":53,"ECONNREFUSED":61,"ECONNRESET":54,"EDEADLK":11,"EDESTADDRREQ":39,"EDOM":33,"EDQUOT":69,"EEXIST":17,"EFAULT":14,"EFBIG":27,"EHOSTUNREACH":65,"EIDRM":90,"EILSEQ":92,"EINPROGRESS":36,"EINTR":4,"EINVAL":22,"EIO":5,"EISCONN":56,"EISDIR":21,"ELOOP":62,"EMFILE":24,"EMLINK":31,"EMSGSIZE":40,"EMULTIHOP":95,"ENAMETOOLONG":63,"ENETDOWN":50,"ENETRESET":52,"ENETUNREACH":51,"ENFILE":23,"ENOBUFS":55,"ENODATA":96,"ENODEV":19,"ENOENT":2,"ENOEXEC":8,"ENOLCK":77,"ENOLINK":97,"ENOMEM":12,"ENOMSG":91,"ENOPROTOOPT":42,"ENOSPC":28,"ENOSR":98,"ENOSTR":99,"ENOSYS":78,"ENOTCONN":57,"ENOTDIR":20,"ENOTEMPTY":66,"ENOTSOCK":38,"ENOTSUP":45,"ENOTTY":25,"ENXIO":6,"EOPNOTSUPP":102,"EOVERFLOW":84,"EPERM":1,"EPIPE":32,"EPROTO":100,"EPROTONOSUPPORT":43,"EPROTOTYPE":41,"ERANGE":34,"EROFS":30,"ESPIPE":29,"ESRCH":3,"ESTALE":70,"ETIME":101,"ETIMEDOUT":60,"ETXTBSY":26,"EWOULDBLOCK":35,"EXDEV":18,"SIGHUP":1,"SIGINT":2,"SIGQUIT":3,"SIGILL":4,"SIGTRAP":5,"SIGABRT":6,"SIGIOT":6,"SIGBUS":10,"SIGFPE":8,"SIGKILL":9,"SIGUSR1":30,"SIGSEGV":11,"SIGUSR2":31,"SIGPIPE":13,"SIGALRM":14,"SIGTERM":15,"SIGCHLD":20,"SIGCONT":19,"SIGSTOP":17,"SIGTSTP":18,"SIGTTIN":21,"SIGTTOU":22,"SIGURG":16,"SIGXCPU":24,"SIGXFSZ":25,"SIGVTALRM":26,"SIGPROF":27,"SIGWINCH":28,"SIGIO":23,"SIGSYS":12,"SSL_OP_ALL":2147486719,"SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION":262144,"SSL_OP_CIPHER_SERVER_PREFERENCE":4194304,"SSL_OP_CISCO_ANYCONNECT":32768,"SSL_OP_COOKIE_EXCHANGE":8192,"SSL_OP_CRYPTOPRO_TLSEXT_BUG":2147483648,"SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS":2048,"SSL_OP_EPHEMERAL_RSA":0,"SSL_OP_LEGACY_SERVER_CONNECT":4,"SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER":32,"SSL_OP_MICROSOFT_SESS_ID_BUG":1,"SSL_OP_MSIE_SSLV2_RSA_PADDING":0,"SSL_OP_NETSCAPE_CA_DN_BUG":536870912,"SSL_OP_NETSCAPE_CHALLENGE_BUG":2,"SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG":1073741824,"SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG":8,"SSL_OP_NO_COMPRESSION":131072,"SSL_OP_NO_QUERY_MTU":4096,"SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION":65536,"SSL_OP_NO_SSLv2":16777216,"SSL_OP_NO_SSLv3":33554432,"SSL_OP_NO_TICKET":16384,"SSL_OP_NO_TLSv1":67108864,"SSL_OP_NO_TLSv1_1":268435456,"SSL_OP_NO_TLSv1_2":134217728,"SSL_OP_PKCS1_CHECK_1":0,"SSL_OP_PKCS1_CHECK_2":0,"SSL_OP_SINGLE_DH_USE":1048576,"SSL_OP_SINGLE_ECDH_USE":524288,"SSL_OP_SSLEAY_080_CLIENT_DH_BUG":128,"SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG":0,"SSL_OP_TLS_BLOCK_PADDING_BUG":512,"SSL_OP_TLS_D5_BUG":256,"SSL_OP_TLS_ROLLBACK_BUG":8388608,"ENGINE_METHOD_DSA":2,"ENGINE_METHOD_DH":4,"ENGINE_METHOD_RAND":8,"ENGINE_METHOD_ECDH":16,"ENGINE_METHOD_ECDSA":32,"ENGINE_METHOD_CIPHERS":64,"ENGINE_METHOD_DIGESTS":128,"ENGINE_METHOD_STORE":256,"ENGINE_METHOD_PKEY_METHS":512,"ENGINE_METHOD_PKEY_ASN1_METHS":1024,"ENGINE_METHOD_ALL":65535,"ENGINE_METHOD_NONE":0,"DH_CHECK_P_NOT_SAFE_PRIME":2,"DH_CHECK_P_NOT_PRIME":1,"DH_UNABLE_TO_CHECK_GENERATOR":4,"DH_NOT_SUITABLE_GENERATOR":8,"NPN_ENABLED":1,"RSA_PKCS1_PADDING":1,"RSA_SSLV23_PADDING":2,"RSA_NO_PADDING":3,"RSA_PKCS1_OAEP_PADDING":4,"RSA_X931_PADDING":5,"RSA_PKCS1_PSS_PADDING":6,"POINT_CONVERSION_COMPRESSED":2,"POINT_CONVERSION_UNCOMPRESSED":4,"POINT_CONVERSION_HYBRID":6,"F_OK":0,"R_OK":4,"W_OK":2,"X_OK":1,"UV_UDP_REUSEADDR":4}
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15914,13 +16770,13 @@ function (_Indicator21) {
 exports.STOCHRSIIndicator = STOCHRSIIndicator;
 
 /***/ }),
-/* 26 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(27);
+var content = __webpack_require__(33);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -15928,7 +16784,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(40)(content, options);
+var update = __webpack_require__(46)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -15945,22 +16801,22 @@ if(false) {
 }
 
 /***/ }),
-/* 27 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var escape = __webpack_require__(28);
-exports = module.exports = __webpack_require__(29)(false);
+var escape = __webpack_require__(34);
+exports = module.exports = __webpack_require__(35)(false);
 // imports
 
 
 // module
-exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\n.kline {  \n    -webkit-overflow-scrolling:touch;\n  }\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n                /*\n                    position: absolute;\n    left: 0;\n    top: 80px;\n                */\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%;\n    overflow:auto;\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(30)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(31)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n#chart_toolbar_periods_vert div a.selected {\n    color: #ffac00\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(32)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(33)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n/* .chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n} */\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(34)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(35)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(36)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(37)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(38)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(39)) + ") no-repeat;\n}\n\n/* .chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n} */\n\n/* .chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n} */\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n/* #chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n} */\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    padding-left: 15px;    \n    padding-top: 20px;\n}\n\n.chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n.chart_trade_quotation .green {\n    color: #0F0\n}\n\n.chart_trade_quotation .red {\n    color: #F00\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n    font-size: 12px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 20px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 26px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: orchid;\n    top: 49px;\n    right: 10px;\n}\n\n \n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
+exports.push([module.i, "html, body {\n    min-height: 100%;\n    margin: 0;\n    min-width: 100%\n}\n\n.kline {  \n    -webkit-overflow-scrolling:touch;\n  }\n\nul, li {\n    padding: 0;\n    margin: 0;\n}\n\nli {\n    list-style: none;\n}\n                /*\n                    position: absolute;\n    left: 0;\n    top: 80px;\n                */\n.chart_container {\n    cursor: default;\n    font-family: arial, sans, serif;\n    font-size: 12px;\n    height: 100%;\n    position: relative;\n    width: 100%;\n    overflow:auto;\n}\n\n.chart_container div, .chart_container ul, .chart_container form {\n    margin: 0;\n    padding: 0\n}\n\n.chart_container a:hover {\n    text-decoration: none\n}\n\n.chart_container ul {\n    list-style: none;\n    border: 0;\n    margin: 0;\n    padding: 0\n}\n\n.chart_container button {\n    cursor: pointer\n}\n\n#chart_dom_elem_cache {\n    *font-weight: bold;\n    position: absolute;\n    visibility: hidden;\n    z-index: -1\n}\n\n#chart_toolbar {\n    border-bottom: 1px solid;\n    *font-weight: bold;\n    height: 29px;\n    position: absolute;\n    z-index: 3\n}\n\n.chart_container.dark #chart_toolbar {\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.chart_container.light #chart_toolbar {\n    background-color: #fff;\n    border-bottom-color: #afb1b3\n}\n\n.chart_container .chart_toolbar_sep {\n    float: left;\n    height: 100%;\n    width: 16px\n}\n\n.chart_container .chart_toolbar_minisep {\n    float: left;\n    height: 100%;\n    width: 4px\n}\n\n.chart_container .chart_dropdown {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_t {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    border-bottom-width: 0;\n    margin-top: 3px;\n    padding-right: 10px;\n    z-index: 101;\n    position: relative\n}\n\n.chart_container .chart_dropdown_t a {\n    display: inline-block;\n    padding: 3px 12px 5px 10px\n}\n\n.chart_container .chart_dropdown_data {\n    border: 1px solid;\n    display: none;\n    position: absolute;\n    padding: 6px 8px 6px 8px;\n    margin-top: -1px;\n    z-index: 100\n}\n\n.chart_container .chart_dropdown_data table {\n    border-collapse: collapse;\n    font-weight: normal;\n    white-space: nowrap\n}\n\n.chart_container .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 8px 6px;\n    vertical-align: top\n}\n\n.market_chooser .chart_dropdown_data {\n    width: 370px\n}\n\n.market_chooser .chart_dropdown_data td {\n    border-bottom: 1px solid;\n    padding: 1px 6px !important;\n    vertical-align: top;\n    line-height: 24px\n}\n\n.market_chooser li {\n    float: left;\n    width: 80px;\n    height: 24px;\n    line-height: 24px\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.dark {\n    color: #fff\n}\n\n.chart_container .chart_dropdown_data td.marketName_ a.light {\n    color: #000\n}\n\n.chart_container .chart_dropdown_data table tr:last-child td {\n    border-bottom: 0\n}\n\n.chart_container .chart_dropdown_data li {\n    white-space: nowrap;\n    display: inline-block\n}\n\n.chart_container .chart_dropdown_data a {\n    text-decoration: none;\n    cursor: pointer;\n    padding: 5px 6px 5px 6px\n}\n\n.chart_container .chart_dropdown-hover.chart_dropdown_data {\n    display: block\n}\n\n#chart_dropdown_symbols .chart_dropdown_data td {\n    padding: 8px 6px 0 6px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data li {\n    display: block;\n    height: 26px\n}\n\n#chart_dropdown_symbols .chart_dropdown_data a {\n    cursor: pointer\n}\n\n#chart_dropdown_themes .chart_dropdown_data td:first-child {\n    padding: 6px 1px 7px 6px\n}\n\n.chart_container.dark .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(36)) + ");\n    background-position: right 9px;\n    border-color: #0a0a0a;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #131E32;\n    background-image: url(" + escape(__webpack_require__(37)) + ");\n    background-position: right 8px;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_dropdown_data {\n    background-color: rgba(10, 10, 10, 0.8);\n    border-color: #606060\n}\n\n.chart_container.dark .chart_dropdown_data td {\n    border-bottom-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_dropdown_data li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_dropdown_data li a:hover {\n    background-color: #383838\n}\n\n#chart_toolbar_periods_vert div a.selected {\n    color: #ffac00\n}\n\n.chart_container.dark .chart_dropdown_data li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_dropdown_t {\n    background-image: url(" + escape(__webpack_require__(38)) + ");\n    background-position: right 10px;\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown-hover.chart_dropdown_t {\n    background-color: #fff;\n    background-image: url(" + escape(__webpack_require__(39)) + ");\n    background-position: right 9px;\n    border-color: #4c4f53;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data {\n    background-color: #fff;\n    border-color: #4c4f53\n}\n\n.chart_container.light .chart_dropdown_data td {\n    border-bottom-color: #e4e5e6;\n    color: #393c40\n}\n\n.chart_container.light .chart_dropdown_data li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_dropdown_data a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_dropdown_data a.selected {\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_label {\n    cursor: default;\n    display: inline-block;\n    float: left;\n    padding: 7px 4px\n}\n\n.chart_container.dark .chart_toolbar_label {\n    border-color: #232323;\n    color: #e5e5e5\n}\n\n.chart_container.light .chart_toolbar_label {\n    border-color: #fff;\n    color: #393c40\n}\n\n.chart_container .chart_toolbar_button {\n    border: 1px solid;\n    cursor: pointer;\n    float: left;\n    margin: 3px 2px;\n    padding: 3px 10px;\n    position: relative;\n    z-index: 100\n}\n\n.chart_container.dark .chart_toolbar_button {\n    border-color: #404040;\n    color: #e5e5e5\n}\n\n.chart_container.dark .chart_toolbar_button:hover {\n    background-color: #383838;\n    border-color: #606060;\n    color: #fff\n}\n\n.chart_container.dark .chart_toolbar_button.selected {\n    background-color: #383838;\n    border-color: #606060;\n    color: #ffac00\n}\n\n.chart_container.dark .chart_toolbar_button.selected:hover {\n    background-color: #474747;\n    border-color: #808080;\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_button {\n    border-color: #ccc;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light .chart_toolbar_button.selected {\n    background-color: #f4f4f4;\n    border-color: #f27935;\n    color: #f27935\n}\n\n.chart_container .chart_toolbar_tabgroup {\n    float: left\n}\n\n.chart_container .chart_toolbar_tabgroup li {\n    display: inline-block;\n    padding: 4px 0;\n    margin: 3px 0\n}\n\n.chart_container .chart_toolbar_tabgroup li a {\n    cursor: pointer;\n    padding: 4px 4px\n}\n\n.chart_container .chart_toolbar_tabgroup li a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a {\n    color: #1987da\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a:hover {\n    background-color: #383838\n}\n\n.chart_container.dark .chart_toolbar_tabgroup li a.selected {\n    color: #ffac00\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a {\n    color: #1478c8\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a:hover {\n    background-color: #f4f4f4\n}\n\n.chart_container.light .chart_toolbar_tabgroup li a.selected {\n    color: #f27935\n}\n\n#chart_toolbar_periods_horz {\n    display: inline-block;\n    float: left;\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolbar_periods_vert {\n    float: left\n}\n\n.chart_container a.chart_icon {\n    border: 1px solid;\n    height: 16px;\n    padding: 0;\n    width: 16px\n}\n\n.chart_container a.chart_icon:hover {\n    border-width: 2px;\n    height: 14px;\n    width: 14px\n}\n\n.chart_container .chart_dropdown_data a.chart_icon {\n    display: inline-block;\n    magin: 0 6px 0 6px\n}\n\n.chart_container a.chart_icon_theme_dark, .chart_container .chart_dropdown_data li a.chart_icon_theme_dark:hover {\n    background-color: #000\n}\n\n.chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {\n    background-color: #fff\n}\n\n/* .chart_container #chart_toolbar_theme {\n    float: left;\n    padding: 0 8px;\n    display: none;\n}\n\n.chart_container #chart_toolbar_theme a.chart_icon {\n    cursor: pointer;\n    float: left;\n    margin: 6px 4px\n}\n\n.chart_container #chart_select_theme td:last-child {\n    padding: 6px 6px 0 8px\n}\n\n.chart_container #chart_select_theme li {\n    padding: 0 4px 0 4px\n} */\n\n.chart_container.dark a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.dark a.chart_icon:hover {\n    border-color: #1987da\n}\n\n.chart_container.dark a.chart_icon.selected {\n    border-color: #ffac00\n}\n\n.chart_container.light a.chart_icon {\n    border-color: #aaa\n}\n\n.chart_container.light a.chart_icon.selected {\n    border-color: #f27935\n}\n\n.chart_container #chart_updated_time {\n    float: right;\n    margin: 4px 3px;\n    padding: 3px 5px\n}\n\n.chart_container.dark #chart_updated_time {\n    color: #e5e5e5\n}\n\n.chart_container.light #chart_updated_time {\n    color: #393c40\n}\n\n#chart_toolpanel {\n    border-right: 1px solid;\n    display: none;\n    position: absolute;\n    width: 32px;\n    z-index: 2\n}\n\n#chart_toolpanel .chart_toolpanel_separator {\n    position: relative;\n    height: 4px\n}\n\n#chart_toolpanel .chart_toolpanel_button {\n    position: relative;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_icon {\n    background-origin: content-box;\n    background-repeat: no-repeat;\n    border: 1px solid;\n    cursor: pointer;\n    height: 16px;\n    margin: 1px 4px 1px 4px;\n    padding: 3px;\n    position: relative;\n    width: 16px;\n    z-index: 101\n}\n\n#chart_toolpanel .chart_toolpanel_tip {\n    border-radius: 4px;\n    border: 1px solid;\n    display: none;\n    *font-weight: bold;\n    position: absolute;\n    padding: 3px 6px 4px 6px;\n    margin-left: 36px;\n    margin-top: -25px;\n    white-space: nowrap;\n    z-index: 100\n}\n\n#chart_toolpanel .chart_toolpanel_button:hover .chart_toolpanel_tip {\n    display: block\n}\n\n.chart_container.dark #chart_toolpanel {\n    background-color: #0a0a0a;\n    border-right-color: #404040\n}\n\n.chart_container.dark .chart_toolpanel_icon {\n    background-color: #0a0a0a;\n    border-color: #0a0a0a\n}\n\n.chart_container.dark .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #404040;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #080808;\n    border-color: #666\n}\n\n.chart_container.dark .chart_toolpanel_tip {\n    background-color: #ffac00;\n    border-color: #ffac00;\n    color: #0a0a0a\n}\n\n.chart_container.light #chart_toolpanel {\n    background-color: #fff;\n    border-right-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_icon {\n    background-color: #fff;\n    border-color: #fff\n}\n\n.chart_container.light .chart_toolpanel_button:hover .chart_toolpanel_icon {\n    background-color: #eee;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-color: #f4f4f4;\n    border-color: #afb1b3\n}\n\n.chart_container.light .chart_toolpanel_tip {\n    background-color: #f27938;\n    border-color: #f27938;\n    color: #eee\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(40)) + ")\n}\n\n.chart_container.dark #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(41)) + ")\n}\n\n.chart_container.dark #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(42)) + ") no-repeat;\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(43)) + ")\n}\n\n.chart_container.light #chart_toolpanel .chart_toolpanel_button.selected .chart_toolpanel_icon {\n    background-image: url(" + escape(__webpack_require__(44)) + ")\n}\n\n.chart_container.light #chart_toolbar .chart_BoxSize {\n    background: url(" + escape(__webpack_require__(45)) + ") no-repeat;\n}\n\n/* .chart_container #chart_toolpanel #chart_Cursor {\n    background-position: 0 0\n} */\n\n/* .chart_container #chart_toolpanel #chart_CrossCursor {\n    background-position: 0 -20px\n} */\n\n.chart_container #chart_toolpanel #chart_SegLine {\n    background-position: 0 -40px\n}\n\n.chart_container #chart_toolpanel #chart_StraightLine {\n    background-position: 0 -60px\n}\n\n.chart_container #chart_toolpanel #chart_RayLine {\n    background-position: 0 -100px\n}\n\n.chart_container #chart_toolpanel #chart_ArrowLine {\n    background-position: 0 -80px\n}\n\n.chart_container #chart_toolpanel #chart_HoriSegLine {\n    background-position: 0 -160px\n}\n\n.chart_container #chart_toolpanel #chart_HoriStraightLine {\n    background-position: 0 -120px\n}\n\n.chart_container #chart_toolpanel #chart_HoriRayLine {\n    background-position: 0 -140px\n}\n\n.chart_container #chart_toolpanel #chart_VertiStraightLine {\n    background-position: 0 -180px\n}\n\n.chart_container #chart_toolpanel #chart_PriceLine {\n    background-position: 0 -200px\n}\n\n.chart_container #chart_toolpanel #chart_TriParallelLine {\n    background-position: 0 -220px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelLine {\n    background-position: 0 -240px\n}\n\n.chart_container #chart_toolpanel #chart_BiParallelRayLine {\n    background-position: 0 -260px\n}\n\n.chart_container .chart_toolpanel_button #chart_DrawFibRetrace {\n    background-position: 0 -280px\n}\n\n.chart_container #chart_toolpanel #chart_DrawFibFans {\n    background-position: 0 -300px\n}\n\n#chart_tabbar {\n    border-top: 1px solid;\n    cursor: default;\n    display: none;\n    *font-weight: bold;\n    height: 22px;\n    overflow: hidden;\n    position: absolute;\n    z-index: 1\n}\n\n#chart_tabbar ul {\n    height: 100%;\n    list-style: none;\n    padding: 0 0 0 4px\n}\n\n#chart_tabbar li {\n    display: inline-block;\n    height: 100%;\n    margin: 0\n}\n\n#chart_tabbar a {\n    cursor: pointer;\n    display: inline-block;\n    height: 100%;\n    margin: 0;\n    padding: 3px 4px 0 4px;\n    overflow: hidden\n}\n\n#chart_tabbar a:hover {\n    text-decoration: none\n}\n\n.chart_container.dark #chart_tabbar {\n    background-color: #0a0a0a;\n    border-top-color: #404040\n}\n\n.chart_container.dark #chart_tabbar a {\n    color: #e5e5e5\n}\n\n.chart_container.dark #chart_tabbar a:hover {\n    background-color: #383838;\n    color: #fff\n}\n\n.chart_container.dark #chart_tabbar a.selected {\n    color: #ffac00\n}\n\n.chart_container.light #chart_tabbar {\n    background-color: #fff;\n    border-top-color: #afb1b3\n}\n\n.chart_container.light #chart_tabbar a {\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a:hover {\n    background-color: #f4f4f4;\n    color: #393c40\n}\n\n.chart_container.light #chart_tabbar a.selected {\n    color: #f27935\n}\n\n#chart_canvasGroup {\n    position: absolute;\n    z-index: 0\n}\n\n#chart_mainCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 0;\n}\n\n#chart_overlayCanvas {\n    overflow: hidden;\n    position: absolute;\n    z-index: 2\n}\n\n#chart_loading {\n    border: 2px solid #fff;\n    border-left: 2px solid transparent;\n    height: 30px;\n    width: 30px;\n    border-radius: 50%;\n    overflow: hidden;\n    position: absolute;\n    text-align: center;\n    visibility: hidden;\n    z-index: 200;\n}\n\n.chart_str_loading {\n    animation: loading_rotate 1s infinite linear;\n}\n\n@keyframes loading_rotate {\n    0% {\n        transform: rotate(0deg);\n    }\n    100% {\n        transform: rotate(360deg);\n    }\n}\n\n#chart_loading.activated {\n    visibility: visible\n}\n\n.chart_container.dark #chart_loading {\n    background-color: rgba(0, 0, 0, 0.6);\n    color: #ccc\n}\n\n.chart_container.light #chart_loading {\n    background-color: rgba(244, 244, 244, 0.8);\n    color: #393c40\n}\n\n/* #chart_parameter_settings {\n    border-radius: 4px;\n    border: 0px solid;\n    width: 640px;\n    position: absolute;\n    overflow: hidden;\n    visibility: hidden;\n    z-index: 500\n}\n\n#chart_parameter_settings.clicked {\n    visibility: visible\n}\n\n#chart_parameter_settings h2 {\n    padding: 8px 12px;\n    margin: 0\n}\n\n#chart_parameter_settings table {\n    border-collapse: collapse;\n    width: 100%\n}\n\n#chart_parameter_settings tr {\n    line-height: 32px\n}\n\n#chart_parameter_settings th {\n    text-align: right;\n    padding: 0 4px 0 16px\n}\n\n#chart_parameter_settings input {\n    width: 2em;\n    margin: 0 2px 0 2px\n}\n\n#chart_parameter_settings #close_settings {\n    border-radius: 4px;\n    cursor: pointer;\n    font-weight: bold;\n    text-align: center;\n    margin: 8px auto;\n    padding: 5px 24px 5px 24px;\n    width: 84px\n}\n\n#chart_parameter_settings .chart_str_default {\n    margin-right: 24px\n}\n\n.chart_container.dark #chart_parameter_settings {\n    background-color: rgba(0, 0, 0, 0.9);\n    border-color: rgba(0, 0, 0, 0.9);\n    color: #ccc;\n}\n\n.chart_container.dark #chart_parameter_settings #close_settings {\n    background: #1887da;\n    color: #eee\n}\n\n.chart_container.light #chart_parameter_settings {\n    background-color: rgba(244, 244, 244, 0.8);\n    border-color: #afb1b3;\n    color: #393c40\n}\n\n.chart_container.light #chart_parameter_settings #close_settings {\n    background: #1478c8;\n    color: #eee\n} */\n\n.chart_container input, .chart_container button {\n    border-radius: 4px;\n    border: 1px solid;\n    padding: 4px\n}\n\n.chart_container input[type=text] {\n    width: 12em\n}\n\n.chart_container input[type=button], .chart_container input[type=submit], .chart_container button {\n    font-family: arial, sans, serif;\n    padding: 4px 8px;\n    cursor: pointer\n}\n\n.chart_container.dark input, .chart_container.dark button {\n    background-color: #151515;\n    border-color: #333;\n    color: #ccc\n}\n\n.chart_container.light input, .chart_container.light button {\n    background-color: #ddd;\n    border-color: #ddd;\n    color: #222\n}\n\n.trade_container {\n    width: 100%;\n    height: auto;\n    /* float: right; */\n    z-index: 99999;\n    font-size: 12px;\n    overflow: hidden;\n    padding-bottom: 15px;\n}\n\n.trade_container.dark {\n    background: #0a0a0a;\n    color: #f1f1f1\n}\n\n.m_righttop {\n    position: fixed;\n    top: 0;\n    height: 41px;\n    line-height: 41px;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    font-size: 16px;\n    color: #f78d15;\n    font-family: Gotham, \"Helvetica Neue\", Helvetica, Arial, sans-serif\n}\n\n.m_righttop em {\n    width: 123px;\n    height: 28px;\n    background-position: 0 0;\n    display: block;\n    float: right;\n    margin-top: 5px\n}\n\n.dark .m_righttop em {\n    background-position: 0 0\n}\n\n.m_rightbot {\n    height: 22px;\n    line-height: 22px;\n    border-top: 1px solid #404040;\n    width: 230px;\n    text-align: right;\n    padding-right: 20px;\n    background-color: #0a0a0a;\n    border-bottom-color: #404040\n}\n\n.m_guadan {\n    padding: 0 10px;\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #404040;\n    border-top: 1px solid #404040\n}\n\n.m_guadan a {\n    font-weight: bold;\n    color: #FFF;\n    text-decoration: none\n}\n\n.light .m_guadan {\n    margin-top: 0px;\n    overflow: hidden;\n    border-left: 1px solid #afb1b3;\n    border-top: 1px solid #afb1b3\n}\n\n#trades, #description {\n    display: none;\n}\n\n#orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {\n    height: 195px;\n    position: relative;\n    overflow: hidden\n}\n\n.symbol-title {\n    font-size: 20px;\n    /* font-weight: bold; */\n    text-align: center;\n    height: 24px;\n    line-height: 24px;\n    font-family: Arial, sans, serif;\n    padding: 5px\n}\n\n.symbol-title .white {\n    color: #FFF;\n    /* text-decoration:none; */\n}\n\n.symbol-title .dark {\n    color: #6BF\n}\n\n.symbol-title .infoDepth {\n    margin-left: 8px;\n    color: #f78d15\n}\n\n.symbol-title a:hover {\n    text-decoration: underline\n}\n\n#orderbook {\n    /* padding-left: 3px;\n    border-bottom: 1px solid #222;\n    padding-bottom: 2px;\n    margin-left: 5px;\n    margin-bottom: 2px */\n    display: flex;\n}\n\n#asks, #bids {\n    flex: 1;\n}\n\n#tabList {\n    display: flex;\n}\n\n#tabList li {\n    flex: 1;\n    text-align: center;\n    line-height: 30px;\n}\n\n#tabList li.current {\n    color: #0F0;\n}\n\n#orderbook .table {\n    position: absolute;\n    border-collapse: collapse;\n    padding: 0;\n    margin: 0\n}\n\n#gasks .table, #asks .table {\n    bottom: 0\n}\n\n#orderbook .table .row {\n    padding: 0;\n    margin: 0;\n    height: 13px;\n    line-height: 13px;\n    font-family: Consolas, monospace\n}\n\n#orderbook .table .row {\n    line-height: 13px\n}\n\n#orderbook .table .g {\n    color: #666\n}\n\n.price {\n    margin-right: 10px\n}\n\n.price h {\n    visibility: hidden\n}\n\n.price g, .amount g {\n    color: #666\n}\n\n#price {\n    text-align: left;\n    font-size: 16px;\n    font-weight: bold;\n    padding-left: 15px;    \n    padding-top: 20px;\n}\n\n.chart_trade_quotation {\n    height: 80px;\n    background-color: #0a0a0a;\n    position: relative;\n}\n\n#chart_trade_quotation_content ul, li {\n    list-style: none;\n    padding: 0;\n    margin: 0;\n}\n\n.chart_trade_quotation .green {\n    color: #0F0\n}\n\n.chart_trade_quotation .red {\n    color: #F00\n}\n\n#chart_trade_quotation_content li {\n    position: absolute;\n    display: block;\n    font-size: 12px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(1) {\n    left: 20px;\n    top: 24px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(2) {\n    left: 26px;\n    top: 36px;\n    color: whitesmoke;\n}\n\n#chart_trade_quotation_content li:nth-of-type(3) {\n    right: 10px;\n    top: 10px;\n    color: goldenrod;\n}\n\n#chart_trade_quotation_content li:nth-of-type(4) {\n    color: yellowgreen;\n    top: 28px;\n    right: 10px;\n}\n\n#chart_trade_quotation_content li:nth-of-type(5) {\n    color: orchid;\n    top: 49px;\n    right: 10px;\n}\n\n \n\n.trade_container .green {\n    color: #0F0\n}\n\n.trade_container .red {\n    color: #F00\n}\n\n.trade_container.dark #orderbook div.table div.remove g, .trade_container.dark #orderbook div.table div.remove span {\n    color: #444\n}\n\n.trade_container.light #orderbook div.table div.remove g, .trade_container.light #orderbook div.table div.remove span {\n    color: #ddd\n}\n\n.trade_container.dark #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light #orderbook div.table div.add {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n#trades {\n    overflow-y: auto;\n    text-align: left;\n    color: #666;\n}\n\n.trade_container.light {\n    background: #fff;\n    border-left: 1px solid #afb1b3;\n    color: #000\n}\n\n.trade_container.light .m_righttop em {\n    background-position: 0 -32px\n}\n\n.trade_container.light .m_righttop {\n    position: fixed;\n    top: 0;\n    height: 40px;\n    line-height: 40px;\n    background: #FFF;\n    width: 230px;\n    border-bottom: 1px solid #afb1b3;\n    text-align: right;\n    padding-right: 20px\n}\n\n.trade_container.light #trades.trades table {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v {\n    color: #333\n}\n\n.trade_container.light #trades.trades .v g {\n    color: #333\n}\n\n.trade_container.light .m_rightbot {\n    background: #fff;\n    border-top: 1px solid #afb1b3\n}\n\n.trade_container.light #orderbook {\n    border-bottom: 1px solid #afb1b3\n}\n\n.trades_list {\n    /* padding-left: 25px */\n}\n\n.trades_list ul {\n    width: 100%;\n    height: 14px;\n    line-height: 14px;\n    text-align: left;\n    list-style: none;\n    clear: both;\n    zoom: 1;\n    margin: 0;\n    padding: 0;\n    display: flex;\n}\n\n.trades_list ul li {\n    height: 14px;\n    line-height: 14px;\n    color: #999;\n    font-size: 12px;\n    list-style: none;\n    float: left;\n    *display: inline;\n    margin: 0;\n    padding: 0;\n    font-family: Consolas, monospace;\n    flex: 1;\n}\n\n.trades_list ul li.tm {\n    width: 62px;\n    color: #999\n}\n\n.trades_list ul li.pr-green {\n    width: 65px;\n    color: #0F0\n}\n\n.trades_list ul li.pr-red {\n    width: 65px;\n    color: #F00\n}\n\n.trades_list ul li.vl {\n    width: 60px;\n    color: #ccc\n}\n\n.trades_list ul li.vl g {\n    color: #666\n}\n\n.trade_container.dark .trades_list ul.newul {\n    display: none;\n    background-color: rgba(238, 238, 238, 0.2)\n}\n\n.trade_container.light .trades_list ul.newul {\n    display: none;\n    background-color: rgba(100, 100, 100, 0.2)\n}\n\n.light .trades_list ul li.tm {\n    color: #333\n}\n\n.light .trades_list ul li.pr-green {\n    color: #6c6\n}\n\n.light .trades_list ul li.pr-red {\n    color: #c66\n}\n\n.light .trades_list ul li.vl {\n    color: #333\n}\n\n.light .trades_list ul li.vl g {\n    color: #333\n}\n\n.container .nav {\n    margin: 0;\n    list-style: none;\n    padding: 0 0 0 3px;\n    height: 41px\n}\n\n.container .nav li {\n    display: inline-block;\n    margin-right: 9px\n}\n\n.container a {\n    text-decoration: none;\n    color: #6BF;\n    font-family: Arial, sans, serif\n}\n\n.container a:hover {\n    text-decoration: underline\n}\n\n.container a.active {\n    color: #FC9\n}\n\n.container span {\n    margin-left: 3px;\n    font-family: Consolas, monospace;\n    color: #ccc\n}\n\n.light .container span {\n    color: #333\n}\n\n.light .container a {\n    text-decoration: none;\n    color: #1478c8;\n    font-family: Arial, sans, serif\n}\n\n.chart_BoxSize {\n    width: 20px;\n    height: 20px\n}\n\n#chart_main_indicator {\n    float: right;\n    right: 12px;\n}\n\n#chart_main_indicator li {\n    line-height: 24px;\n    display: block;\n}\n\n.chart_str_loading {\n    text-indent: -99999px;\n}", ""]);
 
 // exports
 
 
 /***/ }),
-/* 28 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = function escape(url) {
@@ -15982,7 +16838,7 @@ module.exports = function escape(url) {
 
 
 /***/ }),
-/* 29 */
+/* 35 */
 /***/ (function(module, exports) {
 
 /*
@@ -16064,67 +16920,67 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 30 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAAJn2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0RXZ0PSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VFdmVudCMiCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgICAgICAgICAgIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyI+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42PC9leGlmOlBpeGVsWERpbWVuc2lvbj4KICAgICAgICAgPGV4aWY6Q29sb3JTcGFjZT42NTUzNTwvZXhpZjpDb2xvclNwYWNlPgogICAgICAgICA8ZXhpZjpQaXhlbFlEaW1lbnNpb24+NTwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2UvcG5nPC9kYzpmb3JtYXQ+CiAgICAgICAgIDx4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+eG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDY8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkhpc3Rvcnk+CiAgICAgICAgICAgIDxyZGY6U2VxPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OnNvZnR3YXJlQWdlbnQ+QWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKTwvc3RFdnQ6c29mdHdhcmVBZ2VudD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmNoYW5nZWQ+Lzwvc3RFdnQ6Y2hhbmdlZD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OndoZW4+MjAxNC0xMi0wM1QxNzo1Njo1MiswODowMDwvc3RFdnQ6d2hlbj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0Omluc3RhbmNlSUQ+eG1wLmlpZDozNjIzYmJlYi1iNGU2LWNhNDktOTRjZi05MTIyY2Q1Y2NiZTk8L3N0RXZ0Omluc3RhbmNlSUQ+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+c2F2ZWQ8L3N0RXZ0OmFjdGlvbj4KICAgICAgICAgICAgICAgPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC94bXBNTTpIaXN0b3J5PgogICAgICAgICA8eG1wTU06SW5zdGFuY2VJRD54bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOTwveG1wTU06SW5zdGFuY2VJRD4KICAgICAgICAgPHhtcE1NOkRvY3VtZW50SUQ+eG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBODwveG1wTU06RG9jdW1lbnRJRD4KICAgICAgICAgPHhtcE1NOkRlcml2ZWRGcm9tIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgPHN0UmVmOmluc3RhbmNlSUQ+eG1wLmlpZDo4MzE3OTEwZi1kOTE5LTY4NDAtYWVhOS0zNzI5NWE2NGI1NmU8L3N0UmVmOmluc3RhbmNlSUQ+CiAgICAgICAgICAgIDxzdFJlZjpkb2N1bWVudElEPnhtcC5kaWQ6MWYwY2U2ZjQtZTRlNS1jODQ3LWIyOTgtNGNkNjRiYzBkYzA2PC9zdFJlZjpkb2N1bWVudElEPgogICAgICAgICA8L3htcE1NOkRlcml2ZWRGcm9tPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TWV0YWRhdGFEYXRlPgogICAgICAgICA8eG1wOkNyZWF0ZURhdGU+MjAxNC0xMi0wM1QxNzo1NjoyOCswODowMDwveG1wOkNyZWF0ZURhdGU+CiAgICAgICAgIDx4bXA6TW9kaWZ5RGF0ZT4yMDE0LTEyLTAzVDE3OjU2OjUyKzA4OjAwPC94bXA6TW9kaWZ5RGF0ZT4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD5BZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgICAgIDxwaG90b3Nob3A6Q29sb3JNb2RlPjM8L3Bob3Rvc2hvcDpDb2xvck1vZGU+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqC9xe+AAAAWUlEQVQIHWO8cOHCFgYGBm8gRgZbmRgZGXOBIj+QRH8wMTHlMenr69////9/J0wCxNbT07vHCBK4f/8+x8ePH6+B2Pz8/FqKioo/mEAcEAOoEmRkHogNEgMA0qYfb8X3frQAAAAASUVORK5CYII="
 
 /***/ }),
-/* 31 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA21pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6M0E5Qjc0ODc3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6M0E5Qjc0ODY3QUQ0MTFFNDhCN0ZBNEVBQTM1QTBFNjgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjM2MjNiYmViLWI0ZTYtY2E0OS05NGNmLTkxMjJjZDVjY2JlOSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvrZrC8AAABOSURBVHjaYvz//z8DCFy8eNEbSDHq6+tvAfEZQRJAQQ4g+xoDBGgBJX8wQTkVQKwIxRVgHRcuXFCEquaAKvoBxNogHZORBBmg7EkAAQYAImEV+46peUgAAAAASUVORK5CYII="
 
 /***/ }),
-/* 32 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA3FpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NkMxOTJFRDk2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NkMxOTJFRDg2NTdFMTFFNEFFMDJBOUZGMjQ2MkEwQTgiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjgzMTc5MTBmLWQ5MTktNjg0MC1hZWE5LTM3Mjk1YTY0YjU2ZSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5MkIK1AAAAPklEQVR42mJ0CUvewsDA4M2ACrYyAYlcIP6BJAhi54Ek7gNxJ5IEiH2PCcrpgCq4D2UzsCBpBxnJCDMWIMAAVuANgw9cJ2UAAAAASUVORK5CYII="
 
 /***/ }),
-/* 33 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADcWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMTQgNzkuMTUxNDgxLCAyMDEzLzAzLzEzLTEyOjA5OjE1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2QzE5MkVEOTY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2QzE5MkVEODY1N0UxMUU0QUUwMkE5RkYyNDYyQTBBOCIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKFdpbmRvd3MpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODMxNzkxMGYtZDkxOS02ODQwLWFlYTktMzcyOTVhNjRiNTZlIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFmMGNlNmY0LWU0ZTUtYzg0Ny1iMjk4LTRjZDY0YmMwZGMwNiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PkyQgrUAAABCSURBVBhXY3QJS2aAAh8g/g/EW0EcJhABBBxAPAmIJ0PZcIkKIFaEYhAbLKEExOUgDhSA2IogCZARYO1QAGQzTAYAPbkH1E4jJr8AAAAASUVORK5CYII="
 
 /***/ }),
-/* 34 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6N0EwQTE5MkI4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6N0EwQTE5MkE4MTFEMTFFNEI4Njg4OEVFQzVGMTEyOTIiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjYzNEUzRUIyODExOTExRTRBNkJDQzhDODM5MEQxQTkwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjYzNEUzRUIzODExOTExRTRBNkJDQzhDODM5MEQxQTkwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+VsD84AAABMxJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBEEQJ3jITVDUgxL1YoggHlSU6MHlKkEQ3FFREEEviogexJlTDqIxcQl60Is4oujFDVFhfN+p1kqlu7ZZMhN+w6My1f1fVXf9ev2r+6eDfD4fRMhkMpeBaXKdCalg5NYFPMpms0sDy62OWKINhtGPn8ABoC+dTud1BKmE+onAUeAOSBt8CKKtExgESafrKagb1fcB+3FKv1x68K8hYA/Qj0aafAiijUZnACRdUUVoYfQbuA8MAy+BF8BzG4LPwARgCtCLcx9wGYVXwHLgqvjd6zKMGWAZWqRunhF1a3HeC2wITtHYw/gT/UD5AMWQOG6v0Q/iNrTcI4jJvZtA+sZ1GK8AX4V773J1ZTqNLyjOi16ccD4Fp+lcmwRavYM+Zlw10XljghIQ1NFQafa3k6xr5kkH+8H48AOWtDEgGBUGuQSVYoLl5b8r6wfofqu43QcuMZJsfARYAiEZdOqBZHxINrYNMBKNjQQmYy2BjXEiga1xLIGLcVy0HhkfhPGQ7Y1FPYd2W+NCWKr4tuvcKHouhIaVCktaOQlw4etRvE95GpPHngUafVR5xFyxVST1oP+y5iPlJXVlW00cUsK7uirVRO3Vtlmx+IhL6UbBdLW1BD5qLKvyLJSnfYwjTXwHNMD4A0taBQkw7ItQbAXmWhMIo/UCLaK6L3RoeAP5ilJ30TVOpOcoPeLnMHynJeWoxrOlh1PXrZc8irhQDw4D1zhO5DiR48SaeZ5oiJvqqfQV1chjt1cmTtRNNBdZj52lJkUyx0y+EWr5I1XbmIk1kTWRCZig/ASqeyet4HTvWNKRkSDLOt0bbad56Pjkgv2ACZiACewjFJunV6MIrLRPF2AoPejgCIUJmIAJakMTVfEJZSPaCWRMrcrHO2tibA9cNVE+nv2ACaqDgPPSqjqtzHbtXPTStzRPsopZO7MncoIjE5SDALMvJ8SjMfpbEpTYurgZmHOpCzVakLOpS+xBXKtOPVBbjLsGVTSMscPjShAZCbL+omQdZOucCWLHmKdzrROY3vpp8xMtjEfnJ9omtankYdJ6UDbWkVvfXIk8akAmD6VueT1TC5OywZVzTiQPA807VhP53w3q2paguq3ADaBdt98rP1EeSufwVu2ZU4ykzT8wvWvX5h+Y3nhrc/dN+YmmiWWTn6h9F8+ayJrImlikJkbgnG3O2WZNLLUmOhrH5ycmGetmaWg7hZMEN6UTzKIfxtlqYuLOymui7VBqPZHzEz2f6vLb/zHOjCs+sc3mFanoUaYspzBOXlxn2JXZlVnSKkSAEZmB4gKwG6PxWt5ne2vbCdxWjbUxUsztblJ5XNn34qGHZDvZ650r6ueh2AfcSgqyiPgccAkXLqvUbwZWAcew72HSKGwEcorx/KDwr4nTgW1kHDsKOHAOijVAt/hNn/vaAqwUrQ7oojSasseBezjwJn43B4UPbD2h9QHqvpv8YHVQ+DbaXRhTD1YEhe/Gxa0b6LtZzfLSd6a4cPQtrE3AY9HqD7F/KorFAMWS9F+mRDAcLX1HxYrAW6BNGC0EiOgZ8JRKEH8bcQpKpugO4KMwoI+tnVS/FSc/Q4nz8W7T9/LU1bt3sitrYhD8EWAAdoU1AmCjen8AAAAASUVORK5CYII="
 
 /***/ }),
-/* 35 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NjI0MkEyMUI4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NjI0MkEyMUE4MTIwMTFFNDgxNjhGRjc0RjJGMjMwQkQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjZDNzdDQUY4NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjZDNzdDQUY5NjU3RTExRTRBRTAyQTlGRjI0NjJBMEE4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+s3AxtQAABPZJREFUeNrsXE1oHkUYnvkYq0IFC5ImubRI1WolSUEoFIqWHnIr6KqHStWLtaceJFhyUryG4ElKf8RaKELNYkFETyYXPYhNW3+CHtqL+NX+XdoKxQrTZ3bny7ffdv43+Wziu/BssrP7Pjs7M++z7+683zIpJVvEDDsBPNJT5kGL9S57gTMs58+xwKVlKHsC+A4kEwBPIVDLGmAK+Bok61MIOss4cA4k46kEahnUNZkCHkghUItqiwnge5BsSiHoLKp35kGyt1MgAoz+Bb4FFoDfgd+AX0MIbgDqmh8GJlkm52Ma8QKwHfhMb0/G9MIssA1nVNU8rMtewnU/FUJwqOj7TF4vtjL5A9bn9XHvGrtHOYRzyfl+TfwPsAmkf8R240nglh7e79R3+rsxkzdRi481wUfxl5DojauGIOez//s2WBEEHLcyV1eNFbJu95Od7nsfyGPvjdSN/804IElrTCCiLXIum9cgk7xA/8dBzkf07T6hDUrjD4CtqH5XZIKC6hk2ApwGxur7Ghn7CTzGboIAYztBoLGZIML4XoKu8WjoI4+oj+3iZpLJ88HjA2eTlRrImAeuJbmxCJOLkqgutyZ29WEA68utRGMlLkeAYRY7cOq+IlKkvEfWAs9qHe596IWywazDXSRJeY87N9REEdzaVkEJbO1lFpSA1vYpUqe14wRVi+pgrJTXe+ESsB5nvkKa2E9NzPkzWL8JbBSRRq9obNGl0zE1eBV4r1b2SWycqN7m7NdbCxg7W1qRUj5UeTn1eXgjdn3l/UIfcv4X/j8VpsoUJ1KcSHHi/U5QxomsWZyY86HGcWIj4zgCi5f6ojR/zJQaofYhUg2MmURyhGptA9JE0kQioGjdJ6j6Jey9Q9k+x/LColFJNhf77Bzk5rH3BfJGIiACInBoYqD2uUW1qn0BKQNuVVaT0RShEAEREMHK0MTa8WmaWDk+XhONNYjVxMrxpIlEsBIIKD+xPwR2PQjUypZX+zwiu8yTdSFaSRmSlOBIBMvhjTlvax0YXvy/qw3mMoMHtmPKXK8D2yFlwiNpw9ZtTeZTpLazDe4LXxDGxqlfe9A46BgpspzPNJP1TL4cT2Dqd1KkFU+gpgxzfhoYs+wfULf/ltW4mndi3l/kJwpHMLHVYdwhvyRsz4M9xg7y8EasBlwV8mpeWtI7NeGdoPWRO+dYg3JxUo31/l53TunK6JmdWs3ifMEwQsPzE23DO2jG25m778tP9OZkqcaaYQOOgNs5F0+qTJpImthUE43ORDnblLNNmpisicmRifl3LLYzO7xUBLuwRXBbLsFs/jIuwEtFYFjj+B1LQ02knG1G+YmMMuOW5O2+CE4bsRzXeIJiFYwDEZt7syrbgIYySVrfCHK+DvgCeDy1BgeAr9CVF9OHMmMP+h+6ljzd2N0uyvahtDnXnKtPoh0EvhQO9uPAp2i4uVr568Au4EPs+9HWC3uAds34SVb+NPFR4C1lbO6FnG/A+kVgn95Wn/t6A3hen3XePg7KT7xNFNXP5FVsb9ZnXQu8bfpeWL0Gu1n5bbRvYKxqsAOYtjx0qM9ebe7qQc4fw/ooK7+F9RpwtngqyeRtvV/V4llAxc/qV6aKYKEkMMWKjP0JjGqjpwFF9Avwc/E3k393Fal8iKhmyR8DrmmDn5j6yFom79hE1TTG98EgSOvMlxCR7EqiythdAQYAbEvqZUahHBUAAAAASUVORK5CYII="
 
 /***/ }),
-/* 36 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABC0lEQVQ4T7WTYVEDMRSEv1VAJYCDOmgdgAPAASigKGhx0CoACcUBEsDBVcFj9ibpvF6TDn/IzM0kL9l9t5usImIFvHA6niVtcikinoB1qg3AmyIiSnEslPle0n5CsAT8eZjsChgqwaEUtpIeJ39zsoyILXAPjJhK8Apcl40uSQLvgG9LPxJIWqUDZyQZLOmhemcC6/mqmlskU7A1RYT9mKultwDuLEvSEBE2+MOdp+ebBKXDzOBLhnrvfwiKhFvgJkl4b13xJRN3VXPH2Dmw6F3jEVw9mJLka/RTzg/pDNwiAX7yQ7LbM6ALbpCMGEvwZAwGUBP42QnTIoXJDQ8mcJxrumqjv8TZYdr8Ai/uwaXkPGIcAAAAAElFTkSuQmCC"
 
 /***/ }),
-/* 37 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEI1Q0Q4QzI4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEI1Q0Q4QzE4MTIxMTFFNEFGNzk4NUQxNjVEMjU2RTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDc2N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDc3N0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+R+XfywAABNVJREFUeNrsXEloFEEU7QztBgoKkmgueogajSQRBFEMJnjITVDUgxL1YogXDypK9OBylSAI4r6CCOpBEdGDOAEhB9GYuIR40Is4QdGLG6LC+H6mWsua7lq6Z8aZ8Bsela7u/7q669ebX10/7WWzWS/A0uWtl4Apcp0JKe/frQN4vKylbbFnuVURS7DBMNj5AewDevoepLM6glRE/XjgMHAHpDVxCIKtHRgASbvrLagb1fcAe3FLP11a8OdCwC6gDxepi0MQbNQ7/SDpCCp8C6NfwH1gCHgJDAMvbAg+AeOASUA37r3fpRde0TMFroj9bpduTANLcEVq5klRtwb3Pc+G4Dj1PYw/0g7KhygGxXm7jX4QtuHKXYKY3LsOpG9cu/Ey8EW49w5XV6bb+IzirGjFMedbcBrOlUmg1TvoY9pVE503JigAQRV1leZ4M8m6Zpy0sR+MDT9gSUtO4Lsa5IVBLkGlGGBZ+e/S+gGa3yh+7t2fgTA+BCyCkAw4tUAyPiAb2wYYkcZGApOxlsDGOJLA1jiUwMU4LFoPjPfDeND2h0W9h2Zb49FN9W3XsZF4LPiGmQprYjE0UXK6ahTvUjGNyWNPAbV+TONgrIzYKpJ60l9ZiyPlBXVlW00cVMK7qjLVRO3TtpmxxBGXwvWC6WlrCeKosazKM1CeiGMcDOcRoAbG71kTS6iJ6PYFKLYAs61bIIzWCTSI6h6XFqwnX1HqzrvGifQepUvsDsF3GlKOajxTejl1zXrKo4gLteAgcJXjRI4TOU6smPeJhripmspYLZA8dltp4kTdQHOR9dBRalIkc8wUN0ItfqRqGzOxJrImMgETFJ9Ade+oGZxujaU1MBJkvU6/jbbD3Hd8c8F+wARMwAT2EYrN26s8Aivts32HMroYzREKEzABE1SEJqri48tGdBBIm64qn++siaEtcNVE+Xz2AyYoDwLOSyvrtDLbuXPiqW9h3mQlmTuzJ3KCIxMUgwCjLyPEozb4WxKU0LqwEZhxqfM1WpCxqYtsQdhVnVqgXjHsGZRRN4Z2j6sqB0ZEBlxPJOsgW+tMENrHPJwrhEA3nLWrftr8RAvj/PxE26Q2dd3Zj5oPysY6cusfVyIPLiCT+1KzYr1T86OywZV7jiT3Pc0aq4l8dIO6NkWobiNwA2jWHY+Vnyh3pXN4q7bMKUbS5h+Y1tq1+QemFW9t7r4pP9E0sGzyE7Vr8ayJrImsiQk1MQDnbHPONmtioTXR0Tg8PzHKWDdKfdshHCW4KZ1gJn4ZZ6uJkQdLr4m2Xal1Zc5PjDmcefX/P2fGJU9ss1kiFS1KF+UWxsjCdZpdmV2ZJa1EBOiRaSjOATvRG6/lY7Y/bduB26qxKVJVmzahOK4c9+GhhWQ7MdaaK+rnoNgD3PI17BeAi3hwvUr9JmAlcATHHkX1wgYgoxjP9XL/mjgV2ErGob2AE2ehWA10in363NdmYIW4ar8uSqMhexS4hxNvYr/ey31g6ynND1D3zeQHq7zct9Huwpha0OLlvhsXNm+g72bVy1Pf6ShOe7lvYW0EnoirfhfHJ6NYCFAsSf9lSgRDwdQ3L1YE3gJNwmg+QETPgWdUgvirPHdWM0XPAB+EAd3/sPqtOPkdSpiPd5q+l6fO3mMnu7Imet5vAQYAtaODAARZxFkAAAAASUVORK5CYII="
 
 /***/ }),
-/* 38 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAFACAYAAAC1CvwiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2lpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxZjBjZTZmNC1lNGU1LWM4NDctYjI5OC00Y2Q2NGJjMGRjMDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEY5QjlCQTA4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEY5QjlCOUY4MTIyMTFFNEIwQUVBMkM3NjgwODE3OTYiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkMwNTdERDdBN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkMwNTdERDdCN0U4RDExRTRCOUQ1Q0FDNDRFM0JBN0QwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+2tcnMAAABOxJREFUeNrsXDtoFUEU3SzjDwwoiNE0WsS/aAQ/IIiKRTpBUQvBT+MPxEKDEhs1hU0IVvEHahREUAtBRCu10UI0RtSghTbiE39NoiAqPM9NZnWzmZm9My/vaeIdOGx2svfs7Myds3d37tuoWCxGCbqbFl0AqtN1eYij/mUT8Kjn4OKFEbPEhrppwD2QNAJVIQRURgItwE2Q1IQQJKUB6ARJQygBlUm6JS3AiBACKtQXjcB9kNSFECSFRqcDJJuSCsUw+gncBrqAl8AL4DmHoBugax4DNFUffdDh04mvgKXAJb3f5DMKd4AlOCM185SuW4vrnsEhOEFjD+PPtIPtA2ye6OP2G4eHJoSr4Mw7NfF3oA6kb3yH8SLwRbv3Xm9Hwhl7sDmjW9HmfQmhs3G4EGAI7/zvfTA0CKpwK3MNVT3JumOerHTe94jc994ow/hX/EAkrXQC5WsAnSyW3ALMwipC5f0AzZ+nb/f+faCNm4EFaH6nVx+kjA+njVkELmPOrc1p7CTgGFsJuMZGAh/jAcOYMj4E4yfcG0vWk+q5xn0BMQhSN5KizwPXoNxYlGmKiqiWWRNTTjcRm/dxoDF57GmgNg40TubKO8U0yo71H1njuKvL3cs/Cvqare6uQqR8UDVRsXvbVri9XV5B4fR2niIlHeYnqFqV6SXLSR8pz7bgHVAD4w+iiRXURAz7bGy2AlOVp9F6jTm6utWnBRvIVzJ153zjRHqPslPvdsF35sQexuTuk1Mvp66ExonUgiPAZe6LKIkTJU6UOPGfJtBxYlgnpjx2V8lxYlyCcadXH9hmaV6Ulh8zhUao5Y9UuTGTCo1QRRNFE4VACHwUqZ+LJi9hTdPZtsayIjHSZHdzn1xDnmJ97wsyG4VACISAH6HYtM8pqmnt46QMOFW5dzFaIhQhEAIh+CtxIjcetAVeQZqYPt5bE40t8NXE9PGiiUIwBAgkP7FScaJND7haGedpX57IlnexjqWVkiEpCY5CUIbZiNlX0DpQm/yd0gZjnWkGFnzqXK8DC5w6lSNptbb9hCxPkQquPvg35oIydU722ll+kBgRGXC1JFkH2TpvAlMPiyINSUHJTCTnqp8zP5Fh/Ds/UTmCiQUOY3N+Yvp5MG3sImd3YjrgGrDuHJrUljw7OxdoOfmJ1jVWzuqvYhi7hrK533QOGUrvlR3UzwOuAfXecaLpstj5ic78g7z8RFeH5uYn5o0GJz/RuRYvqiyaKJqoC2bjfI7y2BCkidZnZ8nZlpzt/1gT40BjsybajF2zVHGnsE1wY5dglvwyjquJnLCmQprIHUqnK0t+YvgLCFn9L5MmVubtvuKmjdiOK3mBYhj4gfLNvRmOfSCuLJIWVeq3fRiR8dicBfZhNF6HtGAPcCNr7OXKKKNyH7oGPd04p1/IdnTQmivq6ZNoB4DrysHeDpxHx93N1G8GVgHH8L+HtlHYCBQyxtOjvp8mjgO2kbFxFHDgFGzWANv1Pn3uawuwXJ+1w+oH+hNv9Fmzdhz4Efsz9VnHAjtM3wvLtmB11PdttFswphYsA1otzw303ayZ6UffCVHfT0/b9IPoY32t3/T/qRVzAYol6VemRNDVKyiG4aKPCr0F5mujWQARPQOe0hbEX/tdQiZLfjfwSRvQx9aO4/8/bKJq8vHtMGBpnfESfJJdRVSj6JcAAwDMequ4kXXO2QAAAABJRU5ErkJggg=="
 
 /***/ }),
-/* 39 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKElEQVQ4T7VTwU0DMRCcrYArwby9j3QQOoAOgA5CBYQKCB0kFUAJoQMe9v/o4JD8X7SWfVo5vhMfLJ1krT3jm9kdYuY9gGeYJSJPMcaDrXnvd0T0amoTgDdiZinFXCj7cwjhbAmY+QaAfrp2AK4ATJXgRwsicowxPlpgu/feH4noHkDGVIIXEXF6sEZSwSJyIqJRpc8EIYS9uXDxJxYcY3yo3lEx56tq7pG0YJWlnojIhnp6C+AupeTGcZyYeRKRD325vd8l0EvOuUHBa4bq2f8QFAm3KaVrI+G91+I1E09V84KxGyLaLrVxBlcPWpK5jWWU7SBdgHskRPRtB0ndHnTCeq1qQlVHOWNUgm5yMADUBH4uhGlrwjRoHpRA41zTlc//GGcN0+EXyGXo9iBlz1cAAAAASUVORK5CYII="
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -16180,7 +17036,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(41);
+var	fixUrls = __webpack_require__(47);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -16496,7 +17352,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ (function(module, exports) {
 
 
@@ -16591,866 +17447,10 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
-module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        <div id=\"chart_show_indicator\" class=\"chart_toolbar_button chart_str_indicator_cap selected\">技术指标</div>\n        <!-- <div id=\"chart_show_tools\" class=\"chart_toolbar_button chart_str_tools_cap\">画线工具</div> -->\n        <!-- <div id=\"chart_toolbar_theme\">\n            <div class=\"chart_toolbar_label chart_str_theme_cap\">\n                主题选择\n            </div>\n            <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n            <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n        </div> -->\n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_dropdown_settings\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_settings\">更多</a>\n            </div>\n \n            <!-- <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <table>\n                    <tbody>\n                        <tr id=\"chart_select_main_indicator\">\n                            <td class=\"chart_str_main_indicator\">主指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"MA\" class=\"selected\">MA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"EMA\" class=\"\">EMA</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"SAR\" class=\"\">SAR</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"NONE\" class=\"\">None</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <tr id=\"chart_select_chart_style\">\n                            <td class=\"chart_str_chart_style\">主图样式</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a class=\"selected\">CandleStick</a>\n                                    </li>\n                                    <li>\n                                        <a>CandleStickHLC</a>\n                                    </li>\n                                    <li>\n                                        <a class=\"\">OHLC</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n\n                        <tr id=\"chart_select_theme\" style=\"display: none;\">\n                            <td class=\"chart_str_theme\">主题选择</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"dark\" class=\"chart_icon chart_icon_theme_dark selected\"></a>\n                                    </li>\n\n                                    <li>\n                                        <a name=\"light\" class=\"chart_icon chart_icon_theme_light\"></a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr id=\"chart_enable_tools\" style=\"display: none;\">\n                            <td class=\"chart_str_tools\">画线工具</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off selected\">关闭</a>\n                                    </li>\n\n                                </ul>\n\n                            </td>\n                        </tr>\n                        <tr id=\"chart_enable_indicator\" style=\"display: none;\">\n                            <td class=\"chart_str_indicator\">技术指标</td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a name=\"on\" class=\"chart_str_on selected\">开启</a>\n                                    </li>\n                                    <li>\n                                        <a name=\"off\" class=\"chart_str_off\">关闭</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td></td>\n                            <td>\n                                <ul>\n                                    <li>\n                                        <a id=\"chart_btn_parameter_settings\" class=\"chart_str_indicator_parameters\">指标参数设置</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div> -->\n             \n        </div>\n<!-- \n        <div class=\"chart_dropdown\" id=\"chart_language_setting_div\" style=\"padding-left: 5px;\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_language_setting\">语言(LANG)</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"padding-top: 15px; margin-left: -12px;\">\n                <ul>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-cn\" class=\"selected\">简体中文(zh-CN)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"en-us\">English(en-US)</a>\n                    </li>\n                    <li style=\"height: 25px;\">\n                        <a name=\"zh-tw\">繁體中文(zh-HK)</a>\n                    </li>\n                </ul>\n            </div>\n        </div> -->\n    </div>\n    <!-- ToolPanel -->\n    <!-- <div id=\"chart_toolpanel\">\n        <div class=\"chart_toolpanel_separator\"></div>\n\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_Cursor\" name=\"Cursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cursor\">\n                光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_CrossCursor\" name=\"CrossCursor\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_cross_cursor\">\n                十字光标\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_SegLine\" name=\"SegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_seg_line\">\n                线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_StraightLine\" name=\"StraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_straight_line\">\n                直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_RayLine\" name=\"RayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_ray_line\">\n                射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_ArrowLine\" name=\"ArrowLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_arrow_line\">\n                箭头\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriSegLine\" name=\"HoriSegLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_seg_line\">\n                水平线段\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriStraightLine\" name=\"HoriStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_straight_line\">\n                水平直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_HoriRayLine\" name=\"HoriRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_horz_ray_line\">\n                水平射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_VertiStraightLine\" name=\"VertiStraightLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_vert_straight_line\">\n                垂直直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_PriceLine\" name=\"PriceLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_price_line\">\n                价格线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_TriParallelLine\" name=\"TriParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_tri_parallel_line\">\n                价格通道线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelLine\" name=\"BiParallelLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_line\">\n                平行直线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_BiParallelRayLine\" name=\"BiParallelRayLine\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_bi_parallel_ray\">\n                平行射线\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibRetrace\" name=\"DrawFibRetrace\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_retrace\">\n                斐波纳契回调\n            </div>\n        </div>\n        <div class=\"chart_toolpanel_button\">\n            <div class=\"chart_toolpanel_icon\" id=\"chart_DrawFibFans\" name=\"DrawFibFans\"></div>\n            <div class=\"chart_toolpanel_tip chart_str_fib_fans\">\n                斐波纳契扇形\n            </div>\n        </div>\n        <div style=\"padding-left: 3px;padding-top: 10px;\">\n            <button style=\"color: red;\" id=\"clearCanvas\" title=\"Clear All\">X</button>\n        </div>\n    </div> -->\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n\n    </div>\n\n    <!-- <div id=\"chart_parameter_settings\">\n        <h2 class=\"chart_str_indicator_parameters\">指标参数设置</h2>\n        <table>\n            <tbody>\n                <tr>\n                    <th>MA</th>\n                    <td>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                        <br>\n                        <input name=\"MA\">\n                        <input name=\"MA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>DMA</th>\n                    <td>\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                        <input name=\"DMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>EMA</th>\n                    <td>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                        <br>\n                        <input name=\"EMA\">\n                        <input name=\"EMA\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>TRIX</th>\n                    <td>\n                        <input name=\"TRIX\">\n                        <input name=\"TRIX\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>VOLUME</th>\n                    <td>\n                        <input name=\"VOLUME\">\n                        <input name=\"VOLUME\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>BRAR</th>\n                    <td>\n                        <input name=\"BRAR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>MACD</th>\n                    <td>\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                        <input name=\"MACD\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>VR</th>\n                    <td>\n                        <input name=\"VR\">\n                        <input name=\"VR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>KDJ</th>\n                    <td>\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                        <input name=\"KDJ\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>EMV</th>\n                    <td>\n                        <input name=\"EMV\">\n                        <input name=\"EMV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>StochRSI</th>\n                    <td>\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                        <input name=\"StochRSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>WR</th>\n                    <td>\n                        <input name=\"WR\">\n                        <input name=\"WR\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>RSI</th>\n                    <td>\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                        <input name=\"RSI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>ROC</th>\n                    <td>\n                        <input name=\"ROC\">\n                        <input name=\"ROC\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>DMI</th>\n                    <td>\n                        <input name=\"DMI\">\n                        <input name=\"DMI\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>MTM</th>\n                    <td>\n                        <input name=\"MTM\">\n                        <input name=\"MTM\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>OBV</th>\n                    <td>\n                        <input name=\"OBV\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n\n                    <th>PSY</th>\n                    <td>\n                        <input name=\"PSY\">\n                        <input name=\"PSY\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n\n                <tr>\n                    <th>BOLL</th>\n                    <td>\n                        <input name=\"BOLL\">\n                    </td>\n                    <td>\n                        <button class=\"chart_str_default\">默认值</button>\n                    </td>\n                </tr>\n            </tbody>\n        </table>\n\n        <div id=\"close_settings\">\n            <a class=\"chart_str_close\">关闭</a>\n        </div>\n\n    </div> -->\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var formatRegExp = /%[sdj%]/g;
-exports.format = function(f) {
-  if (!isString(f)) {
-    var objects = [];
-    for (var i = 0; i < arguments.length; i++) {
-      objects.push(inspect(arguments[i]));
-    }
-    return objects.join(' ');
-  }
-
-  var i = 1;
-  var args = arguments;
-  var len = args.length;
-  var str = String(f).replace(formatRegExp, function(x) {
-    if (x === '%%') return '%';
-    if (i >= len) return x;
-    switch (x) {
-      case '%s': return String(args[i++]);
-      case '%d': return Number(args[i++]);
-      case '%j':
-        try {
-          return JSON.stringify(args[i++]);
-        } catch (_) {
-          return '[Circular]';
-        }
-      default:
-        return x;
-    }
-  });
-  for (var x = args[i]; i < len; x = args[++i]) {
-    if (isNull(x) || !isObject(x)) {
-      str += ' ' + x;
-    } else {
-      str += ' ' + inspect(x);
-    }
-  }
-  return str;
-};
-
-
-// Mark that a method should not be used.
-// Returns a modified function which warns once by default.
-// If --no-deprecation is set, then it is a no-op.
-exports.deprecate = function(fn, msg) {
-  // Allow for deprecating things in the process of starting up.
-  if (isUndefined(global.process)) {
-    return function() {
-      return exports.deprecate(fn, msg).apply(this, arguments);
-    };
-  }
-
-  if (process.noDeprecation === true) {
-    return fn;
-  }
-
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      if (process.throwDeprecation) {
-        throw new Error(msg);
-      } else if (process.traceDeprecation) {
-        console.trace(msg);
-      } else {
-        console.error(msg);
-      }
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-};
-
-
-var debugs = {};
-var debugEnviron;
-exports.debuglog = function(set) {
-  if (isUndefined(debugEnviron))
-    debugEnviron = process.env.NODE_DEBUG || '';
-  set = set.toUpperCase();
-  if (!debugs[set]) {
-    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-      var pid = process.pid;
-      debugs[set] = function() {
-        var msg = exports.format.apply(exports, arguments);
-        console.error('%s %d: %s', set, pid, msg);
-      };
-    } else {
-      debugs[set] = function() {};
-    }
-  }
-  return debugs[set];
-};
-
-
-/**
- * Echos the value of a value. Trys to print the value out
- * in the best way possible given the different types.
- *
- * @param {Object} obj The object to print out.
- * @param {Object} opts Optional options object that alters the output.
- */
-/* legacy: obj, showHidden, depth, colors*/
-function inspect(obj, opts) {
-  // default options
-  var ctx = {
-    seen: [],
-    stylize: stylizeNoColor
-  };
-  // legacy...
-  if (arguments.length >= 3) ctx.depth = arguments[2];
-  if (arguments.length >= 4) ctx.colors = arguments[3];
-  if (isBoolean(opts)) {
-    // legacy...
-    ctx.showHidden = opts;
-  } else if (opts) {
-    // got an "options" object
-    exports._extend(ctx, opts);
-  }
-  // set default options
-  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-  if (isUndefined(ctx.depth)) ctx.depth = 2;
-  if (isUndefined(ctx.colors)) ctx.colors = false;
-  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-  if (ctx.colors) ctx.stylize = stylizeWithColor;
-  return formatValue(ctx, obj, ctx.depth);
-}
-exports.inspect = inspect;
-
-
-// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-inspect.colors = {
-  'bold' : [1, 22],
-  'italic' : [3, 23],
-  'underline' : [4, 24],
-  'inverse' : [7, 27],
-  'white' : [37, 39],
-  'grey' : [90, 39],
-  'black' : [30, 39],
-  'blue' : [34, 39],
-  'cyan' : [36, 39],
-  'green' : [32, 39],
-  'magenta' : [35, 39],
-  'red' : [31, 39],
-  'yellow' : [33, 39]
-};
-
-// Don't use 'blue' not visible on cmd.exe
-inspect.styles = {
-  'special': 'cyan',
-  'number': 'yellow',
-  'boolean': 'yellow',
-  'undefined': 'grey',
-  'null': 'bold',
-  'string': 'green',
-  'date': 'magenta',
-  // "name": intentionally not styling
-  'regexp': 'red'
-};
-
-
-function stylizeWithColor(str, styleType) {
-  var style = inspect.styles[styleType];
-
-  if (style) {
-    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-           '\u001b[' + inspect.colors[style][1] + 'm';
-  } else {
-    return str;
-  }
-}
-
-
-function stylizeNoColor(str, styleType) {
-  return str;
-}
-
-
-function arrayToHash(array) {
-  var hash = {};
-
-  array.forEach(function(val, idx) {
-    hash[val] = true;
-  });
-
-  return hash;
-}
-
-
-function formatValue(ctx, value, recurseTimes) {
-  // Provide a hook for user-specified inspect functions.
-  // Check that value is an object with an inspect function on it
-  if (ctx.customInspect &&
-      value &&
-      isFunction(value.inspect) &&
-      // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect &&
-      // Also filter out any prototype objects using the circular check.
-      !(value.constructor && value.constructor.prototype === value)) {
-    var ret = value.inspect(recurseTimes, ctx);
-    if (!isString(ret)) {
-      ret = formatValue(ctx, ret, recurseTimes);
-    }
-    return ret;
-  }
-
-  // Primitive types cannot have properties
-  var primitive = formatPrimitive(ctx, value);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Look up the keys of the object.
-  var keys = Object.keys(value);
-  var visibleKeys = arrayToHash(keys);
-
-  if (ctx.showHidden) {
-    keys = Object.getOwnPropertyNames(value);
-  }
-
-  // IE doesn't make error fields non-enumerable
-  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-  if (isError(value)
-      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-    return formatError(value);
-  }
-
-  // Some type of object without properties can be shortcutted.
-  if (keys.length === 0) {
-    if (isFunction(value)) {
-      var name = value.name ? ': ' + value.name : '';
-      return ctx.stylize('[Function' + name + ']', 'special');
-    }
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    }
-    if (isDate(value)) {
-      return ctx.stylize(Date.prototype.toString.call(value), 'date');
-    }
-    if (isError(value)) {
-      return formatError(value);
-    }
-  }
-
-  var base = '', array = false, braces = ['{', '}'];
-
-  // Make Array say that they are Array
-  if (isArray(value)) {
-    array = true;
-    braces = ['[', ']'];
-  }
-
-  // Make functions say that they are functions
-  if (isFunction(value)) {
-    var n = value.name ? ': ' + value.name : '';
-    base = ' [Function' + n + ']';
-  }
-
-  // Make RegExps say that they are RegExps
-  if (isRegExp(value)) {
-    base = ' ' + RegExp.prototype.toString.call(value);
-  }
-
-  // Make dates with properties first say the date
-  if (isDate(value)) {
-    base = ' ' + Date.prototype.toUTCString.call(value);
-  }
-
-  // Make error with message first say the error
-  if (isError(value)) {
-    base = ' ' + formatError(value);
-  }
-
-  if (keys.length === 0 && (!array || value.length == 0)) {
-    return braces[0] + base + braces[1];
-  }
-
-  if (recurseTimes < 0) {
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    } else {
-      return ctx.stylize('[Object]', 'special');
-    }
-  }
-
-  ctx.seen.push(value);
-
-  var output;
-  if (array) {
-    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-  } else {
-    output = keys.map(function(key) {
-      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-    });
-  }
-
-  ctx.seen.pop();
-
-  return reduceToSingleString(output, base, braces);
-}
-
-
-function formatPrimitive(ctx, value) {
-  if (isUndefined(value))
-    return ctx.stylize('undefined', 'undefined');
-  if (isString(value)) {
-    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-                                             .replace(/'/g, "\\'")
-                                             .replace(/\\"/g, '"') + '\'';
-    return ctx.stylize(simple, 'string');
-  }
-  if (isNumber(value))
-    return ctx.stylize('' + value, 'number');
-  if (isBoolean(value))
-    return ctx.stylize('' + value, 'boolean');
-  // For some reason typeof null is "object", so special case here.
-  if (isNull(value))
-    return ctx.stylize('null', 'null');
-}
-
-
-function formatError(value) {
-  return '[' + Error.prototype.toString.call(value) + ']';
-}
-
-
-function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-  var output = [];
-  for (var i = 0, l = value.length; i < l; ++i) {
-    if (hasOwnProperty(value, String(i))) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          String(i), true));
-    } else {
-      output.push('');
-    }
-  }
-  keys.forEach(function(key) {
-    if (!key.match(/^\d+$/)) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          key, true));
-    }
-  });
-  return output;
-}
-
-
-function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-  var name, str, desc;
-  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-  if (desc.get) {
-    if (desc.set) {
-      str = ctx.stylize('[Getter/Setter]', 'special');
-    } else {
-      str = ctx.stylize('[Getter]', 'special');
-    }
-  } else {
-    if (desc.set) {
-      str = ctx.stylize('[Setter]', 'special');
-    }
-  }
-  if (!hasOwnProperty(visibleKeys, key)) {
-    name = '[' + key + ']';
-  }
-  if (!str) {
-    if (ctx.seen.indexOf(desc.value) < 0) {
-      if (isNull(recurseTimes)) {
-        str = formatValue(ctx, desc.value, null);
-      } else {
-        str = formatValue(ctx, desc.value, recurseTimes - 1);
-      }
-      if (str.indexOf('\n') > -1) {
-        if (array) {
-          str = str.split('\n').map(function(line) {
-            return '  ' + line;
-          }).join('\n').substr(2);
-        } else {
-          str = '\n' + str.split('\n').map(function(line) {
-            return '   ' + line;
-          }).join('\n');
-        }
-      }
-    } else {
-      str = ctx.stylize('[Circular]', 'special');
-    }
-  }
-  if (isUndefined(name)) {
-    if (array && key.match(/^\d+$/)) {
-      return str;
-    }
-    name = JSON.stringify('' + key);
-    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-      name = name.substr(1, name.length - 2);
-      name = ctx.stylize(name, 'name');
-    } else {
-      name = name.replace(/'/g, "\\'")
-                 .replace(/\\"/g, '"')
-                 .replace(/(^"|"$)/g, "'");
-      name = ctx.stylize(name, 'string');
-    }
-  }
-
-  return name + ': ' + str;
-}
-
-
-function reduceToSingleString(output, base, braces) {
-  var numLinesEst = 0;
-  var length = output.reduce(function(prev, cur) {
-    numLinesEst++;
-    if (cur.indexOf('\n') >= 0) numLinesEst++;
-    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-  }, 0);
-
-  if (length > 60) {
-    return braces[0] +
-           (base === '' ? '' : base + '\n ') +
-           ' ' +
-           output.join(',\n  ') +
-           ' ' +
-           braces[1];
-  }
-
-  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-}
-
-
-// NOTE: These type checking functions intentionally don't use `instanceof`
-// because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
-}
-exports.isArray = isArray;
-
-function isBoolean(arg) {
-  return typeof arg === 'boolean';
-}
-exports.isBoolean = isBoolean;
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-exports.isNumber = isNumber;
-
-function isString(arg) {
-  return typeof arg === 'string';
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-exports.isObject = isObject;
-
-function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return arg === null ||
-         typeof arg === 'boolean' ||
-         typeof arg === 'number' ||
-         typeof arg === 'string' ||
-         typeof arg === 'symbol' ||  // ES6 symbol
-         typeof arg === 'undefined';
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = __webpack_require__(46);
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
-}
-
-
-function pad(n) {
-  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-}
-
-
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'];
-
-// 26 Feb 16:19:34
-function timestamp() {
-  var d = new Date();
-  var time = [pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())].join(':');
-  return [d.getDate(), months[d.getMonth()], time].join(' ');
-}
-
-
-// log is just a thin wrapper to console.log that prepends a timestamp
-exports.log = function() {
-  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-};
-
-
-/**
- * Inherit the prototype methods from one constructor into another.
- *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be rewritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
- */
-exports.inherits = __webpack_require__(47);
-
-exports._extend = function(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || !isObject(add)) return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-};
-
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(44), __webpack_require__(45)))
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports) {
-
-module.exports = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-}
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports) {
-
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-
-/***/ }),
 /* 48 */
 /***/ (function(module, exports) {
 
-module.exports = {"O_RDONLY":0,"O_WRONLY":1,"O_RDWR":2,"S_IFMT":61440,"S_IFREG":32768,"S_IFDIR":16384,"S_IFCHR":8192,"S_IFBLK":24576,"S_IFIFO":4096,"S_IFLNK":40960,"S_IFSOCK":49152,"O_CREAT":512,"O_EXCL":2048,"O_NOCTTY":131072,"O_TRUNC":1024,"O_APPEND":8,"O_DIRECTORY":1048576,"O_NOFOLLOW":256,"O_SYNC":128,"O_SYMLINK":2097152,"O_NONBLOCK":4,"S_IRWXU":448,"S_IRUSR":256,"S_IWUSR":128,"S_IXUSR":64,"S_IRWXG":56,"S_IRGRP":32,"S_IWGRP":16,"S_IXGRP":8,"S_IRWXO":7,"S_IROTH":4,"S_IWOTH":2,"S_IXOTH":1,"E2BIG":7,"EACCES":13,"EADDRINUSE":48,"EADDRNOTAVAIL":49,"EAFNOSUPPORT":47,"EAGAIN":35,"EALREADY":37,"EBADF":9,"EBADMSG":94,"EBUSY":16,"ECANCELED":89,"ECHILD":10,"ECONNABORTED":53,"ECONNREFUSED":61,"ECONNRESET":54,"EDEADLK":11,"EDESTADDRREQ":39,"EDOM":33,"EDQUOT":69,"EEXIST":17,"EFAULT":14,"EFBIG":27,"EHOSTUNREACH":65,"EIDRM":90,"EILSEQ":92,"EINPROGRESS":36,"EINTR":4,"EINVAL":22,"EIO":5,"EISCONN":56,"EISDIR":21,"ELOOP":62,"EMFILE":24,"EMLINK":31,"EMSGSIZE":40,"EMULTIHOP":95,"ENAMETOOLONG":63,"ENETDOWN":50,"ENETRESET":52,"ENETUNREACH":51,"ENFILE":23,"ENOBUFS":55,"ENODATA":96,"ENODEV":19,"ENOENT":2,"ENOEXEC":8,"ENOLCK":77,"ENOLINK":97,"ENOMEM":12,"ENOMSG":91,"ENOPROTOOPT":42,"ENOSPC":28,"ENOSR":98,"ENOSTR":99,"ENOSYS":78,"ENOTCONN":57,"ENOTDIR":20,"ENOTEMPTY":66,"ENOTSOCK":38,"ENOTSUP":45,"ENOTTY":25,"ENXIO":6,"EOPNOTSUPP":102,"EOVERFLOW":84,"EPERM":1,"EPIPE":32,"EPROTO":100,"EPROTONOSUPPORT":43,"EPROTOTYPE":41,"ERANGE":34,"EROFS":30,"ESPIPE":29,"ESRCH":3,"ESTALE":70,"ETIME":101,"ETIMEDOUT":60,"ETXTBSY":26,"EWOULDBLOCK":35,"EXDEV":18,"SIGHUP":1,"SIGINT":2,"SIGQUIT":3,"SIGILL":4,"SIGTRAP":5,"SIGABRT":6,"SIGIOT":6,"SIGBUS":10,"SIGFPE":8,"SIGKILL":9,"SIGUSR1":30,"SIGSEGV":11,"SIGUSR2":31,"SIGPIPE":13,"SIGALRM":14,"SIGTERM":15,"SIGCHLD":20,"SIGCONT":19,"SIGSTOP":17,"SIGTSTP":18,"SIGTTIN":21,"SIGTTOU":22,"SIGURG":16,"SIGXCPU":24,"SIGXFSZ":25,"SIGVTALRM":26,"SIGPROF":27,"SIGWINCH":28,"SIGIO":23,"SIGSYS":12,"SSL_OP_ALL":2147486719,"SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION":262144,"SSL_OP_CIPHER_SERVER_PREFERENCE":4194304,"SSL_OP_CISCO_ANYCONNECT":32768,"SSL_OP_COOKIE_EXCHANGE":8192,"SSL_OP_CRYPTOPRO_TLSEXT_BUG":2147483648,"SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS":2048,"SSL_OP_EPHEMERAL_RSA":0,"SSL_OP_LEGACY_SERVER_CONNECT":4,"SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER":32,"SSL_OP_MICROSOFT_SESS_ID_BUG":1,"SSL_OP_MSIE_SSLV2_RSA_PADDING":0,"SSL_OP_NETSCAPE_CA_DN_BUG":536870912,"SSL_OP_NETSCAPE_CHALLENGE_BUG":2,"SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG":1073741824,"SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG":8,"SSL_OP_NO_COMPRESSION":131072,"SSL_OP_NO_QUERY_MTU":4096,"SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION":65536,"SSL_OP_NO_SSLv2":16777216,"SSL_OP_NO_SSLv3":33554432,"SSL_OP_NO_TICKET":16384,"SSL_OP_NO_TLSv1":67108864,"SSL_OP_NO_TLSv1_1":268435456,"SSL_OP_NO_TLSv1_2":134217728,"SSL_OP_PKCS1_CHECK_1":0,"SSL_OP_PKCS1_CHECK_2":0,"SSL_OP_SINGLE_DH_USE":1048576,"SSL_OP_SINGLE_ECDH_USE":524288,"SSL_OP_SSLEAY_080_CLIENT_DH_BUG":128,"SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG":0,"SSL_OP_TLS_BLOCK_PADDING_BUG":512,"SSL_OP_TLS_D5_BUG":256,"SSL_OP_TLS_ROLLBACK_BUG":8388608,"ENGINE_METHOD_DSA":2,"ENGINE_METHOD_DH":4,"ENGINE_METHOD_RAND":8,"ENGINE_METHOD_ECDH":16,"ENGINE_METHOD_ECDSA":32,"ENGINE_METHOD_CIPHERS":64,"ENGINE_METHOD_DIGESTS":128,"ENGINE_METHOD_STORE":256,"ENGINE_METHOD_PKEY_METHS":512,"ENGINE_METHOD_PKEY_ASN1_METHS":1024,"ENGINE_METHOD_ALL":65535,"ENGINE_METHOD_NONE":0,"DH_CHECK_P_NOT_SAFE_PRIME":2,"DH_CHECK_P_NOT_PRIME":1,"DH_UNABLE_TO_CHECK_GENERATOR":4,"DH_NOT_SUITABLE_GENERATOR":8,"NPN_ENABLED":1,"RSA_PKCS1_PADDING":1,"RSA_SSLV23_PADDING":2,"RSA_NO_PADDING":3,"RSA_PKCS1_OAEP_PADDING":4,"RSA_X931_PADDING":5,"RSA_PKCS1_PSS_PADDING":6,"POINT_CONVERSION_COMPRESSED":2,"POINT_CONVERSION_UNCOMPRESSED":4,"POINT_CONVERSION_HYBRID":6,"F_OK":0,"R_OK":4,"W_OK":2,"X_OK":1,"UV_UDP_REUSEADDR":4}
+module.exports = "<div id=\"chart_container_fullscreen\" style=\"display: none\">\n</div>\n\n<div class=\"chart_trade_quotation\">\n    <ul id=\"chart_trade_quotation_content\">\n        <li>\n            <div class=\"symbol-title\">\n                <a class=\"white\"></a>\n            </div>\n        </li>\n        <li>\n            <div id=\"price\" class=\"green\"></div>\n        </li>\n        <li>=444444CNY +4.53%</li>\n        <li>高 7497.85</li>\n        <li>低 6519.83</li>\n        <!-- <li>24H 2567.8</li> -->\n    </ul>\n</div>\n\n<div class=\"chart_container dark\">\n    <div id=\"chart_dom_elem_cache\"></div>\n    <!-- ToolBar -->\n    <div id=\"chart_toolbar\">\n        <div class=\"chart_toolbar_minisep\"></div>\n        <!-- Periods -->\n        <div id=\"chart_updated_time\">\n            <div id=\"sizeIcon\" class=\"chart_BoxSize\"></div>\n        </div>\n        <div id=\"chart_toolbar_periods_horz\">\n            <ul class=\"chart_toolbar_tabgroup\" style=\"padding-left:5px; padding-right:11px;\">\n                <li id=\"chart_period_line_h\" name=\"line\" style=\"display: none;\">\n                    <a class=\"chart_str_period_line\">分时</a>\n                </li>\n                <li id=\"chart_period_1m_h\" name=\"1m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1m selected\">1分钟</a>\n                </li>\n                <li id=\"chart_period_3m_h\" name=\"3m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3m\">3分钟</a>\n                </li>\n                <li id=\"chart_period_5m_h\" name=\"5m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_5m\">5分钟</a>\n                </li>\n                <li id=\"chart_period_15m_h\" name=\"15m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_15m\">15分钟</a>\n                </li>\n                <li id=\"chart_period_30m_h\" name=\"30m\" style=\"display: none;\">\n                    <a class=\"chart_str_period_30m\">30分钟</a>\n                </li>\n                <li id=\"chart_period_1h_h\" name=\"1h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1h\">1小时</a>\n                </li>\n                <li id=\"chart_period_2h_h\" name=\"2h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_2h\">2小时</a>\n                </li>\n                <li id=\"chart_period_4h_h\" name=\"4h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_4h\">4小时</a>\n                </li>\n                <li id=\"chart_period_6h_h\" name=\"6h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_6h\">6小时</a>\n                </li>\n                <li id=\"chart_period_12h_h\" name=\"12h\" style=\"display: none;\">\n                    <a class=\"chart_str_period_12h\">12小时</a>\n                </li>\n                <li id=\"chart_period_1d_h\" name=\"1d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1d\">日线</a>\n                </li>\n                <li id=\"chart_period_3d_h\" name=\"3d\" style=\"display: none;\">\n                    <a class=\"chart_str_period_3d\">3日</a>\n                </li>\n                <li id=\"chart_period_1w_h\" name=\"1w\" style=\"display: none;\">\n                    <a class=\"chart_str_period_1w\">周线</a>\n                </li>\n            </ul>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_toolbar_periods_vert\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_period\">周期</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -58px;\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_1w_v\" style=\"display:none;\" name=\"1w\">\n                                        <a class=\"chart_str_period_1w\">周线</a>\n                                    </li>\n                                    <li id=\"chart_period_3d_v\" style=\"display:none;\" name=\"3d\">\n                                        <a class=\"chart_str_period_3d\">3日</a>\n                                    </li>\n                                    <li id=\"chart_period_1d_v\" style=\"display:none;\" name=\"1d\">\n                                        <a class=\"chart_str_period_1d\">日线</a>\n                                    </li>\n                                    <li id=\"chart_period_12h_v\" style=\"display:none;\" name=\"12h\">\n                                        <a class=\"chart_str_period_12h\">12小时</a>\n                                    </li>\n                                    <li id=\"chart_period_6h_v\" style=\"display:none;\" name=\"6h\">\n                                        <a class=\"chart_str_period_6h\">6小时</a>\n                                    </li>\n                                    <li id=\"chart_period_4h_v\" style=\"display:none;\" name=\"4h\">\n                                        <a class=\"chart_str_period_4h\">4小时</a>\n                                    </li>\n                                    <li id=\"chart_period_2h_v\" style=\"display:none;\" name=\"2h\">\n                                        <a class=\"chart_str_period_2h\">2小时</a>\n                                    </li>\n                                    <li id=\"chart_period_1h_v\" style=\"display:none;\" name=\"1h\">\n                                        <a class=\"chart_str_period_1h\">1小时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td>\n                                <ul>\n                                    <li id=\"chart_period_30m_v\" style=\"display:none;\" name=\"30m\">\n                                        <a class=\"chart_str_period_30m\">30分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_15m_v\" style=\"display:none;\" name=\"15m\">\n                                        <a class=\"chart_str_period_15m\">15分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_5m_v\" style=\"display:none;\" name=\"5m\">\n                                        <a class=\"chart_str_period_5m\">5分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_3m_v\" style=\"display:none;\" name=\"3m\">\n                                        <a class=\"chart_str_period_3m\">3分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_1m_v\" style=\"display:none;\" name=\"1m\">\n                                        <a class=\"chart_str_period_1m selected\">1分钟</a>\n                                    </li>\n                                    <li id=\"chart_period_line_v\" style=\"display:none;\" name=\"line\">\n                                        <a class=\"chart_str_period_line\">分时</a>\n                                    </li>\n                                </ul>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n        <div id=\"chart_show_indicator\" class=\"chart_toolbar_button chart_str_indicator_cap selected\">技术指标</div>\n      \n        <div class=\"chart_dropdown\" id=\"chart_main_indicator\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_indicator_settings\">指标</a>\n            </div>\n            <div class=\"chart_dropdown_data\" style=\"margin-left: -142px;\">\n                <ul>\n                    <li>\n                        <a name=\"MA\" class=\"selected\">MA</a>\n                    </li>\n                    <li>\n                        <a name=\"EMA\" class=\"\">EMA</a>\n                    </li>\n                    <li>\n                        <a name=\"BOLL\" class=\"\">BOLL</a>\n                    </li>\n                    <li>\n                        <a name=\"SAR\" class=\"\">SAR</a>\n                    </li>\n                    <li>\n                        <a name=\"NONE\" class=\"\">None</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div class=\"chart_dropdown\" id=\"chart_dropdown_settings\">\n            <div class=\"chart_dropdown_t\">\n                <a class=\"chart_str_settings\">更多</a>\n            </div>\n        </div>\n    </div>\n\n    <div id=\"chart_canvasGroup\" class=\"temp\">\n        <canvas class=\"chart_canvas\" id=\"chart_mainCanvas\" style=\"cursor: default;\"></canvas>\n        <canvas class=\"chart_canvas\" id=\"chart_overlayCanvas\" style=\"cursor: default;\"></canvas>\n    </div>\n    <div id=\"chart_tabbar\">\n        <ul>\n            <li>\n                <a name=\"VOLUME\" class=\"\">VOLUME</a>\n            </li>\n            <li>\n                <a name=\"MACD\" class=\"\">MACD</a>\n            </li>\n\n            <li>\n                <a name=\"KDJ\" class=\"\">KDJ</a>\n            </li>\n\n            <li>\n                <a name=\"StochRSI\" class=\"\">StochRSI</a>\n            </li>\n\n            <li>\n                <a name=\"RSI\" class=\"\">RSI</a>\n            </li>\n\n            <li>\n                <a name=\"DMI\" class=\"\">DMI</a>\n            </li>\n\n            <li>\n                <a name=\"OBV\" class=\"\">OBV</a>\n            </li>\n\n            <li>\n                <a name=\"BOLL\" class=\"\">BOLL</a>\n            </li>\n\n            <li>\n                <a name=\"SAR\" class=\"\">SAR</a>\n            </li>\n\n            <li>\n                <a name=\"DMA\" class=\"\">DMA</a>\n            </li>\n\n            <li>\n                <a name=\"TRIX\" class=\"\">TRIX</a>\n            </li>\n\n            <li>\n                <a name=\"BRAR\" class=\"\">BRAR</a>\n            </li>\n\n            <li>\n                <a name=\"VR\" class=\"\">VR</a>\n            </li>\n\n            <li>\n                <a name=\"EMV\" class=\"\">EMV</a>\n            </li>\n\n            <li>\n                <a name=\"WR\" class=\"\">WR</a>\n            </li>\n\n            <li>\n                <a name=\"ROC\" class=\"\">ROC</a>\n            </li>\n\n            <li>\n                <a name=\"MTM\" class=\"\">MTM</a>\n            </li>\n\n            <li>\n                <a name=\"PSY\">PSY</a>\n            </li>\n\n        </ul>\n    </div>\n\n    <!-- Loading -->\n    <div id=\"chart_loading\" class=\"chart_str_loading\">正在读取数据...</div>\n</div>\n\n<div id=\"chart_container_clone\" style=\"display: none\">\n    <img id=\"chart_container_image\"> </img>\n</div>\n\n<div class=\"trade_container dark\">\n    <div class=\"m_cent\">\n        <div class=\"m_guadan\">\n\n            <ul id=\"tabList\">\n                <li id=\"orderbookTab\" class=\"current\" data-show=\"orderbook\">深度</li>\n                <li id=\"tradesTab\" data-show=\"trades\">成交</li>\n                <li id=\"descriptionTab\" data-show=\"description\">简介</li>\n            </ul>\n            <div id=\"orderbook\">\n                <div id=\"asks\">\n                    <div class=\"table\"></div>\n                </div>\n                <div id=\"bids\">\n                    <div class=\"table\"></div>\n                </div>\n            </div>\n            <div id=\"trades\" class=\"trades\">\n                <div class=\"trades_list\"></div>\n            </div>\n            <div id=\"description\">\n\n            </div>\n        </div>\n    </div>\n</div>\n\n\n\n<div style=\"display: none\" id=\"chart_language_switch_tmp\">\n    <span name=\"chart_str_period\" zh_tw=\"週期\" zh_cn=\"周期\" en_us=\"TIME\"></span>\n    <span name=\"chart_str_period_line\" zh_tw=\"分時\" zh_cn=\"分时\" en_us=\"Line\"></span>\n    <span name=\"chart_str_period_1m\" zh_tw=\"1分鐘\" zh_cn=\"1分钟\" en_us=\"1m\"></span>\n    <span name=\"chart_str_period_3m\" zh_tw=\"3分鐘\" zh_cn=\"3分钟\" en_us=\"3m\"></span>\n    <span name=\"chart_str_period_5m\" zh_tw=\"5分鐘\" zh_cn=\"5分钟\" en_us=\"5m\"></span>\n    <span name=\"chart_str_period_15m\" zh_tw=\"15分鐘\" zh_cn=\"15分钟\" en_us=\"15m\"></span>\n    <span name=\"chart_str_period_30m\" zh_tw=\"30分鐘\" zh_cn=\"30分钟\" en_us=\"30m\"></span>\n    <span name=\"chart_str_period_1h\" zh_tw=\"1小時\" zh_cn=\"1小时\" en_us=\"1h\"></span>\n    <span name=\"chart_str_period_2h\" zh_tw=\"2小時\" zh_cn=\"2小时\" en_us=\"2h\"></span>\n    <span name=\"chart_str_period_4h\" zh_tw=\"4小時\" zh_cn=\"4小时\" en_us=\"4h\"></span>\n    <span name=\"chart_str_period_6h\" zh_tw=\"6小時\" zh_cn=\"6小时\" en_us=\"6h\"></span>\n    <span name=\"chart_str_period_12h\" zh_tw=\"12小時\" zh_cn=\"12小时\" en_us=\"12h\"></span>\n    <span name=\"chart_str_period_1d\" zh_tw=\"日線\" zh_cn=\"日线\" en_us=\"1d\"></span>\n    <span name=\"chart_str_period_3d\" zh_tw=\"3日\" zh_cn=\"3日\" en_us=\"3d\"></span>\n    <span name=\"chart_str_period_1w\" zh_tw=\"周線\" zh_cn=\"周线\" en_us=\"1w\"></span>\n    <span name=\"chart_str_settings\" zh_tw=\"更多\" zh_cn=\"更多\" en_us=\"MORE\"></span>\n    <span name=\"chart_setting_main_indicator\" zh_tw=\"均線設置\" zh_cn=\"均线设置\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_setting_main_indicator_none\" zh_tw=\"關閉均線\" zh_cn=\"关闭均线\" en_us=\"None\"></span>\n    <span name=\"chart_setting_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_chart_style\" zh_tw=\"主圖樣式\" zh_cn=\"主图样式\" en_us=\"Chart Style\"></span>\n    <span name=\"chart_str_main_indicator\" zh_tw=\"主指標\" zh_cn=\"主指标\" en_us=\"Main Indicator\"></span>\n    <span name=\"chart_str_indicator\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"Indicator\"></span>\n    <span name=\"chart_str_indicator_cap\" zh_tw=\"技術指標\" zh_cn=\"技术指标\" en_us=\"INDICATOR\"></span>\n    <span name=\"chart_str_tools\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"Tools\"></span>\n    <span name=\"chart_str_tools_cap\" zh_tw=\"畫線工具\" zh_cn=\"画线工具\" en_us=\"TOOLS\"></span>\n    <span name=\"chart_str_theme\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"Theme\"></span>\n    <span name=\"chart_str_theme_cap\" zh_tw=\"主題選擇\" zh_cn=\"主题选择\" en_us=\"THEME\"></span>\n    <span name=\"chart_language_setting\" zh_tw=\"語言(LANG)\" zh_cn=\"语言(LANG)\" en_us=\"LANGUAGE\"></span>\n    <span name=\"chart_exchanges_setting\" zh_tw=\"更多市場\" zh_cn=\"更多市场\" en_us=\"MORE MARKETS\"></span>\n    <span name=\"chart_othercoin_setting\" zh_tw=\"其它市場\" zh_cn=\"其它市场\" en_us=\"OTHER MARKETS\"></span>\n    <span name=\"chart_str_none\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"None\"></span>\n    <span name=\"chart_str_theme_dark\" zh_tw=\"深色主題\" zh_cn=\"深色主题\" en_us=\"Dark\"></span>\n    <span name=\"chart_str_theme_light\" zh_tw=\"淺色主題\" zh_cn=\"浅色主题\" en_us=\"Light\"></span>\n    <span name=\"chart_str_on\" zh_tw=\"開啟\" zh_cn=\"开启\" en_us=\"On\"></span>\n    <span name=\"chart_str_off\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"Off\"></span>\n    <span name=\"chart_str_close\" zh_tw=\"關閉\" zh_cn=\"关闭\" en_us=\"CLOSE\"></span>\n    <span name=\"chart_str_default\" zh_tw=\"默認值\" zh_cn=\"默认值\" en_us=\"default\"></span>\n    <span name=\"chart_str_loading\" zh_tw=\"正在讀取數據...\" zh_cn=\"正在读取数据...\" en_us=\"Loading...\"></span>\n    <span name=\"chart_str_indicator_parameters\" zh_tw=\"指標參數設置\" zh_cn=\"指标参数设置\" en_us=\"Indicator Parameters\"></span>\n    <span name=\"chart_str_cursor\" zh_tw=\"光標\" zh_cn=\"光标\" en_us=\"Cursor\"></span>\n    <span name=\"chart_str_cross_cursor\" zh_tw=\"十字光標\" zh_cn=\"十字光标\" en_us=\"Cross Cursor\"></span>\n    <span name=\"chart_str_seg_line\" zh_tw=\"線段\" zh_cn=\"线段\" en_us=\"Trend Line\"></span>\n    <span name=\"chart_str_straight_line\" zh_tw=\"直線\" zh_cn=\"直线\" en_us=\"Extended\"></span>\n    <span name=\"chart_str_ray_line\" zh_tw=\"射線\" zh_cn=\"射线\" en_us=\"Ray\"></span>\n    <span name=\"chart_str_arrow_line\" zh_tw=\"箭頭\" zh_cn=\"箭头\" en_us=\"Arrow\"></span>\n    <span name=\"chart_str_horz_seg_line\" zh_tw=\"水平線段\" zh_cn=\"水平线段\" en_us=\"Horizontal Line\"></span>\n    <span name=\"chart_str_horz_straight_line\" zh_tw=\"水平直線\" zh_cn=\"水平直线\" en_us=\"Horizontal Extended\"></span>\n    <span name=\"chart_str_horz_ray_line\" zh_tw=\"水平射線\" zh_cn=\"水平射线\" en_us=\"Horizontal Ray\"></span>\n    <span name=\"chart_str_vert_straight_line\" zh_tw=\"垂直直線\" zh_cn=\"垂直直线\" en_us=\"Vertical Extended\"></span>\n    <span name=\"chart_str_price_line\" zh_tw=\"價格線\" zh_cn=\"价格线\" en_us=\"Price Line\"></span>\n    <span name=\"chart_str_tri_parallel_line\" zh_tw=\"價格通道線\" zh_cn=\"价格通道线\" en_us=\"Parallel Channel\"></span>\n    <span name=\"chart_str_bi_parallel_line\" zh_tw=\"平行直線\" zh_cn=\"平行直线\" en_us=\"Parallel Lines\"></span>\n    <span name=\"chart_str_bi_parallel_ray\" zh_tw=\"平行射線\" zh_cn=\"平行射线\" en_us=\"Parallel Rays\"></span>\n    <span name=\"chart_str_fib_retrace\" zh_tw=\"斐波納契回調\" zh_cn=\"斐波纳契回调\" en_us=\"Fibonacci Retracements\"></span>\n    <span name=\"chart_str_fib_fans\" zh_tw=\"斐波納契扇形\" zh_cn=\"斐波纳契扇形\" en_us=\"Fibonacci Fans\"></span>\n    <span name=\"chart_str_updated\" zh_tw=\"更新於\" zh_cn=\"更新于\" en_us=\"Updated\"></span>\n    <span name=\"chart_str_ago\" zh_tw=\"前\" zh_cn=\"前\" en_us=\"ago\"></span>\n</div>";
 
 /***/ })
 /******/ ]);
