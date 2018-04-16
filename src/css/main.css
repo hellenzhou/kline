@@ -413,26 +413,7 @@ li {
 .chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {
     background-color: #fff
 }
-
-/* .chart_container #chart_toolbar_theme {
-    float: left;
-    padding: 0 8px;
-    display: none;
-}
-
-.chart_container #chart_toolbar_theme a.chart_icon {
-    cursor: pointer;
-    float: left;
-    margin: 6px 4px
-}
-
-.chart_container #chart_select_theme td:last-child {
-    padding: 6px 6px 0 8px
-}
-
-.chart_container #chart_select_theme li {
-    padding: 0 4px 0 4px
-} */
+ 
 
 .chart_container.dark a.chart_icon {
     border-color: #aaa

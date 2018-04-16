@@ -736,15 +736,21 @@ export default class Kline {
                 if (Kline.instance.isSized) {
                     trade_container.css('display', "none");
                     chart_container.appendTo(chart_container_fullscreen);
+
+                    Control.onSize(Kline.instance.height, Kline.instance.width);
+
                     chart_container_fullscreen.css('display', "block");
-                    debugger
                     chart_trade_quotation.css('display', "none");
+
                 } else {
                     chart_trade_quotation.css('display', "block");
-                    chart_container = chart_container_fullscreen.remove();
+                    chart_container = chart_container.detach();
+
                     chart_trade_quotation.after(chart_container);
                     chart_container_fullscreen.css('display', "none");
                     trade_container.css('display', "block");
+
+                    Control.onSize(Kline.instance.width, Kline.instance.height);
                 }
             });
             $('body').on('click', '#tabList li', function (element) {

@@ -66,6 +66,8 @@ export class ChartManager {
         this._overlayCanvas = null;
         this._mainContext = null;
         this._overlayContext = null;
+        this._x = 0;
+        this._y = 0;
 
         if (!ChartManager.created) {
             ChartManager.instance = this;
@@ -82,15 +84,14 @@ export class ChartManager {
             if (refresh) {
                 this.getFrame("frame0").setChanged(true);
             }
-            this.layout(this._mainContext, "frame0", 0, 0, this._mainCanvas.width, this._mainCanvas.height);
+            this.layout(this._mainContext, "frame0", this._x, this._y, this._mainCanvas.width, this._mainCanvas.height);
             this.drawMain("frame0", this._mainContext);
         }
         if (layer === "All" || layer === "OverlayCanvas") {
-            this._overlayContext.clearRect(0, 0, this._overlayCanvas.width, this._overlayCanvas.height);
+            this._overlayContext.clearRect(this._x, this._y, this._overlayCanvas.width, this._overlayCanvas.height);
             this.drawOverlay("frame0", this._overlayContext);
         }
     }
-
 
     bindCanvas(layer, canvas) {
         if (layer === "main") {
