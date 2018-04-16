@@ -41,7 +41,6 @@ export class ChartManager {
 
     
     constructor() {
-       // debugger
         this._dataSources = {};
         this._dataSourceCache = {};
         this._dataProviders = {};
@@ -76,7 +75,6 @@ export class ChartManager {
     }
 
     redraw(layer, refresh) {
-       // debugger
         if (layer === undefined || refresh) {
             layer = "All";
         }
@@ -127,7 +125,7 @@ export class ChartManager {
         delete this._ranges['frame0.k0.indic1'];
         delete this._ranges['frame0.k0.indic1Range'];
         delete this._areas['frame0.k0.indic1'];
-        delete this._areas['frame0.k0.indic1Range'];
+        delete this._areas['frame0.k0.indic1Range'];        
         templates.DefaultTemplate.loadTemplate("frame0.k0", "");
         this.redraw('All', true);
     }
@@ -974,13 +972,14 @@ export class ChartManager {
             default:
                 return null;
         }
+        
         if (!notLoadSettings) {
             indic.setParameters(ChartSettings.get().indics[indicName]);
         }
         return { "indic": indic, "range": range };
     }
 
-    setMainIndicator(dsName, indicName) {
+    setMainIndicator(dsName, indicName) {        
         let areaName = dsName + ".main";
         let dp = this.getDataProvider(areaName + ".main");
         if (dp === undefined || !Util.isInstance(dp, data_providers.MainDataProvider))

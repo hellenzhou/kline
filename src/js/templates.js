@@ -1,14 +1,15 @@
-import {ChartManager} from './chart_manager'
-import {ChartSettings} from './chart_settings'
+import { ChartManager } from './chart_manager'
+import { ChartSettings } from './chart_settings'
 import * as data_sources from './data_sources'
 import * as data_providers from './data_providers'
 import * as areas from './areas'
 import * as plotters from './plotters'
-import {Timeline} from './timeline'
-import {CName} from './cname'
+import { Timeline } from './timeline'
+import { CName } from './cname'
 import * as layouts from './layouts'
 import * as themes from './themes'
 import * as ranges from './ranges'
+import { debug } from 'util';
 
 export class Template {
 
@@ -20,8 +21,10 @@ export class Template {
 
     static createDataSource(dsName, dsAlias, createFunc) {
         let mgr = ChartManager.instance;
-        if (mgr.getCachedDataSource(dsAlias) === null)
+        let cacheDs = mgr.getCachedDataSource(dsAlias);
+        if (cacheDs === null ) {
             mgr.setCachedDataSource(dsAlias, createFunc(dsAlias));
+        }
         mgr.setCurrentDataSource(dsName, dsAlias);
         mgr.updateData(dsName, null);
     }
@@ -68,10 +71,10 @@ export class Template {
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
         mgr.setPlotter(plotter.getName(), plotter);
-       
+
         // plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
         // mgr.setPlotter(plotter.getName(), plotter);
-        
+
         plotter = new plotters.RangePlotter(areaName + "Range.main");
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");

@@ -154,10 +154,10 @@ export default class Kline {
         }
         $(this.element).html(view);
 
-        setInterval(Control.refreshFunction, this.intervalTime);
-        if (this.type === "stomp") {
-            Control.socketConnect();
-        }
+        // setInterval(Control.refreshFunction, this.intervalTime);
+        // if (this.type === "stomp") {
+        //     Control.socketConnect();
+        // }
 
         // if (!this.disableFirebase) {
         //     fire();
@@ -186,8 +186,8 @@ export default class Kline {
             }
         }
 
-        !this.showLanguageSelect && $("#chart_language_setting_div").hide();
-        !this.showDrawTool && $(".chart_str_tools_cap").hide();
+        // !this.showLanguageSelect && $("#chart_language_setting_div").hide();
+        // !this.showDrawTool && $(".chart_str_tools_cap").hide();
         $(this.element).css({ visibility: "visible" });
     }
 

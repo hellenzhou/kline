@@ -39,7 +39,6 @@ export class DataSource extends NamedObject {
 
 
 export class MainDataSource extends DataSource {
-
     constructor(name) {
         super(name);
         this._erasedCount = 0;

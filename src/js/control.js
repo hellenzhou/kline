@@ -30,7 +30,6 @@ export class Control {
     };
 
     static klineAbortRequest() {
-        //  debugger
         if (Kline.instance.type !== "stomp" || !Kline.instance.stompClient) {
             if (Kline.instance.G_KLINE_HTTP_REQUEST && Kline.instance.G_KLINE_HTTP_REQUEST.readyState !== 4) {
                 Kline.instance.G_KLINE_HTTP_REQUEST.abort();
@@ -69,7 +68,7 @@ export class Control {
     }
 
     static klineRequestData(showLoading) {
-  
+
         Control.klineAbortRequest();
         window.clearTimeout(Kline.instance.klineTimer);
 
@@ -126,7 +125,9 @@ export class Control {
         if (Kline.instance.klineSinceName && Kline.instance.klineSinceValue) {
             reqParams[Kline.instance.klineSinceName] = Kline.instance.klineSinceValue;
         }
-
+    
+        let timePer = Kline.instance.periodMap[per];
+        
         $(document).ready(
             Kline.instance.G_KLINE_HTTP_REQUEST = $.ajax({
                 type: "GET",
@@ -141,7 +142,7 @@ export class Control {
                 },
                 success: function (res) {
                     if (Kline.instance.G_KLINE_HTTP_REQUEST) {
-                        Control.klineRequestSuccessHandler(res);
+                        Control.klineRequestSuccessHandler(res, timePer);
                     }
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -162,7 +163,7 @@ export class Control {
         );
     }
 
-    static klineRequestSuccessHandler(res) {       
+    static klineRequestSuccessHandler(res, per) {
         if (!res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
@@ -172,12 +173,20 @@ export class Control {
             return;
         }
 
-        debugger 
-
         let chart = ChartManager.instance.getChart();
+
+        if (chart.getRange() !== per) {
+            if (Kline.instance.type === 'poll') {
+                Kline.instance.klineTimer = setTimeout(function () {
+
+                    Control.klineRequestData(true);
+                }, intervalTime);
+            }
+            return;
+        }
+
         chart.setTitle();
 
-        
         Kline.instance.klineData = eval(res.data);
         let updateDataRes = Kline.instance.chartMgr.updateData("frame0.k0", Kline.instance.klineData);
         Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate());
@@ -187,6 +196,7 @@ export class Control {
         if (!updateDataRes) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
+
                     Control.klineRequestData(true);
                 }, intervalTime);
             }
@@ -601,7 +611,6 @@ export class Control {
             height: height + 'px'
         });
 
-        debugger
         let chart_container_clone_image = $('#chart_container_image')
         chart_container_clone_image.css({
             left: canvasGroupRect.x + 'px',
@@ -661,13 +670,13 @@ export class Control {
         });
         let domElemCache = $('#chart_dom_elem_cache');
         // let rowTheme = $('#chart_select_theme')[0];
-       // let rowTools = $('#chart_enable_tools')[0];
-      //  let rowIndic = $('#chart_enable_indicator')[0];
+        // let rowTools = $('#chart_enable_tools')[0];
+        //  let rowIndic = $('#chart_enable_indicator')[0];
         let periodsVert = $('#chart_toolbar_periods_vert'); //周期
         let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
         let showIndic = $('#chart_show_indicator')[0];
         //   let showTools = $('#chart_show_tools')[0];
-        debugger
+
         //  let selectTheme = $('#chart_toolbar_theme')[0];
         let dropDownSettings = $('#chart_dropdown_settings');
         let mainIndicator = $('#chart_main_indicator')[0]; //指标
@@ -799,7 +808,7 @@ export class Control {
     static switchTools(name) {
         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
         // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-      //  $('#chart_enable_tools a').removeClass('selected');
+        //  $('#chart_enable_tools a').removeClass('selected');
         if (name === 'on') {
             // $('#chart_show_tools').addClass('selected');
             // $('#chart_enable_tools a').each(function () {
@@ -938,7 +947,6 @@ export class Control {
     }
 
     static calcPeriodWeight(period) {
-        //  debugger
         let index = period;
         if (period !== 'line')
             index = Kline.instance.periodMap[Kline.instance.tagMapPeriod[period]];

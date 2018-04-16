@@ -2,6 +2,7 @@ import { ChartManager } from './chart_manager'
 import { Control } from './control'
 import Kline from './kline'
 import { Template } from './templates'
+import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 export class Chart {
 
@@ -69,7 +70,6 @@ export class Chart {
             bids_ei: 0
         };
         this.strIsLine = false;
-       // debugger
         this._range = Kline.instance.range;
         this._symbol = Kline.instance.symbol;
     }
@@ -78,9 +78,16 @@ export class Chart {
         let lang = ChartManager.instance.getLanguage();
         let title = Kline.instance.symbolName;
         title += ' ';
-        title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
-        title += (this._contract_unit + '/' + this._money_type).toUpperCase();
-       // debugger
+
+        let rangePer;
+        for (let key in Kline.instance.periodMap) {
+            if (Kline.instance.periodMap[key] === this._range) {
+                rangePer = key;
+                break;
+            }
+        }
+
+        title += this.strIsLine ? Chart.strPeriod[lang]['line'] : rangePer;
         ChartManager.instance.setTitle('frame0.k0', title);
     }
 
@@ -91,11 +98,8 @@ export class Chart {
     }
 
     updateDataAndDisplay() {
-    
-        debugger
         Kline.instance.symbol = this._symbol;
         Kline.instance.range = this._range;
-
         ChartManager.instance.setCurrentDataSource('frame0.k0', this._symbol + '.' + this._range);
         ChartManager.instance.setNormalMode();
         let f = Kline.instance.chartMgr.getDataSource("frame0.k0").getLastDate();
@@ -128,7 +132,6 @@ export class Chart {
     }
 
     setCurrentPeriod(period) {
-     //   debugger
         this._range = Kline.instance.periodMap[period];
         if (Kline.instance.type === "stomp" && Kline.instance.stompClient.ws.readyState === 1) {
             Kline.instance.subscribed.unsubscribe();
@@ -136,7 +139,6 @@ export class Chart {
         }
 
         this.updateDataAndDisplay();
-     //   debugger
         Kline.instance.onRangeChange(this._range);
     }
 
@@ -232,5 +234,9 @@ export class Chart {
         ChartManager.instance.removeIndicator(areaName);
         ChartManager.instance.redraw('All', true);
     };
+
+    getRange() {
+        return this._range;
+    }
 
 }
