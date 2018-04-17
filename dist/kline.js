@@ -3622,23 +3622,13 @@ function () {
   }, {
     key: "klineRequestSuccessHandler",
     value: function klineRequestSuccessHandler(res, per) {
-      if (!res || !res.data || !Array.isArray(res.data)) {
+      var chart = _chart_manager.ChartManager.instance.getChart();
+
+      if (chart.getRange() !== per || !res || !res.data || !Array.isArray(res.data)) {
         if (_kline.default.instance.type === 'poll') {
           _kline.default.instance.klineTimer = setTimeout(function () {
             Control.klineRequestData(true);
           }, _kline.default.instance.klineIntervalTime);
-        }
-
-        return;
-      }
-
-      var chart = _chart_manager.ChartManager.instance.getChart();
-
-      if (chart.getRange() !== per) {
-        if (_kline.default.instance.type === 'poll') {
-          _kline.default.instance.klineTimer = setTimeout(function () {
-            Control.klineRequestData(true);
-          }, intervalTime);
         }
 
         return;
@@ -4160,8 +4150,6 @@ function () {
           (0, _jquery.default)(".trade_container").hide();
         }
       } else {
-        debugger;
-
         var _container = (0, _jquery.default)(_kline.default.instance.element);
 
         _container.css({
@@ -4173,45 +4161,22 @@ function () {
 
         _toolBar.hide();
 
-        var _canvasGroup = (0, _jquery.default)('#chart_canvasGroup');
-
         var _tabBar = (0, _jquery.default)('#chart_tabbar');
 
-        var _tabBarShown = _tabBar[0].style.display !== 'block' ? false : true;
+        _tabBar.hide();
 
-        var _toolBarRect = {};
-        _toolBarRect.x = 0;
-        _toolBarRect.y = 0;
-        _toolBarRect.w = 29;
-        _toolBarRect.h = width;
-        debugger;
-        var toolPanelRect = {};
-        toolPanelRect.x = 0;
-        toolPanelRect.y = _toolBarRect.h + 1;
-        toolPanelRect.w = 0;
-        toolPanelRect.h = height - toolPanelRect.y;
-        var _tabBarRect = {};
-        _tabBarRect.w = chartWidth;
-        _tabBarRect.h = _tabBarShown ? 22 : -1;
-        _tabBarRect.x = chartWidth - _tabBarRect.w;
-        _tabBarRect.y = remainHeight - (_tabBarRect.h + 1);
+        var _canvasGroup = (0, _jquery.default)('#chart_canvasGroup');
+
         var _canvasGroupRect = {};
-        _canvasGroupRect.x = _tabBarRect.x;
-        _canvasGroupRect.y = toolPanelRect.y;
-        _canvasGroupRect.w = _tabBarRect.w;
-        _canvasGroupRect.h = _tabBarRect.y - toolPanelRect.y;
-
-        _toolBar.css({
-          left: _toolBarRect.x + 'px',
-          top: _toolBarRect.y + 'px',
-          width: _toolBarRect.w + 'px',
-          height: _toolBarRect.h + 'px'
-        });
+        _canvasGroupRect.x = 0;
+        _canvasGroupRect.y = 0;
+        _canvasGroupRect.w = width;
+        _canvasGroupRect.h = height;
 
         _canvasGroup.css({
           left: _canvasGroupRect.x + 'px',
-          top: _toolBarRect.y + _toolBarRect.h + 'px',
-          width: '100%',
+          top: _canvasGroupRect.y + 'px',
+          width: _canvasGroupRect.w + 'px',
           height: _canvasGroupRect.h + 'px'
         });
 
@@ -4234,65 +4199,6 @@ function () {
         _overlayCanvas.height = _canvasGroupRect.h * _ratio;
         _overlayCanvas.style.width = '100%';
         _overlayCanvas.style.height = _canvasGroupRect.h + "px";
-
-        if (_tabBarShown) {
-          _tabBar.css({
-            left: _tabBarRect.x + 'px',
-            top: _tabBarRect.y + 'px',
-            width: _tabBarRect.w + 'px',
-            height: _tabBarRect.h + 'px'
-          });
-        }
-
-        var _dlgLoading = (0, _jquery.default)("#chart_loading");
-
-        _dlgLoading.css({
-          left: chartWidth - _dlgLoading.width() >> 1,
-          top: height - _dlgLoading.height() >> 2
-        });
-
-        var _domElemCache = (0, _jquery.default)('#chart_dom_elem_cache');
-
-        var _periodsVert = (0, _jquery.default)('#chart_toolbar_periods_vert'); //周期
-
-
-        var _periodsHorz = (0, _jquery.default)('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
-
-        var _mainIndicator = (0, _jquery.default)('#chart_main_indicator')[0]; //指标
-
-        var _chatPeriodToolRanages = []; // 根据时间计算显示个数
-
-        var _ranges = _kline.default.instance.ranges;
-
-        var _periodShowWidth = chartWidth - _mainIndicator.offsetWidth - 4 - 70;
-
-        var _totalCount = _ranges.length,
-            _showCount = _totalCount,
-            _totalWidth = 0;
-
-        for (var _i = 0; _i < _totalCount; _i++) {
-          var _dom = (0, _jquery.default)('#chart_period_' + _ranges[_i] + '_h');
-
-          _dom.show();
-
-          _totalWidth += _dom.width();
-
-          if (_totalWidth > _periodShowWidth - _periodsVert.width()) {
-            _dom.hide();
-
-            _showCount--;
-          } else {
-            _chatPeriodToolRanages.push(_ranges[_i]);
-          }
-        }
-
-        if (_showCount < _ranges.length) {
-          _periodsVert.show();
-
-          _kline.default.instance.periodsVertDisplayNone(_chatPeriodToolRanages);
-        } else {
-          _periodsVert.hide();
-        }
       }
 
       _chart_manager.ChartManager.instance.redraw('All', true);

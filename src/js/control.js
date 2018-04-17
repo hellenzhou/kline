@@ -164,23 +164,12 @@ export class Control {
     }
 
     static klineRequestSuccessHandler(res, per) {
-        if (!res || !res.data || !Array.isArray(res.data)) {
+        let chart = ChartManager.instance.getChart();
+        if (chart.getRange() !== per || !res || !res.data || !Array.isArray(res.data)) {
             if (Kline.instance.type === 'poll') {
                 Kline.instance.klineTimer = setTimeout(function () {
                     Control.klineRequestData(true);
                 }, Kline.instance.klineIntervalTime);
-            }
-            return;
-        }
-
-        let chart = ChartManager.instance.getChart();
-
-        if (chart.getRange() !== per) {
-            if (Kline.instance.type === 'poll') {
-                Kline.instance.klineTimer = setTimeout(function () {
-
-                    Control.klineRequestData(true);
-                }, intervalTime);
             }
             return;
         }
@@ -527,13 +516,9 @@ export class Control {
     static onSize(w, h) {
         let width = w || window.innerWidth;
         let height = h || window.innerHeight;
-
-
         let remainHeight = height;
         let chartWidth = width;
-
         if (w < h) {
-
             if (Kline.instance.showTrade && !isNaN(Kline.instance.tradeHeight)) {
                 remainHeight -= Kline.instance.tradeHeight;
             }
@@ -549,14 +534,14 @@ export class Control {
             let chart_container_clone = $('#chart_container_clone');
             let chart_container_fullscreen = $('#chart_container_fullscreen');
             let tabBar = $('#chart_tabbar');
-  
+
             let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
             let toolBarRect = {};
             toolBarRect.x = 0;
             toolBarRect.y = 0;
             toolBarRect.w = chartWidth;
             toolBarRect.h = 29;
-          
+
             let toolbarY = toolBarRect.h + 1;
             let tabBarRect = {};
             tabBarRect.w = chartWidth;
@@ -681,9 +666,7 @@ export class Control {
                 $(".trade_container").hide();
             }
         } else {
-            debugger
             let container = $(Kline.instance.element);
-           
             container.css({
                 width: height + 'px',
                 height: width + 'px'
@@ -692,46 +675,20 @@ export class Control {
             let toolBar = $('#chart_toolbar');
             toolBar.hide();
 
-            let canvasGroup = $('#chart_canvasGroup');
-         
             let tabBar = $('#chart_tabbar');
-            let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
-            let toolBarRect = {};
-            toolBarRect.x = 0;
-            toolBarRect.y = 0;
-            toolBarRect.w = 29;
-            toolBarRect.h = width;
-        
-            debugger
-
-            let toolPanelRect = {};
-            toolPanelRect.x = 0;
-            toolPanelRect.y = toolBarRect.h + 1;
-            toolPanelRect.w = 0;
-            toolPanelRect.h = height - toolPanelRect.y;
-            let tabBarRect = {};
-            tabBarRect.w = chartWidth;
-            tabBarRect.h = tabBarShown ? 22 : -1;
-            tabBarRect.x = chartWidth - tabBarRect.w;
-            tabBarRect.y = remainHeight - (tabBarRect.h + 1);
-
+            tabBar.hide();
+         
+            let canvasGroup = $('#chart_canvasGroup');
             let canvasGroupRect = {};
-            canvasGroupRect.x = tabBarRect.x;
-            canvasGroupRect.y = toolPanelRect.y;
-            canvasGroupRect.w = tabBarRect.w;
-            canvasGroupRect.h = tabBarRect.y - toolPanelRect.y;
-
-            toolBar.css({
-                left: toolBarRect.x + 'px',
-                top: toolBarRect.y + 'px',
-                width: toolBarRect.w + 'px',
-                height: toolBarRect.h + 'px'
-            });
+            canvasGroupRect.x = 0;
+            canvasGroupRect.y = 0;
+            canvasGroupRect.w = width;
+            canvasGroupRect.h = height;
 
             canvasGroup.css({
                 left: canvasGroupRect.x + 'px',
-                top: toolBarRect.y + toolBarRect.h + 'px',
-                width: '100%',
+                top: canvasGroupRect.y + 'px',
+                width:  canvasGroupRect.w + 'px',
                 height: canvasGroupRect.h + 'px'
             });
 
@@ -758,52 +715,6 @@ export class Control {
             overlayCanvas.height = canvasGroupRect.h * ratio;
             overlayCanvas.style.width = '100%';
             overlayCanvas.style.height = canvasGroupRect.h + "px";
-
-            if (tabBarShown) {
-                tabBar.css({
-                    left: tabBarRect.x + 'px',
-                    top: tabBarRect.y + 'px',
-                    width: tabBarRect.w + 'px',
-                    height: tabBarRect.h + 'px'
-                });
-            }
-
-            let dlgLoading = $("#chart_loading");
-            dlgLoading.css({
-                left: (chartWidth - dlgLoading.width()) >> 1,
-                top: (height - dlgLoading.height()) >> 2
-            });
-            let domElemCache = $('#chart_dom_elem_cache');
-
-            let periodsVert = $('#chart_toolbar_periods_vert'); //周期
-            let periodsHorz = $('#chart_toolbar_periods_horz')[0]; // 分时 5 分钟
-            let mainIndicator = $('#chart_main_indicator')[0]; //指标
-
-            let chatPeriodToolRanages = [];
-            // 根据时间计算显示个数
-            let ranges = Kline.instance.ranges;
-            let periodShowWidth = chartWidth - mainIndicator.offsetWidth - 4 - 70;
-            let totalCount = ranges.length, showCount = totalCount, totalWidth = 0;
-
-            for (let i = 0; i < totalCount; i++) {
-                let dom = $('#chart_period_' + ranges[i] + '_h');
-                dom.show();
-                totalWidth += dom.width();
-                if (totalWidth > periodShowWidth - periodsVert.width()) {
-                    dom.hide();
-                    showCount--;
-                } else {
-                    chatPeriodToolRanages.push(ranges[i])
-                }
-            }
-
-            if (showCount < ranges.length) {
-                periodsVert.show();
-                Kline.instance.periodsVertDisplayNone(chatPeriodToolRanages);
-            } else {
-                periodsVert.hide();
-            }
-
         }
 
         ChartManager.instance.redraw('All', true);
