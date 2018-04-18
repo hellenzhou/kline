@@ -39,7 +39,7 @@ export class ChartManager {
     static created = false;
     static instance = null;
 
-    
+
     constructor() {
         this._dataSources = {};
         this._dataSourceCache = {};
@@ -84,11 +84,12 @@ export class ChartManager {
             if (refresh) {
                 this.getFrame("frame0").setChanged(true);
             }
-            this.layout(this._mainContext, "frame0", this._x, this._y, this._mainCanvas.width, this._mainCanvas.height);
+            debugger
+            this.layout(this._mainContext, "frame0", -368 * 3,-207*3, this._mainCanvas.height-368*3, this._mainCanvas.width-207*3);
             this.drawMain("frame0", this._mainContext);
         }
         if (layer === "All" || layer === "OverlayCanvas") {
-            this._overlayContext.clearRect(this._x, this._y, this._overlayCanvas.width, this._overlayCanvas.height);
+            this._overlayContext.clearRect(0, 0, this._overlayCanvas.height, this._overlayCanvas.width);
             this.drawOverlay("frame0", this._overlayContext);
         }
     }
@@ -126,7 +127,7 @@ export class ChartManager {
         delete this._ranges['frame0.k0.indic1'];
         delete this._ranges['frame0.k0.indic1Range'];
         delete this._areas['frame0.k0.indic1'];
-        delete this._areas['frame0.k0.indic1Range'];        
+        delete this._areas['frame0.k0.indic1Range'];
         templates.DefaultTemplate.loadTemplate("frame0.k0", "");
         this.redraw('All', true);
     }
@@ -973,14 +974,14 @@ export class ChartManager {
             default:
                 return null;
         }
-        
+
         if (!notLoadSettings) {
             indic.setParameters(ChartSettings.get().indics[indicName]);
         }
         return { "indic": indic, "range": range };
     }
 
-    setMainIndicator(dsName, indicName) {        
+    setMainIndicator(dsName, indicName) {
         let areaName = dsName + ".main";
         let dp = this.getDataProvider(areaName + ".main");
         if (dp === undefined || !Util.isInstance(dp, data_providers.MainDataProvider))

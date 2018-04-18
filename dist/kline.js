@@ -173,12 +173,13 @@ function () {
           this.getFrame("frame0").setChanged(true);
         }
 
-        this.layout(this._mainContext, "frame0", this._x, this._y, this._mainCanvas.width, this._mainCanvas.height);
+        debugger;
+        this.layout(this._mainContext, "frame0", -368 * 3, -207 * 3, this._mainCanvas.height - 368 * 3, this._mainCanvas.width - 207 * 3);
         this.drawMain("frame0", this._mainContext);
       }
 
       if (layer === "All" || layer === "OverlayCanvas") {
-        this._overlayContext.clearRect(this._x, this._y, this._overlayCanvas.width, this._overlayCanvas.height);
+        this._overlayContext.clearRect(0, 0, this._overlayCanvas.height, this._overlayCanvas.width);
 
         this.drawOverlay("frame0", this._overlayContext);
       }
@@ -1964,7 +1965,7 @@ function () {
     this.G_KLINE_HTTP_REQUEST = null;
     this.klineData = {};
     this.klineTimer = null;
-    this.klineIntervalTime = 3000; //行情数据
+    this.klineIntervalTime = 6000; //行情数据
 
     this.tradesBaseUrl = 'http://api.bitkk.com/data/v1/trades';
     this.tradesMarketName = 'market';
@@ -4176,8 +4177,10 @@ function () {
         _canvasGroup.css({
           left: _canvasGroupRect.x + 'px',
           top: _canvasGroupRect.y + 'px',
-          width: _canvasGroupRect.w + 'px',
-          height: _canvasGroupRect.h + 'px'
+          width: _canvasGroupRect.h + 'px',
+          //canvasGroupRect.w + 'px',
+          height: _canvasGroupRect.w + 'px',
+          backgroundColor: 'red'
         });
 
         var _mainCanvas = (0, _jquery.default)('#chart_mainCanvas')[0];
@@ -4190,15 +4193,48 @@ function () {
 
         var _ratio = _devicePixelRatio / _backingStoreRatio;
 
-        _kline.default.instance.deviceRatio = _ratio;
-        _mainCanvas.width = _canvasGroupRect.w * _ratio;
-        _mainCanvas.height = _canvasGroupRect.h * _ratio;
-        _mainCanvas.style.width = '100%';
-        _mainCanvas.style.height = _canvasGroupRect.h + "px";
+        _kline.default.instance.deviceRatio = _ratio; // mainCanvas.width = canvasGroupRect.w * ratio;
+        // mainCanvas.height = canvasGroupRect.h * ratio;
+        // mainCanvas.style.width = canvasGroupRect.w + "px";
+        // mainCanvas.style.height = canvasGroupRect.h + "px";
+        // mainCanvas.style.overflow = 'scroll';
+
+        _mainCanvas.width = 414 * _ratio;
+        _mainCanvas.height = 736 * _ratio;
+        _mainCanvas.style.width = 414 + 'px';
+        _mainCanvas.style.height = 736 + 'px';
+        _mainCanvas.style.overflow = 'scroll';
+        debugger;
         _overlayCanvas.width = _canvasGroupRect.w * _ratio;
         _overlayCanvas.height = _canvasGroupRect.h * _ratio;
-        _overlayCanvas.style.width = '100%';
+        _overlayCanvas.style.width = _canvasGroupRect.w + "px";
         _overlayCanvas.style.height = _canvasGroupRect.h + "px";
+        _overlayCanvas.style.overflow = 'scroll'; // mainCanvas.style.transform = 'rotate(90deg)';
+        // overlayCanvas.style.transform = 'rotate(90deg)';
+
+        var overlayerContext = _overlayCanvas.getContext("2d"); // context.transform (1,1,1,1,414 * ratio,0);
+
+
+        _context.setTransform(1, 0, 0, 1, 0, 0); // context.translate(0 * ratio + 200/2 * ratio, 0 * ratio);
+
+
+        _context.translate(207 * _ratio, 368 * _ratio);
+
+        _context.rotate(90 * Math.PI / 180); // overlayerContext.translate(0 * ratio +200/2 * ratio, 0 * ratio);
+        // overlayerContext.translate(414 * ratio, 0 * ratio);
+        //   overlayerContext.rotate(10 * Math.PI / 180);
+        //  ChartManager.instance.setxy(414,0);
+
+
+        _chart_manager.ChartManager.instance.redraw('All', true); // mainCanvas.style.width = 736 + "px";
+        // mainCanvas.style.height = 414 + "px";
+        // overlayCanvas.style.width = 736 + "px";
+        // overlayCanvas.style.height = 414 + "px";
+
+
+        _kline.default.instance.onResize(width, height);
+
+        return;
       }
 
       _chart_manager.ChartManager.instance.redraw('All', true);
@@ -6299,6 +6335,7 @@ function (_BackgroundPlotter) {
       var range = mgr.getRange(this.getAreaName());
       var theme = mgr.getTheme(this.getFrameName());
       var rect = area.getRect();
+      console.log(this.getAreaName() + ':(' + rect.X + ',' + rect.Y + ',' + rect.Width + ',' + rect.Height + ')');
 
       if (!area.isChanged() && !timeline.isUpdated() && !range.isUpdated()) {
         var first = timeline.getFirstIndex();
@@ -6968,6 +7005,7 @@ function (_Plotter4) {
   _createClass(MainInfoPlotter, [{
     key: "Draw",
     value: function Draw(context) {
+      debugger;
       var mgr = _chart_manager.ChartManager.instance;
       var area = mgr.getArea(this.getAreaName());
       var timeline = mgr.getTimeline(this.getDataSourceName());
@@ -7805,6 +7843,7 @@ function (_NamedObject7) {
   }, {
     key: "DrawBackground",
     value: function DrawBackground(context) {
+      debugger;
       context.fillStyle = this.m_pTheme.getColor(themes.Theme.Color.Background);
       context.fillRect(this.m_left, this.m_top, this.m_right - this.m_left, this.m_bottom - this.m_top);
 

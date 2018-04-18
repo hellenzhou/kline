@@ -152,6 +152,7 @@ export class MainAreaBackgroundPlotter extends BackgroundPlotter {
         let range = mgr.getRange(this.getAreaName());
         let theme = mgr.getTheme(this.getFrameName());
         let rect = area.getRect();
+        console.log(this.getAreaName() +':(' + rect.X +',' + rect.Y + ',' + rect.Width + ',' + rect.Height+')') ;
         if (!area.isChanged() && !timeline.isUpdated() && !range.isUpdated()) {
             let first = timeline.getFirstIndex();
             let last = timeline.getLastIndex() - 2;
@@ -173,6 +174,7 @@ export class RangeAreaBackgroundPlotter extends BackgroundPlotter {
     }
 
     Draw(context) {
+        
         let mgr = ChartManager.instance;
         let areaName = this.getAreaName();
         let area = mgr.getArea(areaName);
@@ -195,7 +197,7 @@ export class TimelineAreaBackgroundPlotter extends BackgroundPlotter {
         super(name);
     }
 
-    Draw(context) {
+    Draw(context) {        
         let mgr = ChartManager.instance;
         let area = mgr.getArea(this.getAreaName());
         let timeline = mgr.getTimeline(this.getDataSourceName());
@@ -565,6 +567,7 @@ export class MainInfoPlotter extends Plotter {
     }
 
     Draw(context) {
+        debugger
         let mgr = ChartManager.instance;
         let area = mgr.getArea(this.getAreaName());
         let timeline = mgr.getTimeline(this.getDataSourceName());
@@ -1097,7 +1100,6 @@ export class TimelinePlotter extends Plotter {
     }
 
     Draw(context) {
-
         let mgr = ChartManager.instance;
         let area = mgr.getArea(this.getAreaName());
         let timeline = mgr.getTimeline(this.getDataSourceName());
@@ -1288,6 +1290,7 @@ export class COrderGraphPlotter extends NamedObject {
     }
 
     DrawBackground(context) {
+        debugger
         context.fillStyle = this.m_pTheme.getColor(themes.Theme.Color.Background);
         context.fillRect(this.m_left, this.m_top, this.m_right - this.m_left, this.m_bottom - this.m_top);
         let all = ChartManager.instance.getChart()._depthData;

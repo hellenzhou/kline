@@ -60,7 +60,7 @@ export default class Kline {
         this.G_KLINE_HTTP_REQUEST = null;
         this.klineData = {};
         this.klineTimer = null;
-        this.klineIntervalTime = 3000;
+        this.klineIntervalTime = 6000;
 
         //行情数据
         this.tradesBaseUrl = 'http://api.bitkk.com/data/v1/trades';
@@ -749,6 +749,7 @@ export default class Kline {
                     chart_trade_quotation.after(chart_container);
                     chart_container_fullscreen.css('display', "none");
                     trade_container.css('display', "block");
+
 
                     Control.onSize(Kline.instance.width, Kline.instance.height);
                 }

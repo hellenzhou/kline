@@ -677,7 +677,7 @@ export class Control {
 
             let tabBar = $('#chart_tabbar');
             tabBar.hide();
-         
+
             let canvasGroup = $('#chart_canvasGroup');
             let canvasGroupRect = {};
             canvasGroupRect.x = 0;
@@ -688,9 +688,11 @@ export class Control {
             canvasGroup.css({
                 left: canvasGroupRect.x + 'px',
                 top: canvasGroupRect.y + 'px',
-                width:  canvasGroupRect.w + 'px',
-                height: canvasGroupRect.h + 'px'
+                width: canvasGroupRect.h + 'px',//canvasGroupRect.w + 'px',
+                height: canvasGroupRect.w + 'px',
+                backgroundColor:'red'
             });
+
 
             let mainCanvas = $('#chart_mainCanvas')[0];
             let overlayCanvas = $('#chart_overlayCanvas')[0];
@@ -706,15 +708,58 @@ export class Control {
             let ratio = devicePixelRatio / backingStoreRatio;
 
             Kline.instance.deviceRatio = ratio;
-            mainCanvas.width = canvasGroupRect.w * ratio;
-            mainCanvas.height = canvasGroupRect.h * ratio;
-            mainCanvas.style.width = '100%';
-            mainCanvas.style.height = canvasGroupRect.h + "px";
 
+            // mainCanvas.width = canvasGroupRect.w * ratio;
+            // mainCanvas.height = canvasGroupRect.h * ratio;
+            // mainCanvas.style.width = canvasGroupRect.w + "px";
+            // mainCanvas.style.height = canvasGroupRect.h + "px";
+            // mainCanvas.style.overflow = 'scroll';
+            mainCanvas.width = 414* ratio;
+            mainCanvas.height = 736* ratio;
+
+            mainCanvas.style.width = 414+'px';
+            mainCanvas.style.height = 736+'px';
+            mainCanvas.style.overflow = 'scroll';
+
+            debugger
             overlayCanvas.width = canvasGroupRect.w * ratio;
             overlayCanvas.height = canvasGroupRect.h * ratio;
-            overlayCanvas.style.width = '100%';
+            overlayCanvas.style.width = canvasGroupRect.w + "px";
             overlayCanvas.style.height = canvasGroupRect.h + "px";
+            overlayCanvas.style.overflow = 'scroll';
+
+            // mainCanvas.style.transform = 'rotate(90deg)';
+            // overlayCanvas.style.transform = 'rotate(90deg)';
+            let overlayerContext = overlayCanvas.getContext("2d");
+
+           // context.transform (1,1,1,1,414 * ratio,0);
+            context.setTransform(1,0,0,1,0,0);
+            // context.translate(0 * ratio + 200/2 * ratio, 0 * ratio);
+             context.translate(207*ratio,368*ratio);
+             context.rotate(90 * Math.PI / 180);
+           
+           
+
+
+            // overlayerContext.translate(0 * ratio +200/2 * ratio, 0 * ratio);
+            // overlayerContext.translate(414 * ratio, 0 * ratio);
+          //   overlayerContext.rotate(10 * Math.PI / 180);
+
+            //  ChartManager.instance.setxy(414,0);
+
+           
+            ChartManager.instance.redraw('All', true);
+
+            // mainCanvas.style.width = 736 + "px";
+            // mainCanvas.style.height = 414 + "px";
+
+            // overlayCanvas.style.width = 736 + "px";
+            // overlayCanvas.style.height = 414 + "px";
+         
+
+            Kline.instance.onResize(width, height);
+
+            return;
         }
 
         ChartManager.instance.redraw('All', true);
