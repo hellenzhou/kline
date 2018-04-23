@@ -4,9 +4,12 @@ html, body {
     min-width: 100%
 }
 
-.kline {  
-    -webkit-overflow-scrolling:touch;
-  }
+.kline {
+    -webkit-overflow-scrolling: touch;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
 
 ul, li {
     padding: 0;
@@ -23,8 +26,7 @@ li {
     font-size: 12px;
     height: 100%;
     position: relative;
-    width: 100%;
-    overflow:auto;
+    width: 100%
 }
 
 .chart_container div, .chart_container ul, .chart_container form {
@@ -198,7 +200,7 @@ li {
 }
 
 .chart_container.dark .chart_dropdown-hover.chart_dropdown_t {
-    background-color: #131E32;
+    background-color: #0a0a0a;
     background-image: url("../img/dropup_w.png");
     background-position: right 8px;
     border-color: #606060;
@@ -221,10 +223,6 @@ li {
 
 .chart_container.dark .chart_dropdown_data li a:hover {
     background-color: #383838
-}
-
-#chart_toolbar_periods_vert div a.selected {
-    color: #ffac00
 }
 
 .chart_container.dark .chart_dropdown_data li a.selected {
@@ -413,7 +411,25 @@ li {
 .chart_container a.chart_icon_theme_light, .chart_container .chart_dropdown_data li a.chart_icon_theme_light:hover {
     background-color: #fff
 }
- 
+
+.chart_container #chart_toolbar_theme {
+    float: left;
+    padding: 0 8px
+}
+
+.chart_container #chart_toolbar_theme a.chart_icon {
+    cursor: pointer;
+    float: left;
+    margin: 6px 4px
+}
+
+.chart_container #chart_select_theme td:last-child {
+    padding: 6px 6px 0 8px
+}
+
+.chart_container #chart_select_theme li {
+    padding: 0 4px 0 4px
+}
 
 .chart_container.dark a.chart_icon {
     border-color: #aaa
@@ -435,10 +451,35 @@ li {
     border-color: #f27935
 }
 
+/* .chart_container #chart_updated_time {
+    float: right;
+    margin: 4px 3px;
+    padding: 3px 10px
+} */
+
 .chart_container #chart_updated_time {
     float: right;
     margin: 4px 3px;
-    padding: 3px 5px
+    padding: 3px 10px
+}
+
+#fullscreen_chart_updated_time {
+    /* float: right;
+    margin: 4px 3px;
+    padding: 3px 10px; */
+    position: absolute;
+    z-index:9999;
+    color: white;
+  
+    right:0px;bottom:0px;
+    width:40px;
+    height: 30px;
+    font-size: 10px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+ 
+    display:block;
+   
 }
 
 .chart_container.dark #chart_updated_time {
@@ -571,6 +612,14 @@ li {
 
 .chart_container.light #chart_toolbar .chart_BoxSize {
     background: url("../img/size_l.png") no-repeat;
+}
+
+.chart_container #chart_toolpanel #chart_Cursor {
+    background-position: 0 0
+}
+
+.chart_container #chart_toolpanel #chart_CrossCursor {
+    background-position: 0 -20px
 }
 
 .chart_container #chart_toolpanel #chart_SegLine {
@@ -709,7 +758,7 @@ li {
 #chart_mainCanvas {
     overflow: hidden;
     position: absolute;
-    z-index: 0;
+    z-index: 0
 }
 
 #chart_overlayCanvas {
@@ -717,6 +766,26 @@ li {
     position: absolute;
     z-index: 2
 }
+
+/*
+#chart_loading {
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 48px;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    visibility: hidden;
+    width: 200px;
+    z-index: 200
+}
+
+#chart_loading.activated {
+    visibility: visible
+}
+*/
 
 #chart_loading {
     border: 2px solid #fff;
@@ -733,6 +802,11 @@ li {
 
 .chart_str_loading {
     animation: loading_rotate 1s infinite linear;
+    text-indent: -99999px;
+}
+
+#chart_loading.activated {
+    visibility: visible
 }
 
 @keyframes loading_rotate {
@@ -744,18 +818,90 @@ li {
     }
 }
 
-#chart_loading.activated {
-    visibility: visible
-}
-
 .chart_container.dark #chart_loading {
+    /* border-color: #aaa; */
     background-color: rgba(0, 0, 0, 0.6);
     color: #ccc
 }
 
 .chart_container.light #chart_loading {
+    /* border-color: #afb1b3; */
     background-color: rgba(244, 244, 244, 0.8);
     color: #393c40
+}
+
+#chart_parameter_settings {
+    border-radius: 4px;
+    border: 1px solid;
+    width: 640px;
+    position: absolute;
+    overflow: hidden;
+    visibility: hidden;
+    z-index: 500
+}
+
+#chart_parameter_settings.clicked {
+    visibility: visible
+}
+
+#chart_parameter_settings h2 {
+    padding: 8px 12px;
+    margin: 0
+}
+
+#chart_parameter_settings table {
+    border-collapse: collapse;
+    width: 100%
+}
+
+#chart_parameter_settings tr {
+    line-height: 32px
+}
+
+#chart_parameter_settings th {
+    text-align: right;
+    padding: 0 4px 0 16px
+}
+
+#chart_parameter_settings input {
+    width: 2em;
+    margin: 0 2px 0 2px
+}
+
+#chart_parameter_settings #close_settings {
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    margin: 8px auto;
+    padding: 5px 24px 5px 24px;
+    width: 84px
+}
+
+#chart_parameter_settings .chart_str_default {
+    margin-right: 24px
+}
+
+.chart_container.dark #chart_parameter_settings {
+    background-color: rgba(0, 0, 0, 0.9);
+    border-color: rgba(0, 0, 0, 0.9);
+    color: #ccc;
+}
+
+.chart_container.dark #chart_parameter_settings #close_settings {
+    background: #1887da;
+    color: #eee
+}
+
+.chart_container.light #chart_parameter_settings {
+    background-color: rgba(244, 244, 244, 0.8);
+    border-color: #afb1b3;
+    color: #393c40
+}
+
+.chart_container.light #chart_parameter_settings #close_settings {
+    background: #1478c8;
+    color: #eee
 }
 
 .chart_container input, .chart_container button {
@@ -786,10 +932,18 @@ li {
     color: #222
 }
 
+/* .trade_container {
+    width: 250px;
+    height: 100%;
+    float: right;
+    z-index: 99999;
+    font-size: 12px;
+    overflow: hidden
+} */
+
 .trade_container {
     width: 100%;
     height: auto;
-    /* float: right; */
     z-index: 99999;
     font-size: 12px;
     overflow: hidden;
@@ -838,6 +992,14 @@ li {
     border-bottom-color: #404040
 }
 
+/* 
+.m_guadan {
+    margin-top: 29px;
+    overflow: hidden;
+    border-left: 1px solid #404040;
+    border-top: 1px solid #404040
+} */
+
 .m_guadan {
     padding: 0 10px;
     margin-top: 0px;
@@ -852,6 +1014,13 @@ li {
     text-decoration: none
 }
 
+/* .light .m_guadan {
+    margin-top: 29px;
+    overflow: hidden;
+    border-left: 1px solid #afb1b3;
+    border-top: 1px solid #afb1b3
+} */
+
 .light .m_guadan {
     margin-top: 0px;
     overflow: hidden;
@@ -863,15 +1032,36 @@ li {
     display: none;
 }
 
+/* #orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {
+    height: 195px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden
+} */
+
 #orderbook #asks, #orderbook #gasks, #orderbook #bids, #orderbook #gbids {
     height: 195px;
     position: relative;
     overflow: hidden
 }
 
+#asks {
+    left: 25px;
+}
+
+/* .symbol-title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    height: 16px;
+    line-height: 16px;
+    font-family: Arial, sans, serif;
+    padding: 5px
+} */
+
 .symbol-title {
-    font-size: 20px;
-    /* font-weight: bold; */
+    font-size: 16px;
+    font-weight: bold;
     text-align: center;
     height: 24px;
     line-height: 24px;
@@ -879,13 +1069,13 @@ li {
     padding: 5px
 }
 
-.symbol-title .white {
-    color: #FFF;
-    /* text-decoration:none; */
-}
-
 .symbol-title .dark {
     color: #6BF
+}
+
+.symbol-title .white {
+    color: #FFF;
+    text-decoration: none;
 }
 
 .symbol-title .infoDepth {
@@ -897,12 +1087,23 @@ li {
     text-decoration: underline
 }
 
-#orderbook {
-    /* padding-left: 3px;
+/* #asks, #bids {
+    width: 150px
+} */
+
+#asks, #bids {
+    flex: 1;
+}
+
+/* #orderbook {
+    padding-left: 3px;
     border-bottom: 1px solid #222;
     padding-bottom: 2px;
     margin-left: 5px;
-    margin-bottom: 2px */
+    margin-bottom: 2px
+} */
+
+#orderbook {
     display: flex;
 }
 
@@ -951,6 +1152,19 @@ li {
     color: #666
 }
 
+#gasks, #gbids {
+    width: 80px
+}
+
+#gasks .amount, #gbids .amount {
+    float: right
+}
+
+#gasks .price, #gbids .price {
+    float: left;
+    text-align: right
+}
+
 .price {
     margin-right: 10px
 }
@@ -964,15 +1178,15 @@ li {
 }
 
 #price {
-    text-align: left;
+    text-align: center;
     font-size: 16px;
     font-weight: bold;
-    padding-left: 15px;    
-    padding-top: 20px;
+    height: 25px;
+    line-height: 25px
 }
 
 .chart_trade_quotation {
-    height: 80px;
+    height: 76px;
     background-color: #0a0a0a;
     position: relative;
 }
@@ -1004,7 +1218,7 @@ li {
 
 #chart_trade_quotation_content li:nth-of-type(2) {
     left: 26px;
-    top: 36px;
+    top: 49px;
     color: whitesmoke;
 }
 
@@ -1025,8 +1239,6 @@ li {
     top: 49px;
     right: 10px;
 }
-
- 
 
 .trade_container .green {
     color: #0F0
@@ -1053,6 +1265,14 @@ li {
     display: none;
     background-color: rgba(100, 100, 100, 0.2)
 }
+
+/* 
+#trades {
+    overflow-y: auto;
+    text-align: left;
+    color: #666;
+    padding-top: 5px
+} */
 
 #trades {
     overflow-y: auto;
@@ -1103,8 +1323,24 @@ li {
     border-bottom: 1px solid #afb1b3
 }
 
+/* .trades_list {
+    padding-left: 25px
+}
+
+.trades_list ul {
+    width: 200px;
+    height: 14px;
+    line-height: 14px;
+    text-align: left;
+    list-style: none;
+    clear: both;
+    zoom: 1;
+    margin: 0;
+    padding: 0
+} */
+
 .trades_list {
-    /* padding-left: 25px */
+    padding-left: 25px
 }
 
 .trades_list ul {
@@ -1119,6 +1355,19 @@ li {
     padding: 0;
     display: flex;
 }
+
+/* .trades_list ul li {
+    height: 14px;
+    line-height: 14px;
+    color: #999;
+    font-size: 12px;
+    list-style: none;
+    float: left;
+    *display: inline;
+    margin: 0;
+    padding: 0;
+    font-family: Consolas, monospace
+} */
 
 .trades_list ul li {
     height: 14px;
@@ -1141,12 +1390,12 @@ li {
 
 .trades_list ul li.pr-green {
     width: 65px;
-    color: #0F0
+    color: #6c6
 }
 
 .trades_list ul li.pr-red {
     width: 65px;
-    color: #F00
+    color: #c66
 }
 
 .trades_list ul li.vl {
@@ -1235,16 +1484,12 @@ li {
     height: 20px
 }
 
-#chart_main_indicator {
+/* #chart_main_indicator {
     float: right;
     right: 12px;
-}
+} */
 
 #chart_main_indicator li {
     line-height: 24px;
     display: block;
-}
-
-.chart_str_loading {
-    text-indent: -99999px;
 }

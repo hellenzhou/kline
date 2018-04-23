@@ -39,6 +39,7 @@ export class DataSource extends NamedObject {
 
 
 export class MainDataSource extends DataSource {
+
     constructor(name) {
         super(name);
         this._erasedCount = 0;
@@ -123,10 +124,8 @@ export class MainDataSource extends DataSource {
                         this._updatedCount++;
                     }
                     i++;
-              
                     if (i < cnt) {
-                      //  this.setUpdateMode(DataSource.UpdateMode.Append);
-                      this.setUpdateMode(DataSource.UpdateMode.Refresh);
+                        this.setUpdateMode(DataSource.UpdateMode.Append);
                         for (; i < cnt; i++, this._appendedCount++) {
                             e = data[i];
                             this._dataItems.push({

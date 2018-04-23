@@ -1,5 +1,6 @@
-import {NamedObject} from './named_object'
-import {ChartManager} from './chart_manager'
+import { NamedObject } from './named_object'
+import { ChartManager } from './chart_manager'
+
 
 export class Range extends NamedObject {
 
@@ -19,6 +20,16 @@ export class Range extends NamedObject {
         this._selectedPosition = -1;
         this._selectedValue = -Number.MAX_VALUE;
         this._gradations = [];
+    }
+
+    static landscapeOffSetY = 0;
+    
+    static getLandscapeOffSetY() {
+        return Range.landscapeOffSetY;
+    }
+
+    static setLandscapeOffSetY(offy) {
+        Range.landscapeOffSetY = offy;
     }
 
     isUpdated() {
@@ -72,7 +83,14 @@ export class Range extends NamedObject {
     getSelectedPosition() {
         if (this._selectedPosition >= 0) {
             return this._selectedPosition;
+        } else if (Range.getLandscapeOffSetY() !== 0) {
+            if (this._selectedPosition + Range.getLandscapeOffSetY() > 0) {
+                return this._selectedPosition;
+            }
         }
+        // else  if (this._selectedPosition + 414 *3 > 0){
+        //     return this._selectedPosition ;
+        // }
         if (this._selectedValue > -Number.MAX_VALUE) {
             return this.toY(this._selectedValue);
         }
@@ -129,7 +147,7 @@ export class Range extends NamedObject {
                 max = Math.max(max, dp.getMaxValue());
             }
         }
-        let r = {"min": min, "max": max};
+        let r = { "min": min, "max": max };
         this.preSetRange(r);
         this.setRange(r.min, r.max);
     }

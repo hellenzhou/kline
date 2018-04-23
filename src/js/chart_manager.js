@@ -11,6 +11,7 @@ import * as plotters from './plotters'
 import * as ctools from './ctools'
 import * as areas from './areas'
 import { Util } from './util'
+import Kline from './kline';
 
 
 export class ChartManager {
@@ -38,7 +39,6 @@ export class ChartManager {
 
     static created = false;
     static instance = null;
-
 
     constructor() {
         this._dataSources = {};
@@ -76,6 +76,15 @@ export class ChartManager {
         return ChartManager.instance;
     }
 
+    getx() {
+        return this._x;
+    }
+
+    setxy(x, y) {
+        this._x = x;
+        this._y = y;
+    }
+
     redraw(layer, refresh) {
         if (layer === undefined || refresh) {
             layer = "All";
@@ -84,15 +93,32 @@ export class ChartManager {
             if (refresh) {
                 this.getFrame("frame0").setChanged(true);
             }
-            debugger
-            this.layout(this._mainContext, "frame0", -368 * 3,-207*3, this._mainCanvas.height-368*3, this._mainCanvas.width-207*3);
+
+            //modify 
+            if (this._x === 0) {
+                this.layout(this._mainContext, "frame0", 0, 0, this._mainCanvas.width, this._mainCanvas.height);
+            } else {
+                this.layout(this._mainContext, "frame0", this._x, this._y,
+                    this._mainCanvas.height + this._x, this._mainCanvas.width + this._y);
+            }
+
             this.drawMain("frame0", this._mainContext);
         }
         if (layer === "All" || layer === "OverlayCanvas") {
-            this._overlayContext.clearRect(0, 0, this._overlayCanvas.height, this._overlayCanvas.width);
+            //modify 
+            if (this._x === 0) {
+
+                this._overlayContext.clearRect(0, 0, this._overlayCanvas.width, this._overlayCanvas.height);
+            } else {
+
+
+                this._overlayContext.clearRect(this._x, this._y, this._overlayCanvas.height, this._overlayCanvas.width);
+            }
+
             this.drawOverlay("frame0", this._overlayContext);
         }
     }
+
 
     bindCanvas(layer, canvas) {
         if (layer === "main") {
@@ -220,13 +246,13 @@ export class ChartManager {
     setNormalMode() {
         this._drawingTool = this._beforeDrawingTool;
         $(".chart_dropdown_data").removeClass("chart_dropdown-hover");
-        // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-        // $("#chart_CrossCursor").parent().addClass("selected");
+        $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+        $("#chart_CrossCursor").parent().addClass("selected");
         if (this._drawingTool === ChartManager.DrawingTool.Cursor) {
             this.showCursor();
             $("#mode a").removeClass("selected");
-            // $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
-            // $("#chart_Cursor").parent().addClass("selected");
+            $("#chart_toolpanel .chart_toolpanel_button").removeClass("selected");
+            $("#chart_Cursor").parent().addClass("selected");
         } else {
             this.hideCursor();
         }
@@ -343,7 +369,8 @@ export class ChartManager {
     }
 
     getDataSource(name) {
-        return this._dataSources[name];
+        let ds = this._dataSources[name];
+        return ds;
     }
 
     setDataSource(name, ds, forceRefresh) {
@@ -354,7 +381,8 @@ export class ChartManager {
     }
 
     getCachedDataSource(name) {
-        return this._dataSourceCache[name];
+        let cds = this._dataSourceCache[name];
+        return cds
     }
 
     setCachedDataSource(name, ds) {
@@ -374,7 +402,8 @@ export class ChartManager {
     }
 
     getFrame(name) {
-        return this._frames[name];
+        let f = this._frames[name];
+        return f;
     }
 
     setFrame(name, frame) {
@@ -398,7 +427,8 @@ export class ChartManager {
     }
 
     getTimeline(name) {
-        return this._timelines[name];
+        let tl = this._timelines[name];
+        return tl;
     }
 
     setTimeline(name, timeline) {
@@ -410,7 +440,8 @@ export class ChartManager {
     }
 
     getRange(name) {
-        return this._ranges[name];
+        let rg = this._ranges[name];
+        return  rg;
     }
 
     setRange(name, range) {
@@ -434,7 +465,8 @@ export class ChartManager {
     }
 
     getTheme(name) {
-        return this._themes[name];
+        let th = this._themes[name];
+        return  th;
     }
 
     setTheme(name, theme) {
@@ -532,6 +564,8 @@ export class ChartManager {
                     area.drawGrid(context);
                 }
         }
+
+
         for (let n in this._areas) {
             let area = this._areas[n];
             if (Util.isInstance(area, areas.ChartAreaGroup) === false)
@@ -640,7 +674,7 @@ export class ChartManager {
     }
 
     scale(s) {
-        if (this._highlightedFrame === null || !this._highlightedFrame)
+        if (this._highlightedFrame === null || !this._highlightedFram)
             return;
         let hiArea = this._highlightedFrame.getHighlightedArea();
         if (this.getRange(hiArea.getName()) !== undefined) {
@@ -974,7 +1008,6 @@ export class ChartManager {
             default:
                 return null;
         }
-
         if (!notLoadSettings) {
             indic.setParameters(ChartSettings.get().indics[indicName]);
         }

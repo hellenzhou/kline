@@ -1,6 +1,6 @@
-import { NamedObject } from './named_object'
-import { ChartManager } from './chart_manager'
-import { Util } from './util'
+import {NamedObject} from './named_object'
+import {ChartManager} from './chart_manager'
+import {Util} from './util'
 import * as data_sources from './data_sources'
 
 
@@ -45,7 +45,7 @@ export class DataProvider extends NamedObject {
         for (; n >= 0; n--) {
             let first = firstIndexes[n];
             if (i < first) {
-                minmaxes[n] = { "min": min, "max": max };
+                minmaxes[n] = {"min": min, "max": max};
             } else {
                 for (; i >= first; i--) {
                     if (this.getMinMaxAt(i, minmax) === false) {
@@ -60,10 +60,10 @@ export class DataProvider extends NamedObject {
                         maxIndex = i;
                     }
                 }
-                minmaxes[n] = { "min": min, "max": max };
+                minmaxes[n] = {"min": min, "max": max};
             }
             if (indexes !== null && indexes !== undefined) {
-                indexes[n] = { "minIndex": minIndex, "maxIndex": maxIndex };
+                indexes[n] = {"minIndex": minIndex, "maxIndex": maxIndex};
             }
         }
     }

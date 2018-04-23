@@ -100,8 +100,9 @@ export class DarkTheme extends Theme {
         this._colors[Theme.Color.CircleColorFill] = "#000000";
         this._colors[Theme.Color.CircleColorStroke] = "#ffffff";
         this._fonts = [];
-        let size =  10 * devicePixelRatio;
 
+        let devicePixelRatio = window.devicePixelRatio;
+        let size =  10 * devicePixelRatio;
         this._fonts[Theme.Font.Default] = size + "px Tahoma";
     }
 
@@ -153,7 +154,6 @@ export class LightTheme extends Theme {
         let devicePixelRatio = window.devicePixelRatio;
         let size =  10 * devicePixelRatio;
         this._fonts[Theme.Font.Default] = size + "px Tahoma";
-        
     }
 
 }

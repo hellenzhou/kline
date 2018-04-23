@@ -6,20 +6,11 @@ export class Timeline extends NamedObject {
 
     static devicePixelRatio = window.devicePixelRatio || 1;
 
-    static itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
-    5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio,
-    9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio,
-    15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio,
-    23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
+    static itemWidth = [1 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 9 * devicePixelRatio, 11 * devicePixelRatio, 13 * devicePixelRatio, 15 * devicePixelRatio, 17 * devicePixelRatio, 19 * devicePixelRatio, 21 * devicePixelRatio, 23 * devicePixelRatio, 25 * devicePixelRatio, 27 * devicePixelRatio, 29 * devicePixelRatio];
+    static spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio, 2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
 
-    static spaceWidth = [1 * devicePixelRatio, 1 * devicePixelRatio, 2 * devicePixelRatio,
-    2 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
-    3 * devicePixelRatio, 3 * devicePixelRatio, 3 * devicePixelRatio,
-    3 * devicePixelRatio, 5 * devicePixelRatio, 5 * devicePixelRatio,
-    5 * devicePixelRatio, 5 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio, 7 * devicePixelRatio];
-
-    static PADDING_LEFT = 4;
-    static PADDING_RIGHT = 8;
+    static PADDING_LEFT = 4 * devicePixelRatio;
+    static PADDING_RIGHT = 8 * devicePixelRatio;
 
     constructor(name) {
         super(name);
@@ -216,7 +207,6 @@ export class Timeline extends NamedObject {
                 this._updated = true;
                 break;
             case DataSource.UpdateMode.Append:
-
                 let lastIndex = this.getLastIndex();
                 let erasedCount = ds.getErasedCount();
                 if (lastIndex < oldMaxIndex) {
@@ -236,7 +226,6 @@ export class Timeline extends NamedObject {
                     }
                     this._updated = true;
                 }
-
                 break;
         }
     }

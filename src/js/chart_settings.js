@@ -59,6 +59,7 @@ export class ChartSettings {
         _frame.mIndic = _m_indic;
         _frame.indics = _indic;
         _frame.indicsStatus = 'open';
+    
         _frame.period = _range;
         ChartSettings._data = {
             ver: 1,

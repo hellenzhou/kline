@@ -2,7 +2,6 @@ import { ChartManager } from './chart_manager'
 import { Control } from './control'
 import Kline from './kline'
 import { Template } from './templates'
-import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 export class Chart {
 
@@ -78,16 +77,8 @@ export class Chart {
         let lang = ChartManager.instance.getLanguage();
         let title = Kline.instance.symbolName;
         title += ' ';
-
-        let rangePer;
-        for (let key in Kline.instance.periodMap) {
-            if (Kline.instance.periodMap[key] === this._range) {
-                rangePer = key;
-                break;
-            }
-        }
-
-        title += this.strIsLine ? Chart.strPeriod[lang]['line'] : rangePer;
+        title += this.strIsLine ? Chart.strPeriod[lang]['line'] : Chart.strPeriod[lang][this._range];
+        title += (this._contract_unit + '/' + this._money_type).toUpperCase();
         ChartManager.instance.setTitle('frame0.k0', title);
     }
 
@@ -108,8 +99,10 @@ export class Chart {
 
         if (f === -1) {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, Kline.instance.limit, null);
+            // Control.requestData(true);
         } else {
             Kline.instance.requestParam = Control.setHttpRequestParam(Kline.instance.symbol, Kline.instance.range, null, f.toString());
+            // Control.requestData();
         }
 
         Control.klineRequestData(true);
@@ -118,7 +111,6 @@ export class Chart {
 
         ChartManager.instance.redraw('All', false);
     }
-
 
 
     setCurrentContractUnit(contractUnit) {
@@ -137,7 +129,6 @@ export class Chart {
             Kline.instance.subscribed.unsubscribe();
             Kline.instance.subscribed = Kline.instance.stompClient.subscribe(Kline.instance.subscribePath + '/' + Kline.instance.symbol + '/' + this._range, Control.subscribeCallback);
         }
-
         this.updateDataAndDisplay();
         Kline.instance.onRangeChange(this._range);
     }
@@ -150,7 +141,8 @@ export class Chart {
     updateDepth(array) {
         if (array === null) {
             this._depthData.array = [];
-            ChartManager.instance.redraw('All', false);
+            // modify
+          //  ChartManager.instance.redraw('All', false);
             return;
         }
         if (!array.asks || !array.bids || array.asks === '' || array.bids === '')
@@ -189,7 +181,8 @@ export class Chart {
                 _data.array[i].amounts = _data.array[i - 1].amounts + _data.array[i].amount;
             }
         }
-        ChartManager.instance.redraw('All', false);
+         // modify
+        //ChartManager.instance.redraw('All', false);
     }
 
     setMainIndicator(indicName) {

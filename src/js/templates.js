@@ -9,22 +9,19 @@ import { CName } from './cname'
 import * as layouts from './layouts'
 import * as themes from './themes'
 import * as ranges from './ranges'
-import { debug } from 'util';
 
 export class Template {
 
+    // static displayVolume = true;
     static displayVolume = false;
-
     static createCandlestickDataSource(dsAlias) {
         return new data_sources.MainDataSource(dsAlias);
     }
 
     static createDataSource(dsName, dsAlias, createFunc) {
         let mgr = ChartManager.instance;
-        let cacheDs = mgr.getCachedDataSource(dsAlias);
-        if (cacheDs === null ) {
+        if (mgr.getCachedDataSource(dsAlias) === null)
             mgr.setCachedDataSource(dsAlias, createFunc(dsAlias));
-        }
         mgr.setCurrentDataSource(dsName, dsAlias);
         mgr.updateData(dsName, null);
     }
@@ -71,10 +68,8 @@ export class Template {
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeAreaBackgroundPlotter(areaName + "Range.background");
         mgr.setPlotter(plotter.getName(), plotter);
-
         // plotter = new plotters.COrderGraphPlotter(areaName + "Range.grid");
         // mgr.setPlotter(plotter.getName(), plotter);
-
         plotter = new plotters.RangePlotter(areaName + "Range.main");
         mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.RangeSelectionPlotter(areaName + "Range.selection");
@@ -137,8 +132,8 @@ export class Template {
         mgr.setTimeline(timeline.getName(), timeline);
         plotter = new plotters.TimelineAreaBackgroundPlotter(dsName + ".timeline.background");
         mgr.setPlotter(plotter.getName(), plotter);
-        // plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
-        // mgr.setPlotter(plotter.getName(), plotter);
+        plotter = new plotters.TimelinePlotter(dsName + ".timeline.main");
+        mgr.setPlotter(plotter.getName(), plotter);
         plotter = new plotters.TimelineSelectionPlotter(dsName + ".timeline.selection");
         mgr.setPlotter(plotter.getName(), plotter);
     }

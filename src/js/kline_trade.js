@@ -32,6 +32,8 @@ export class KlineTrade {
         this.curPrice = null;
         this.klineTradeInit = false;
         $("#trades .trades_list").empty();
+        $("#gasks .table").empty();
+        $("#gbids .table").empty();
         $("#asks .table").empty();
         $("#bids .table").empty();
     }
@@ -42,10 +44,12 @@ export class KlineTrade {
         for (let i = 0; i < array.length; i++) {
             let item = array[i];
             if (i >= array.length - this.tradesLimit) {
+                //modify
                 this.tradeDate.setTime(item.date * 1000);
                 let dateStr = this.dateFormatTf(this.tradeDate.getHours())
                     + ":" + this.dateFormatTf(this.tradeDate.getMinutes())
                     + ":" + this.dateFormatTf(this.tradeDate.getSeconds());
+
                 let arr = (Number(item.amount).toFixed(4) + "").split(".");
                 let price = Number(item.price);
                 if (price > 1) {
@@ -58,76 +62,56 @@ export class KlineTrade {
                     price = price.toFixed(6)
                 }
 
-                // if (this.klineTradeInit) {
-                //     totalUls = "<ul class='newul'><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
-                // } else {
-                //     totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
-                // }
-
-                totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
-
+                if (this.klineTradeInit) {
+                    totalUls = "<ul class='newul'><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
+                } else {
+                    totalUls = "<ul><li class='tm'>" + dateStr + "</li><li class='pr-" + (item.type === 'buy' ? 'green' : 'red') + "'>" + price + "</li><li class='vl'>" + arr[0] + "<g>" + (arr.length > 1 ? '.' + arr[1] : '') + "</g></li></ul>" + totalUls;
+                }
             }
         }
         let j = 0;
         let that = this;
+        if (this.klineTradeInit) {
+            clearInterval(myTime);
+            let myTime = setInterval(function () {
+                let item = array[j];
+                //that.curPrice = item.price
+                let price = Number(item.price);
+                if (price > 1) {
+                    price = price.toFixed(2)
+                }
 
-        if (array.length > 0) {
-            //this.curPrice=array[array.length-1].price.toFixed(6);
-            let price = Number(array[array.length - 1].price);
-            if (price > 1) {
-                price = price.toFixed(2)
-            }
+                if (price < 1 && price > 0.0001) {
+                    price = price.toFixed(4)
+                }
+                if (price < 0.0001) {
+                    price = price.toFixed(6)
+                }
+                that.curPrice = price;
+                $("div#price").attr("class", item.type === 'buy' ? 'green' : 'red').text(price);
+                j++;
+                if (j >= array.length) {
+                    clearInterval(myTime);
+                }
+            }, 100)
+        } else {
+            if (array.length > 0) {
+                //this.curPrice=array[array.length-1].price.toFixed(6);
+                let price = Number(array[array.length - 1].price);
+                if (price > 1) {
+                    price = price.toFixed(2)
+                }
 
-            if (price < 1 && price > 0.0001) {
-                price = price.toFixed(4)
+                if (price < 1 && price > 0.0001) {
+                    price = price.toFixed(4)
+                }
+                if (price < 0.0001) {
+                    price = price.toFixed(6)
+                }
+                that.curPrice = price;
+                $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
             }
-            if (price < 0.0001) {
-                price = price.toFixed(6)
-            }
-            that.curPrice = price;
-            $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
         }
-        // if (this.klineTradeInit) {
-        //     clearInterval(myTime);
-        //     let myTime = setInterval(function () {
-        //         let item = array[j];
-        //         //that.curPrice = item.price
-        //         let price = Number(item.price);
-        //         if (price > 1) {
-        //             price = price.toFixed(2)
-        //         }
-
-        //         if (price < 1 && price > 0.0001) {
-        //             price = price.toFixed(4)
-        //         }
-        //         if (price < 0.0001) {
-        //             price = price.toFixed(6)
-        //         }
-        //         that.curPrice = price;
-        //         $("div#price").attr("class", item.type === 'buy' ? 'green' : 'red').text(price);
-        //         j++;
-        //         if (j >= array.length) {
-        //             clearInterval(myTime);
-        //         }
-        //     }, 100)
-        // } else {
-        //     if (array.length > 0) {
-        //         //this.curPrice=array[array.length-1].price.toFixed(6);
-        //         let price = Number(array[array.length - 1].price);
-        //         if (price > 1) {
-        //             price = price.toFixed(2)
-        //         }
-
-        //         if (price < 1 && price > 0.0001) {
-        //             price = price.toFixed(4)
-        //         }
-        //         if (price < 0.0001) {
-        //             price = price.toFixed(6)
-        //         }
-        //         that.curPrice = price;
-        //         $("div#price").attr("class", array[array.length - 1].type === 'buy' ? 'green' : 'red').text(price);
-        //     }
-        // }
 
         if (this.klineTradeInit) {
             $trades.prepend(totalUls);
@@ -135,6 +119,7 @@ export class KlineTrade {
             $trades.append(totalUls);
         }
         totalUls = null;
+        //modify
         // $trades.find("ul.newul").slideDown(1000, function () {
         //     $(this).removeClass("newul");
         // });
@@ -144,6 +129,8 @@ export class KlineTrade {
     updateDepth(data) {
         ChartManager.instance.getChart().updateDepth(data);
         if (!data) return;
+        $("#gasks .table").html(this.getgview(this.getgasks(data.asks)));
+        $("#gbids .table").html(this.getgview(this.getgbids(data.bids)));
         if (this.lastDepth === null) {
             this.lastDepth = {};
             this.lastDepth.asks = this.getAsks(data.asks, this.depthShowSize);
