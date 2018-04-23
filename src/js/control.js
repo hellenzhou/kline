@@ -651,7 +651,10 @@ export class Control {
             let toolPanel = $('#chart_toolpanel');
             let canvasGroup = $('#chart_canvasGroup');
             let tabBar = $('#chart_tabbar');
+
             tabBar.show();
+            let  tradecontainer =   $(".trade_container");
+            tradecontainer.show();
          //   let toolPanelShown = toolPanel[0].style.display !== 'inline' ? false : true;
          let toolPanelShown = false;
             let tabBarShown = tabBar[0].style.display !== 'block' ? false : true;
@@ -853,7 +856,9 @@ export class Control {
             let tabBar = $('#chart_tabbar');
             tabBar.hide();
 
-
+            let  tradecontainer =   $(".trade_container");
+            tradecontainer.hide();
+            
             let canvasGroupRect = {};
             canvasGroupRect.x = 0;
             canvasGroupRect.y = 0;
