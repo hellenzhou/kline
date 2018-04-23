@@ -8,7 +8,7 @@ import * as themes from './themes'
 import * as data_providers from './data_providers'
 import * as data_sources from './data_sources'
 import * as ctools from './ctools'
-import {Range} from './ranges'
+import { Range } from './ranges'
 
 
 export class Plotter extends NamedObject {
@@ -1657,8 +1657,7 @@ export class SelectionPlotter extends Plotter {
         let x = timeline.toItemCenter(timeline.getSelectedIndex());
         Plotter.drawLine(context, x, area.getTop() - 1, x, area.getBottom());
         let pos = range.getSelectedPosition();
-
-        if (pos !== -1 && pos + Range.getLandscapeOffSetY() >= 0) {
+        if (pos >= 0 /*|| (pos!==-1 && Range.isLandscapeAndValidPositionY(pos))*/) {
             Plotter.drawLine(context, area.getLeft(), pos, area.getRight(), pos);
         }
     }

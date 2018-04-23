@@ -22,14 +22,25 @@ export class Range extends NamedObject {
         this._gradations = [];
     }
 
-    static landscapeOffSetY = 0;
-    
-    static getLandscapeOffSetY() {
-        return Range.landscapeOffSetY;
+    static landscapeOffset_y = -1;
+    static getLandscapeOffsetY() {
+        return Range.landscapeOffset_y;
     }
 
-    static setLandscapeOffSetY(offy) {
-        Range.landscapeOffSetY = offy;
+    static resetLandscapeOffsetY() {
+        Range.landscapeOffset_y = -1;
+    }
+
+    static isLandscapeAndValidPositionY() {
+        if (Range.landscapeOffset_y !== -1) {
+            return Range.landscapeOffset_y + pos >= 0
+        }
+
+        return false;
+    }
+
+    static setLandscapeOffsetY(offy) {
+        Range.landscapeOffset_y = offy;
     }
 
     isUpdated() {
@@ -83,14 +94,11 @@ export class Range extends NamedObject {
     getSelectedPosition() {
         if (this._selectedPosition >= 0) {
             return this._selectedPosition;
-        } else if (Range.getLandscapeOffSetY() !== 0) {
-            if (this._selectedPosition + Range.getLandscapeOffSetY() > 0) {
-                return this._selectedPosition;
-            }
-        }
-        // else  if (this._selectedPosition + 414 *3 > 0){
-        //     return this._selectedPosition ;
+        } 
+        // else if (this._selectedPosition + 414 *3 > 0) {
+        //     return this._selectedPosition;
         // }
+ 
         if (this._selectedValue > -Number.MAX_VALUE) {
             return this.toY(this._selectedValue);
         }

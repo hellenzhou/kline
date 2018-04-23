@@ -4788,7 +4788,7 @@ function () {
           // overlayerContext.rotate(-90 * Math.PI / 180);     
 
 
-          _ranges.Range.setLandscapeOffSetY(0);
+          _ranges.Range.setLandscapeOffsetY(-1);
 
           chart_trade_quotation.after(chart_container);
 
@@ -4809,8 +4809,9 @@ function () {
 
             chart_container_fullscreen.css('display', "block");
             chart_trade_quotation.css('display', "none");
+            debugger;
 
-            _ranges.Range.setLandscapeOffSetY(Kline.instance.height * Kline.instance.deviceRatio);
+            _ranges.Range.setLandscapeOffsetY(Kline.instance.height * Kline.instance.deviceRatio);
           } else {
             chart_trade_quotation.css('display', "block");
             chart_container = chart_container.detach();
@@ -4820,7 +4821,7 @@ function () {
 
             _control.Control.onSize(Kline.instance.width, Kline.instance.height);
 
-            _ranges.Range.setLandscapeOffSetY(0);
+            _ranges.Range.setLandscapeOffsetY(-1);
           }
 
           return;
@@ -7299,12 +7300,8 @@ function (_NamedObject) {
     value: function getSelectedPosition() {
       if (this._selectedPosition >= 0) {
         return this._selectedPosition;
-      } else if (Range.getLandscapeOffSetY() !== 0) {
-        if (this._selectedPosition + Range.getLandscapeOffSetY() > 0) {
-          return this._selectedPosition;
-        }
-      } // else  if (this._selectedPosition + 414 *3 > 0){
-      //     return this._selectedPosition ;
+      } // else if (this._selectedPosition + 414 *3 > 0) {
+      //     return this._selectedPosition;
       // }
 
 
@@ -7498,14 +7495,28 @@ function (_NamedObject) {
       } while (v > this.getMinValue());
     }
   }], [{
-    key: "getLandscapeOffSetY",
-    value: function getLandscapeOffSetY() {
-      return Range.landscapeOffSetY;
+    key: "getLandscapeOffsetY",
+    value: function getLandscapeOffsetY() {
+      return Range.landscapeOffset_y;
     }
   }, {
-    key: "setLandscapeOffSetY",
-    value: function setLandscapeOffSetY(offy) {
-      Range.landscapeOffSetY = offy;
+    key: "resetLandscapeOffsetY",
+    value: function resetLandscapeOffsetY() {
+      Range.landscapeOffset_y = -1;
+    }
+  }, {
+    key: "isLandscapeAndValidPositionY",
+    value: function isLandscapeAndValidPositionY() {
+      if (Range.landscapeOffset_y !== -1) {
+        return Range.landscapeOffset_y + pos >= 0;
+      }
+
+      return false;
+    }
+  }, {
+    key: "setLandscapeOffsetY",
+    value: function setLandscapeOffsetY(offy) {
+      Range.landscapeOffset_y = offy;
     }
   }]);
 
@@ -7513,7 +7524,7 @@ function (_NamedObject) {
 }(_named_object.NamedObject);
 
 exports.Range = Range;
-Range.landscapeOffSetY = 0;
+Range.landscapeOffset_y = -1;
 
 var PositiveRange =
 /*#__PURE__*/
@@ -14713,9 +14724,11 @@ function (_Plotter9) {
       Plotter.drawLine(context, x, area.getTop() - 1, x, area.getBottom());
       var pos = range.getSelectedPosition();
 
-      if (pos !== -1 && pos + _ranges.Range.getLandscapeOffSetY() >= 0) {
-        Plotter.drawLine(context, area.getLeft(), pos, area.getRight(), pos);
-      }
+      if (pos >= 0
+      /*|| (pos!==-1 && Range.isLandscapeAndValidPositionY(pos))*/
+      ) {
+          Plotter.drawLine(context, area.getLeft(), pos, area.getRight(), pos);
+        }
     }
   }]);
 

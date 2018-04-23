@@ -833,7 +833,7 @@ export default class Kline {
                 // overlayerContext.translate(0 , 0);
                 // overlayerContext.rotate(-90 * Math.PI / 180);     
 
-                Range.setLandscapeOffSetY(0);
+                Range.setLandscapeOffsetY(-1);
                 chart_trade_quotation.after(chart_container);
                 Control.onSize(Kline.instance.width, Kline.instance.height);
 
@@ -851,7 +851,8 @@ export default class Kline {
                     Control.onSize(Kline.instance.height, Kline.instance.width);
                     chart_container_fullscreen.css('display', "block");
                     chart_trade_quotation.css('display', "none");
-                    Range.setLandscapeOffSetY(Kline.instance.height * Kline.instance.deviceRatio);
+                    debugger
+                    Range.setLandscapeOffsetY(Kline.instance.height * Kline.instance.deviceRatio);
                 } else {
                     chart_trade_quotation.css('display', "block");
                     chart_container = chart_container.detach();
@@ -859,7 +860,7 @@ export default class Kline {
                     chart_container_fullscreen.css('display', "none");
                     trade_container.css('display', "block");
                     Control.onSize(Kline.instance.width, Kline.instance.height);
-                    Range.setLandscapeOffSetY(0);
+                    Range.setLandscapeOffsetY(-1);
                 }
 
                 return;
